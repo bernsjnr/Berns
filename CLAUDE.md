@@ -28,7 +28,11 @@ Placeholders still to replace: poster artwork (canvas-drawn mock-ups), prices, p
 - Colours: Berns Blue `#080CDF`, ink `#1A1A1A` (never #000), paper `#F3F1EC`, stone `#D6D2C8`, white. Old blue #0E50C8 and old greys are retired.
 - Blue is the signature: full ground for covers/footers/dividers; elsewhere an accent only. No blue text on ink.
 - Text is solid ink on light, solid white on blue/ink. Never grey or faded.
-- Fonts (Adobe Fonts kit `https://use.typekit.net/tdx4jgk.css`, add bernsds.com to the kit's domains; never download the font files):
+- Fonts (Adobe Fonts kit `https://use.typekit.net/tdx4jgk.css`, web project BERNS; never download the font files):
+  - The kit has no domain list. It loads on any site and on a local file (tested Nov 2026, Safari engine and Chrome). Nothing to set up for bernsds.com.
+  - After changing fonts in the Adobe project, press Save Changes to republish. The kit CSS shows `last_published` at the top.
+  - It won't load inside a Claude artifact (blocked by the viewer). Preview by opening `index.html` locally instead.
+  - Kit contents: `scale-variable` (wght 200-900, wdth 50-175, set width with `font-variation-settings`), `neue-haas-grotesk-display` 400 (this is 45 Light) and 700, `neue-haas-grotesk-text` 400 and 700, all with italics.
   - Titles: `scale-variable`, bold, uppercase, wide (wdth ~150-175)
   - Wordmark: BERNS in Scale at `wdth 125, wght 900`; "studios" in NHG Text Bold lowercase
   - Headings: `neue-haas-grotesk-display` 700
