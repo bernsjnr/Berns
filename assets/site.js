@@ -60,6 +60,51 @@
   };
   window.BERNS_UI.observe();
 
+  /* Home: show the logo header and bottom nav once the hero nav is off screen */
+  const heroNav = document.querySelector('.hero-nav');
+  if (heroNav) {
+    new IntersectionObserver(([e]) => body.classList.toggle('past-hero', !e.isIntersecting)).observe(heroNav);
+  }
+
+  /* Cursor: Berns Blue. Breathes at rest, pulses while scrolling, grows on hover. */
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    const root = document.documentElement;
+    body.insertAdjacentHTML('beforeend', '<div class="cursor-ring" aria-hidden="true"></div><div class="cursor" aria-hidden="true"></div>');
+    const dot = body.querySelector('.cursor'), ring = body.querySelector('.cursor-ring');
+    const HOT = 'a,button,[role="button"],input,select,textarea,label,.media,.hero-portrait,.stage canvas';
+    let mx = -100, my = -100, x = mx, y = my, seen = false;
+    let hover = 0, hoverTo = 0, energy = 0, lastY = scrollY;
+    const sense = () => { const el = document.elementFromPoint(mx, my); hoverTo = el && el.closest(HOT) ? 1 : 0; };
+    addEventListener('pointermove', e => {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      mx = e.clientX; my = e.clientY;
+      if (!seen) { x = mx; y = my; seen = true; root.classList.add('has-cursor'); }
+      root.classList.remove('cursor-out');
+      hoverTo = e.target.closest && e.target.closest(HOT) ? 1 : 0;
+    }, { passive: true });
+    document.addEventListener('mouseleave', () => root.classList.add('cursor-out'));
+    addEventListener('scroll', () => {
+      energy = Math.min(1, energy + Math.abs(scrollY - lastY) / 280);
+      lastY = scrollY;
+      if (seen) sense();
+    }, { passive: true });
+    const t0 = performance.now();
+    const loop = now => {
+      const t = (now - t0) / 1000;
+      x += (mx - x) * .22; y += (my - y) * .22;
+      hover += (hoverTo - hover) * .14;
+      energy *= .94;
+      const grow = 1 + hover * 3.6;
+      const breath = reduce ? 1 : 1 + Math.sin(t * Math.PI * (1.4 + energy * 2.2)) * (.06 + energy * .14);
+      dot.style.transform = `translate3d(${x}px,${y}px,0) scale(${(grow * breath).toFixed(3)})`;
+      const ph = (t * (.8 + energy)) % 1;
+      ring.style.transform = `translate3d(${x}px,${y}px,0) scale(${(grow * (1 + ph * (1.3 + energy))).toFixed(3)})`;
+      ring.style.opacity = reduce ? 0 : (energy * .5 * (1 - ph)).toFixed(3);
+      requestAnimationFrame(loop);
+    };
+    requestAnimationFrame(loop);
+  }
+
   /* Smooth scroll */
   if (!reduce && window.Lenis) {
     const lenis = new Lenis({ duration: 1.1, easing: t => 1 - Math.pow(1 - t, 4) });

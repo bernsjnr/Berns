@@ -3,36 +3,63 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Berns. Design, motion and presenting</title>
-<meta name="description" content="Berns is a designer and presenter. Berns Studios is his independent studio for design and motion.">
+<title>Bernard Bannor. Designer and presenter</title>
+<meta name="description" content="Bernard Bannor is a designer and presenter working between culture, sport and community. Berns Studios is his independent studio for design and motion.">
 <!-- Adobe Fonts kit (Scale variable + Neue Haas Grotesk). Loads anywhere, no domain setup. -->
 <link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
+<!-- Space Mono Bold, used for the READ MORE link (from the 2026 home artboard). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
 <link rel="stylesheet" href="assets/site.css">
 </head>
-<body data-base="" data-page="home">
+<body data-base="" data-page="home" class="has-hero">
 <main>
-<section class="intro">
-  <p class="label rv">Welcome</p>
-  <h1 class="say rv">Hello, I'm Berns. I design and animate brands, and I host the rooms where creativity and sport meet.</h1>
-  <svg class="chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 5.5l6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.2"/></svg>
+
+<!-- Hero: built from "Website for Berns Studios.ai" (3840x2160 artboard) -->
+<section class="hero" id="top">
+  <nav class="hero-nav" aria-label="Main">
+    <a href="studios/index.html">Work</a>
+    <a href="#about">About</a>
+    <a href="shop/index.html">Shop</a>
+    <a href="contact/index.html">Contact</a>
+  </nav>
+  <figure class="hero-portrait">
+    <img src="assets/img/berns-portrait.webp" alt="Bernard Bannor in a black knit cardigan against an orange curtain" width="1000" height="1500" fetchpriority="high">
+  </figure>
+  <div class="hero-intro">
+    <h1 class="hero-name">Bernard<br>Bannor</h1>
+    <div class="hero-side">
+      <p class="hero-lede">A designer and presenter working between culture, sport and community.</p>
+      <a class="mono-link" href="#about">Read more</a>
+    </div>
+  </div>
 </section>
+
+<div class="head" style="padding-top:clamp(72px,9vw,136px)">
+  <p class="label rv">Work</p>
+  <p class="say rv">Recent design and motion from Berns Studios.</p>
+</div>
 <div class="grid" data-render="projects:4"></div>
-<div class="head" style="padding-top:clamp(56px,7vw,96px)">
-  <p class="label rv">Berns Studios</p>
-  <p class="say rv">My independent studio for design and motion.</p>
-  <div class="actions rv"><a class="btn" href="studios/index.html">See all work</a></div>
+<div class="head" style="padding-top:clamp(40px,5vw,56px);padding-bottom:0"><div class="actions rv"><a class="btn" href="studios/index.html">See all work</a></div></div>
+
+<div class="head" id="about">
+  <p class="label rv">About</p>
+  <p class="say rv">Hello, I'm Berns. I design and animate brands, and I host the rooms where creativity and sport meet.</p>
 </div>
-<div class="head">
-  <p class="label rv">Presenting</p>
-  <p class="say rv">Looking for a host? My world brings creativity and sport together. I'll moderate the conversation and keep the energy up.</p>
-  <div class="actions rv"><a class="btn" href="presenting/index.html">Presenting</a></div>
+<div class="trio">
+  <a class="box rv" href="studios/index.html"><h3>Berns Studios</h3><p>My independent studio for design and motion.</p><span class="label">Studios</span></a>
+  <a class="box rv" href="presenting/index.html"><h3>Presenting</h3><p>Looking for a host? I'll moderate the conversation and keep the energy up.</p><span class="label">Presenting</span></a>
+  <a class="box rv" href="community/index.html"><h3>Community</h3><p>BULLY THE ROADS, Track + Play and Rule of Thirds.</p><span class="label">Community</span></a>
 </div>
+
 <div class="head">
   <p class="label rv">Shop</p>
   <p class="say rv">My prints. Each one checked, signed and posted by me.</p>
 </div>
 <div class="grid three" data-render="posters:3"></div>
 <div class="head" style="padding-top:clamp(40px,5vw,56px);padding-bottom:0"><div class="actions rv"><a class="btn" href="shop/index.html">Visit the shop</a></div></div>
+
 <section class="contact">
   <p class="label rv">Contact</p>
   <h2 class="big rv">Let's make something you're proud of.</h2>
