@@ -1,195 +1,32 @@
-<title>BERNS</title>
-<meta name="claude:viewport-fit-sides" content="cover">
-<!-- Live site: Adobe Fonts kit (Scale + Neue Haas Grotesk). Add bernsds.com to the kit's domains. -->
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BERNS | Designer and presenter</title>
+<meta name="description" content="Hello, I'm Berns. I design brands, motion and websites, and I host the rooms where people come together.">
 <link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
-<!-- Preview stand-ins only (the artifact sandbox blocks Typekit) -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Inter+Tight:wght@400;500;700&display=swap">
-<style>
-/* Layout: white page, typography-led. Giant BERNS wordmark, stone and ink panels, one blue footer as the back cover. */
-:root{
-  --blue:#080CDF; --ink:#1A1A1A; --paper:#F3F1EC; --stone:#D6D2C8; --white:#FFFFFF;
-  --f-title:'scale-variable','Archivo','Arial Black',Arial,sans-serif;
-  --f-head:'neue-haas-grotesk-display','Helvetica Neue',Helvetica,'Inter Tight',Arial,sans-serif;
-  --f-body:'neue-haas-grotesk-text','Helvetica Neue',Helvetica,'Inter Tight',Arial,sans-serif;
-  --r:12px; --max:1280px;
-  --ease:cubic-bezier(.2,.7,.2,1);
-  color-scheme:light;
-}
-*{box-sizing:border-box}
-body{background:var(--white);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
-a{color:inherit}
-img{max-width:100%;display:block}
-.wrap{max-width:var(--max);margin:0 auto;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
-@media (max-width:480px){.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}}
-
-/* Type roles */
-.title{font-family:var(--f-title);font-weight:900;font-variation-settings:'wdth' 150,'wght' 900;font-stretch:125%;text-transform:uppercase;line-height:.9;letter-spacing:0;margin:0}
-.h{font-family:var(--f-head);font-weight:700;line-height:1.1;letter-spacing:-.01em;margin:0;text-wrap:balance}
-.label{font-family:var(--f-body);font-weight:700;font-size:11px;line-height:16px;letter-spacing:.16em;text-transform:uppercase;margin:0}
-.lede{font-family:var(--f-head);font-weight:700;font-size:clamp(24px,3.2vw,40px);line-height:1.12;letter-spacing:-.015em;max-width:22ch;margin:0;text-wrap:balance}
-p{margin:0;max-width:62ch}
-.rule{width:24px;height:2px;background:var(--blue)}
-
-/* Wordmark */
-.wm{display:inline-flex;align-items:baseline;gap:.28em;text-decoration:none;white-space:nowrap}
-.wm b{font-family:var(--f-title);font-weight:900;font-variation-settings:'wdth' 125,'wght' 900;font-stretch:125%;letter-spacing:0}
-.wm span{font-family:var(--f-body);font-weight:700;text-transform:lowercase}
-
-/* Header */
-.site-header{padding-block:24px}
-.site-header .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
-.site-header .wm b{font-size:18px}
-nav ul{list-style:none;margin:0;padding:0;display:flex;gap:clamp(14px,3vw,40px);flex-wrap:wrap}
-nav a{font-family:var(--f-body);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;padding-block:6px;border-bottom:2px solid transparent;transition:border-color .2s var(--ease)}
-nav a:hover,nav a[aria-current="page"]{border-bottom-color:var(--blue)}
-a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:4px}
-
-/* Buttons and links */
-.btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--f-body);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;border-radius:999px;padding:14px 22px;border:1px solid currentColor;background:transparent;color:inherit;cursor:pointer;transition:background .2s var(--ease),color .2s var(--ease)}
-.btn-blue{background:var(--blue);border-color:var(--blue);color:var(--white)}
-.btn-blue:hover{background:var(--ink);border-color:var(--ink)}
-.btn-white{background:var(--white);border-color:var(--white);color:var(--ink)}
-.btn-white:hover{background:transparent;color:var(--white)}
-.go{font-family:var(--f-body);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase;text-decoration:none;display:inline-flex;gap:8px;align-items:center}
-.go::after{content:"→";transition:transform .2s var(--ease)}
-.go:hover::after{transform:translateX(4px)}
-
-/* Hero */
-.hero{padding-block:clamp(48px,9vw,120px) 0}
-.hero-top{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:end}
-.hero-meta{display:grid;gap:6px;text-align:right}
-.giant{margin-top:clamp(40px,7vw,96px);line-height:.78;white-space:nowrap;overflow:hidden;padding-bottom:.02em}
-.giant span{display:inline-block;font-family:var(--f-title);font-weight:900;font-variation-settings:'wdth' 125,'wght' 900;font-stretch:125%;font-size:24vw;letter-spacing:-.01em}
-@media (max-width:720px){.hero-top{grid-template-columns:1fr}.hero-meta{text-align:left}}
-
-section{scroll-margin-top:16px}
-.sec{padding-block:clamp(64px,9vw,128px)}
-.sec-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;padding-bottom:24px;border-bottom:1px solid var(--ink);margin-bottom:32px}
-.sec-head .title{font-size:clamp(36px,6vw,80px)}
-
-/* Two doors */
-.doors{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-top:clamp(48px,6vw,80px)}
-.door{border-radius:var(--r);padding:clamp(24px,3.5vw,48px);display:flex;flex-direction:column;gap:20px;min-height:340px;min-width:0}
-.door .grow{flex:1}
-.door-studios{background:var(--stone)}
-.door-studios .wm b{font-size:clamp(28px,4vw,48px)}
-.door-studios .wm span{font-size:clamp(28px,4vw,48px)}
-.door-present{background:var(--ink);color:var(--white)}
-.door-present .h{font-size:clamp(28px,4vw,48px)}
-@media (max-width:760px){.doors{grid-template-columns:1fr}}
-
-/* Work */
-.work{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.tile{display:grid;gap:12px;text-decoration:none;min-width:0}
-.ph{aspect-ratio:4/5;border-radius:var(--r);background:var(--paper);display:grid;place-items:center;overflow:hidden;transition:background .2s var(--ease)}
-.tile:hover .ph{background:var(--stone)}
-.tile .h{font-size:18px}
-@media (max-width:960px){.work{grid-template-columns:repeat(2,1fr)}}
-.services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
-.svc{border-top:1px solid var(--ink);padding-top:16px;display:grid;gap:8px;align-content:start}
-.svc .h{font-size:22px}
-@media (max-width:760px){.services{grid-template-columns:1fr}}
-
-/* Presenting band */
-.band-ink{background:var(--ink);color:var(--white)}
-.band-ink .sec-head{border-bottom-color:var(--white)}
-.present-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:clamp(24px,5vw,72px);align-items:start}
-.reel{aspect-ratio:16/10;border-radius:var(--r);border:1px solid var(--white);display:grid;place-items:center;position:relative;overflow:hidden}
-.reel .play{width:72px;height:72px;border-radius:50%;background:var(--white);display:grid;place-items:center}
-.reel .play::before{content:"";border-left:18px solid var(--ink);border-top:11px solid transparent;border-bottom:11px solid transparent;margin-left:5px}
-.reel .label{position:absolute;left:16px;top:14px}
-.credits{list-style:none;margin:28px 0 32px;padding:0}
-.credits li{display:flex;justify-content:space-between;gap:16px;padding-block:16px;border-top:1px solid var(--white)}
-.credits li:last-child{border-bottom:1px solid var(--white)}
-.credits .h{font-size:18px}
-.formats{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
-.chip{border:1px solid currentColor;border-radius:999px;padding:6px 12px}
-@media (max-width:860px){.present-grid{grid-template-columns:1fr}}
-
-/* Shop teaser */
-.posters{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.poster-card{background:var(--paper);border-radius:var(--r);padding:clamp(16px,2.5vw,32px);display:grid;gap:16px;text-decoration:none;min-width:0;transition:background .2s var(--ease)}
-.poster-card:hover{background:var(--stone)}
-.poster-card img{aspect-ratio:1/1.414;width:100%;object-fit:cover;outline:1px solid rgba(26,26,26,.12)}
-.poster-card .row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
-.poster-card .h{font-size:16px}
-@media (max-width:960px){.posters{grid-template-columns:repeat(2,1fr)}}
-
-/* Community */
-.comm{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.comm-item{border-top:1px solid var(--ink);padding-top:20px;display:grid;gap:14px;align-content:start;min-width:0}
-.comm-item .title{font-size:clamp(22px,2.4vw,30px);line-height:1}
-@media (max-width:860px){.comm{grid-template-columns:1fr}}
-
-/* Footer / contact */
-.foot{background:var(--blue);color:var(--white);padding-block:clamp(64px,9vw,128px) 32px}
-.foot .lede{max-width:18ch;font-size:clamp(32px,5vw,64px)}
-.contact-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:40px}
-.email{font-family:var(--f-head);font-weight:700;font-size:clamp(20px,2.4vw,28px);user-select:all;margin-right:8px}
-.foot-base{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline;border-top:1px solid var(--white);margin-top:clamp(56px,8vw,112px);padding-top:20px}
-.foot-base .wm b,.foot-base .wm span{font-size:15px}
-.socials{display:flex;gap:24px;flex-wrap:wrap}
-.socials a{text-decoration:none}
-
-/* ===== Shop view ===== */
-.shop-head{padding-block:clamp(32px,5vw,64px) 32px;display:grid;gap:16px}
-.shop-head .title{font-size:clamp(48px,10vw,140px)}
-.shop{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:clamp(16px,3vw,48px);align-items:start}
-.stage{position:relative;border-radius:var(--r);overflow:hidden;background:var(--paper);height:clamp(440px,72vh,780px);touch-action:none}
-.stage canvas{display:block;width:100%;height:100%;cursor:grab}
-.stage canvas:active{cursor:grabbing}
-.stage-ui{position:absolute;left:16px;right:16px;top:16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;pointer-events:none}
-.stage-ui>*{pointer-events:auto}
-.seg{display:inline-flex;background:var(--white);border:1px solid var(--ink);border-radius:999px;padding:3px}
-.seg button{font-family:var(--f-body);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;border:0;background:transparent;color:var(--ink);padding:9px 14px;border-radius:999px;cursor:pointer;transition:background .2s var(--ease),color .2s var(--ease)}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--white)}
-.icon-btn{font-family:var(--f-body);font-weight:700;font-size:11px;letter-spacing:.16em;text-transform:uppercase;background:var(--white);border:1px solid var(--ink);color:var(--ink);border-radius:999px;padding:12px 16px;cursor:pointer}
-.stage-hint{position:absolute;left:16px;bottom:14px;background:var(--white);border-radius:999px;padding:6px 12px}
-.stage-msg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px}
-
-.panel{display:grid;gap:28px;min-width:0}
-.panel .h.name{font-size:clamp(28px,3vw,40px)}
-.price{font-family:var(--f-head);font-weight:700;font-size:28px;font-variant-numeric:tabular-nums}
-.opt{display:grid;gap:10px}
-.opts{display:flex;flex-wrap:wrap;gap:8px}
-.opt-btn{font-family:var(--f-body);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--ink);background:var(--white);color:var(--ink);border-radius:999px;padding:10px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .2s var(--ease),color .2s var(--ease)}
-.opt-btn[aria-pressed="true"]{background:var(--ink);color:var(--white)}
-.sw{width:14px;height:14px;border-radius:50%;border:1px solid var(--ink)}
-.specs{list-style:none;margin:0;padding:0}
-.specs li{display:grid;grid-template-columns:120px 1fr;gap:16px;padding-block:12px;border-top:1px solid var(--ink)}
-.specs li:last-child{border-bottom:1px solid var(--ink)}
-.buy{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.picker{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px}
-.pick{border:0;background:var(--paper);border-radius:var(--r);padding:16px;display:grid;gap:12px;text-align:left;cursor:pointer;font:inherit;color:inherit;transition:background .2s var(--ease)}
-.pick:hover{background:var(--stone)}
-.pick img{aspect-ratio:1/1.414;width:100%}
-.pick[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--blue)}
-.pick .h{font-size:15px}
-@media (max-width:900px){.shop{grid-template-columns:1fr}.stage{height:auto;aspect-ratio:4/5;max-height:72vh}.picker{grid-template-columns:repeat(2,1fr)}}
-
-.bag{font-family:var(--f-body);font-weight:700;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
-.view[hidden]{display:none!important}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
-</style>
-
+<link rel="stylesheet" href="/assets/css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
 <header class="site-header">
   <div class="wrap">
-    <a class="wm" href="#home" aria-label="Berns, home"><b>BERNS</b></a>
+    <a class="wm" href="/" aria-label="Berns, home"><b>BERNS</b></a>
     <nav aria-label="Main">
       <ul>
-        <li><a href="#studios" data-nav="studios">Studios</a></li>
-        <li><a href="#presenting" data-nav="presenting">Presenting</a></li>
-        <li><a href="#shop" data-nav="shop">Shop</a></li>
-        <li><a href="#community" data-nav="community">Community</a></li>
-        <li><a href="#contact" data-nav="contact">Contact</a></li>
+        <li><a href="/studios/">Studios</a></li>
+        <li><a href="/presenting/">Presenting</a></li>
+        <li><a href="/shop/">Shop</a></li>
+        <li><a href="/community/">Community</a></li>
+        <li><a href="/contact/">Contact</a></li>
       </ul>
     </nav>
   </div>
 </header>
 
-<!-- ================= HOME ================= -->
-<main id="view-home" class="view">
-  <section class="hero" id="home">
+<main id="main">
+  <section class="hero">
     <div class="wrap">
       <div class="hero-top">
         <div style="display:grid;gap:20px">
@@ -208,92 +45,44 @@ section{scroll-margin-top:16px}
           <p class="label">Design</p>
           <div class="wm"><b>BERNS</b><span>studios</span></div>
           <p class="grow">My independent studio. Brand identity, motion and web for music, hospitality, sport, the arts, faith and community groups.</p>
-          <a class="go" href="#studios">See the work</a>
+          <a class="go" href="/studios/">See the work</a>
         </article>
         <article class="door door-present">
           <p class="label">Presenting</p>
           <h2 class="h">Host. MC. Moderator.</h2>
           <p class="grow">Launches, panels, listening parties and sports events. I keep the room warm and the run of show tight.</p>
-          <a class="go" href="#presenting">Book me for your event</a>
+          <a class="go" href="/presenting/">Book me for your event</a>
         </article>
       </div>
     </div>
   </section>
 
-  <section class="sec" id="studios">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2 class="title">Studios</h2>
-        <p class="label">Selected work</p>
-      </div>
-      <div class="work">
-        <a class="tile" href="#studios"><div class="ph"><span class="label">Image</span></div><h3 class="h">Grace Baptist Church</h3><p class="label">Brand identity · Web</p></a>
-        <a class="tile" href="#studios"><div class="ph"><span class="label">Image</span></div><h3 class="h">ReRooted</h3><p class="label">Motion</p></a>
-        <a class="tile" href="#studios"><div class="ph"><span class="label">Image</span></div><h3 class="h">ILUMO Kenya</h3><p class="label">Illustration</p></a>
-        <a class="tile" href="#studios"><div class="ph"><span class="label">Image</span></div><h3 class="h">The Way</h3><p class="label">Web</p></a>
-      </div>
-      <div class="services">
-        <div class="svc"><h3 class="h">Brand identity</h3><p>Logos, colour, typography, imagery direction and brand books your team can actually use.</p></div>
-        <div class="svc"><h3 class="h">Motion</h3><p>Animated logos, social content, title sequences and motion systems that bring a brand to life on screen.</p></div>
-        <div class="svc"><h3 class="h">Web</h3><p>Websites that carry your identity online, built to be clear, fast and easy to update.</p></div>
-      </div>
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:40px">
-        <a class="btn btn-blue" href="#contact">Start a project</a>
-        <a class="btn" href="#studios">Read the client guide</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec band-ink" id="presenting">
-    <div class="wrap">
-      <div class="sec-head">
-        <h2 class="title">Presenting</h2>
-        <p class="label">Host · MC · Moderator</p>
-      </div>
-      <div class="present-grid">
-        <div class="reel"><span class="label">Showreel</span><div class="play" aria-hidden="true"></div></div>
-        <div>
-          <p class="lede" style="font-size:clamp(22px,2.4vw,30px);max-width:26ch">I bring a designer's eye for detail and a host's feel for the room.</p>
-          <ul class="credits">
-            <li><span class="h">Guardian Black History Month</span><span class="label">Host</span></li>
-            <li><span class="h">Wave and Dave listening party</span><span class="label">Presenter</span></li>
-            <li><span class="h">BULLY THE ROADS events</span><span class="label">Host</span></li>
-          </ul>
-          <a class="btn btn-white" href="#contact">Book Berns for your event</a>
-          <div class="formats label"><span class="chip">Launches</span><span class="chip">Panels</span><span class="chip">Listening parties</span><span class="chip">Sports events</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="sec" id="posters">
+  <section class="sec">
     <div class="wrap">
       <div class="sec-head">
         <h2 class="title">Shop</h2>
-        <a class="go" href="#shop">Open the shop</a>
+        <a class="go" href="/shop/">Open the shop</a>
       </div>
-      <div class="posters" id="teaser"></div>
+      <div class="posters" data-poster-cards></div>
     </div>
   </section>
 
-  <section class="sec" id="community" style="padding-top:0">
+  <section class="sec" style="padding-top:0">
     <div class="wrap">
       <div class="sec-head">
         <h2 class="title">Community</h2>
-        <p class="label">Things I've built with others</p>
+        <a class="go" href="/community/">See all</a>
       </div>
       <div class="comm">
         <article class="comm-item">
           <p class="label">Co-founder</p>
           <h3 class="title">Bully the Roads</h3>
           <p>A grassroots London running club. Weekly runs, big energy, everyone welcome whatever your pace.</p>
-          <a class="go" href="#community">Run with us</a>
         </article>
         <article class="comm-item">
           <p class="label">Co-founder</p>
           <h3 class="title">Track + Play</h3>
           <p>An annual community sports day. Races, games and a day out for the whole community.</p>
-          <a class="go" href="#community">Next sports day</a>
         </article>
         <article class="comm-item">
           <p class="label">One third</p>
@@ -304,66 +93,6 @@ section{scroll-margin-top:16px}
       </div>
     </div>
   </section>
-</main>
-
-<!-- ================= SHOP ================= -->
-<main id="view-shop" class="view" hidden>
-  <div class="wrap">
-    <div class="shop-head">
-      <div style="display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline">
-        <p class="label">Shop / Posters</p>
-        <p class="bag" id="bag">Bag (0)</p>
-      </div>
-      <h1 class="title">Posters</h1>
-      <p>Every print is checked, signed and packed by me before it goes out.</p>
-    </div>
-
-    <div class="shop">
-      <div class="stage" id="stage">
-        <div class="stage-ui">
-          <div class="seg" role="group" aria-label="View">
-            <button type="button" id="v-room" aria-pressed="true">On the wall</button>
-            <button type="button" id="v-free" aria-pressed="false">Free rotate</button>
-          </div>
-          <button type="button" class="icon-btn" id="v-reset">Reset view</button>
-        </div>
-        <p class="label stage-hint">Drag to rotate · Scroll to zoom</p>
-        <p class="label stage-msg" id="stage-msg" hidden>The 3D view couldn't load in this browser.</p>
-      </div>
-
-      <aside class="panel">
-        <div style="display:grid;gap:10px">
-          <p class="label" id="p-ed">Edition of 50</p>
-          <h2 class="h name" id="p-name">Make it feel like you</h2>
-          <p class="price" id="p-price">£45</p>
-        </div>
-        <div class="opt">
-          <p class="label">Size</p>
-          <div class="opts" id="o-size"></div>
-        </div>
-        <div class="opt">
-          <p class="label">Frame</p>
-          <div class="opts" id="o-frame"></div>
-        </div>
-        <div class="buy">
-          <button type="button" class="btn btn-blue" id="add">Add to bag</button>
-          <span class="label" id="add-note" aria-live="polite"></span>
-        </div>
-        <div style="display:grid;gap:10px">
-          <p class="label">Example details</p>
-          <ul class="specs">
-            <li><span class="label">Paper</span><span>Giclée on 310gsm fine art paper</span></li>
-            <li><span class="label">Edition</span><span>Signed and numbered by hand</span></li>
-            <li><span class="label">Frame</span><span>Solid wood, glazed, ready to hang</span></li>
-            <li><span class="label">Delivery</span><span>Packed by me and posted within 5 working days. Prints ship rolled, framed pieces ship flat.</span></li>
-          </ul>
-        </div>
-      </aside>
-    </div>
-
-    <div class="picker" id="picker"></div>
-    <div style="height:clamp(64px,9vw,128px)"></div>
-  </div>
 </main>
 
 <footer class="foot" id="contact">
@@ -381,211 +110,11 @@ section{scroll-margin-top:16px}
     <div class="foot-base">
       <div class="wm"><b>BERNS</b><span>studios</span></div>
       <p class="label">Design / Motion / Presenting</p>
-      <div class="socials label"><a href="#contact">Instagram</a><a href="#contact">LinkedIn</a></div>
     </div>
   </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-<script>
-(function(){
-const C={blue:'#080CDF',ink:'#1A1A1A',paper:'#F3F1EC',stone:'#D6D2C8',white:'#FFFFFF'};
-const TITLE="'scale-variable','Archivo','Arial Black',sans-serif";
-const BODY="'neue-haas-grotesk-text','Helvetica Neue',Helvetica,'Inter Tight',Arial,sans-serif";
-const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-/* ---------- Giant wordmark fit ---------- */
-function fitGiant(){
-  const el=document.getElementById('giant'); if(!el)return;
-  const box=el.parentElement.clientWidth; if(!box)return;
-  el.style.fontSize='100px';
-  const w=el.getBoundingClientRect().width;
-  el.style.fontSize=(100*box/w*0.995)+'px';
-}
-
-/* ---------- Poster artwork (placeholder designs) ---------- */
-const PW=1000,PH=1414;
-function font(ctx,w,size,family,stretch){ctx.font=`${w} ${size}px ${family}`;try{ctx.fontStretch=stretch||'normal'}catch(e){}}
-function fitSize(ctx,text,maxW,family,stretch){font(ctx,900,200,family,stretch);return 200*maxW/ctx.measureText(text).width}
-function stack(ctx,lines,x,top,maxW,maxH,color,stretch){
-  let sizes=lines.map(t=>fitSize(ctx,t,maxW,TITLE,stretch||'expanded'));
-  const total=sizes.reduce((a,s)=>a+s*.84,0); if(total>maxH){const k=maxH/total;sizes=sizes.map(s=>s*k)}
-  ctx.fillStyle=color;ctx.textBaseline='alphabetic';let y=top;
-  lines.forEach((t,i)=>{font(ctx,900,sizes[i],TITLE,stretch||'expanded');y+=sizes[i]*.74;ctx.fillText(t,x,y);y+=sizes[i]*.1});
-}
-function foot(ctx,color,l,m,r){
-  ctx.fillStyle=color;ctx.fillRect(60,1300,880,2);
-  font(ctx,700,22,BODY);try{ctx.letterSpacing='3.5px'}catch(e){}
-  ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.fillText(l,60,1352);
-  ctx.textAlign='center';ctx.fillText(m,500,1352);ctx.textAlign='right';ctx.fillText(r,940,1352);
-  ctx.textAlign='left';try{ctx.letterSpacing='0px'}catch(e){}
-}
-const POSTERS=[
- {id:'feel',name:'Make it feel like you',no:'01',draw(ctx){ctx.fillStyle=C.blue;ctx.fillRect(0,0,PW,PH);stack(ctx,['MAKE','IT FEEL','LIKE','YOU'],60,70,880,1150,C.white);foot(ctx,C.white,'BERNS','NO. 01','2026')}},
- {id:'duality',name:'Duality',no:'02',draw(ctx){ctx.fillStyle=C.paper;ctx.fillRect(0,0,PW,PH);
-   ctx.fillStyle=C.blue;ctx.beginPath();ctx.arc(500,560,340,Math.PI,0);ctx.fill();
-   ctx.fillStyle=C.ink;ctx.beginPath();ctx.arc(500,600,340,0,Math.PI);ctx.fill();
-   ctx.fillStyle=C.paper;ctx.beginPath();ctx.arc(500,400,62,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(500,760,62,0,Math.PI*2);ctx.fill();
-   stack(ctx,['DUALITY'],60,1040,880,220,C.ink);foot(ctx,C.ink,'BERNS','NO. 02','2026')}},
- {id:'smooth',name:'Slow is smooth',no:'03',draw(ctx){ctx.fillStyle=C.ink;ctx.fillRect(0,0,PW,PH);
-   stack(ctx,['SLOW IS','SMOOTH.','SMOOTH IS','FAST.'],60,70,880,640,C.white);
-   for(let i=0;i<8;i++){const y=780+i*62;ctx.fillStyle=C.white;ctx.fillRect(130,y,810,2);font(ctx,700,26,BODY);ctx.fillText(String(8-i),68,y+42)}
-   ctx.fillRect(130,780+8*62,810,2);foot(ctx,C.white,'BERNS','NO. 03','2026')}},
- {id:'motion',name:'Motion',no:'04',draw(ctx){ctx.fillStyle=C.stone;ctx.fillRect(0,0,PW,PH);
-   const st=['ultra-condensed','extra-condensed','condensed','semi-condensed','normal','semi-expanded','expanded'];
-   st.forEach((s,i)=>{font(ctx,900,150,TITLE,s);ctx.fillStyle=i===6?C.blue:C.ink;ctx.fillText('MOTION',60,200+i*158)});
-   foot(ctx,C.ink,'BERNS','DESIGN / MOTION','2026')}}
-];
-const canvases={};
-function art(p){if(!canvases[p.id]){const c=document.createElement('canvas');c.width=PW;c.height=PH;p.draw(c.getContext('2d'));canvases[p.id]=c}return canvases[p.id]}
-
-/* ---------- Prices (examples) ---------- */
-const SIZES=[{id:'a3',label:'A3',mm:[297,420],price:45,frame:50},{id:'a2',label:'A2',mm:[420,594],price:70,frame:70},{id:'5070',label:'50 × 70 cm',mm:[500,700],price:90,frame:85}];
-const FRAMES=[{id:'none',label:'Unframed',sw:C.white},{id:'black',label:'Black',sw:'#1A1A1A',col:'#1E1D1B',grain:'#000000'},{id:'oak',label:'Natural oak',sw:'#C9A77C',col:'#C9A77C',grain:'#9C7A50'},{id:'white',label:'White',sw:'#F4F4F2',col:'#F2F1ED',grain:'#DCD9D2'}];
-const state={poster:POSTERS[0],size:SIZES[1],frame:FRAMES[2],bag:0,mode:'room'};
-
-/* ---------- Teaser + picker ---------- */
-function buildLists(){
-  const teaser=document.getElementById('teaser'),picker=document.getElementById('picker');
-  teaser.innerHTML='';picker.innerHTML='';
-  POSTERS.forEach(p=>{
-    const url=art(p).toDataURL('image/jpeg',.82);
-    const a=document.createElement('a');a.className='poster-card';a.href='#shop';
-    a.innerHTML=`<img alt="${p.name} poster" src="${url}"><div class="row"><span class="h">${p.name}</span><span class="label">From £45</span></div>`;
-    a.addEventListener('click',()=>{state.poster=p});teaser.appendChild(a);
-    const b=document.createElement('button');b.type='button';b.className='pick';b.id='pick-'+p.id;
-    b.setAttribute('aria-pressed',p===state.poster);
-    b.innerHTML=`<img alt="" src="${url}"><span class="label">No. ${p.no}</span><span class="h">${p.name}</span>`;
-    b.addEventListener('click',()=>{state.poster=p;syncPanel();rebuild(false);document.getElementById('stage').scrollIntoView({behavior:reduce?'auto':'smooth',block:'nearest'})});
-    picker.appendChild(b);
-  });
-}
-function optButtons(el,list,key,swatch){
-  el.innerHTML='';list.forEach(o=>{const b=document.createElement('button');b.type='button';b.className='opt-btn';b.id=key+'-'+o.id;
-    b.innerHTML=(swatch?`<span class="sw" style="background:${o.sw}"></span>`:'')+o.label;
-    b.addEventListener('click',()=>{state[key]=o;syncPanel();rebuild(key==='size')});el.appendChild(b)});
-}
-function syncPanel(){
-  const p=state.poster;document.getElementById('p-name').textContent=p.name;document.getElementById('p-ed').textContent='No. '+p.no+' · Edition of 50';
-  const total=state.size.price+(state.frame.id==='none'?0:state.size.frame);
-  document.getElementById('p-price').textContent='£'+total;
-  document.querySelectorAll('#o-size .opt-btn').forEach(b=>b.setAttribute('aria-pressed',b.id==='size-'+state.size.id));
-  document.querySelectorAll('#o-frame .opt-btn').forEach(b=>b.setAttribute('aria-pressed',b.id==='frame-'+state.frame.id));
-  document.querySelectorAll('.pick').forEach(b=>b.setAttribute('aria-pressed',b.id==='pick-'+p.id));
-  document.getElementById('add-note').textContent='';
-}
-document.getElementById('add').addEventListener('click',()=>{state.bag++;document.getElementById('bag').textContent='Bag ('+state.bag+')';
-  document.getElementById('add-note').textContent='Added: '+state.size.label+', '+state.frame.label.toLowerCase()});
-
-/* ---------- Copy email ---------- */
-document.getElementById('copy').addEventListener('click',e=>{const t='info@bernsds.com',btn=e.currentTarget;
-  const done=()=>{btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy email',1600)};
-  const sel=()=>{const r=document.createRange();r.selectNodeContents(document.getElementById('email'));const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected, press copy'};
-  try{navigator.clipboard.writeText(t).then(done,sel)}catch(err){sel()}});
-
-/* ---------- 3D ---------- */
-let renderer,scene,camera,controls,group,room=[],running=false,ready=false;
-const lin=h=>new THREE.Color(h).convertSRGBToLinear();
-function grainTex(base,line){const c=document.createElement('canvas');c.width=c.height=256;const x=c.getContext('2d');x.fillStyle=base;x.fillRect(0,0,256,256);
-  for(let i=0;i<140;i++){x.strokeStyle=line;x.globalAlpha=Math.random()*.18;x.lineWidth=Math.random()*1.6+.3;const y=Math.random()*256;x.beginPath();x.moveTo(0,y);
-    for(let k=0;k<=8;k++)x.lineTo(k*32,y+Math.sin(k*.9+i)*2.2);x.stroke()}
-  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.encoding=THREE.sRGBEncoding;return t}
-function labelTex(p){const c=document.createElement('canvas');c.width=600;c.height=320;const x=c.getContext('2d');x.fillStyle='#FFFFFF';x.fillRect(0,0,600,320);
-  x.fillStyle=C.ink;x.font=`900 64px ${TITLE}`;try{x.fontStretch='expanded'}catch(e){}x.fillText('BERNS',36,96);try{x.fontStretch='normal'}catch(e){}
-  x.font=`700 22px ${BODY}`;x.fillText('SIGNED AND NUMBERED BY HAND',36,160);x.fillText(p.name.toUpperCase(),36,200);
-  x.fillStyle=C.blue;x.fillRect(36,232,48,4);x.fillStyle=C.ink;x.font=`700 40px ${BODY}`;x.fillText('12 / 50',36,290);
-  const t=new THREE.CanvasTexture(c);t.encoding=THREE.sRGBEncoding;return t}
-
-function init3D(){
-  if(ready)return true; if(!window.THREE||!THREE.OrbitControls){document.getElementById('stage-msg').hidden=false;return false}
-  const stage=document.getElementById('stage');
-  try{renderer=new THREE.WebGLRenderer({antialias:true})}catch(e){document.getElementById('stage-msg').hidden=false;return false}
-  renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputEncoding=THREE.sRGBEncoding;
-  renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
-  stage.prepend(renderer.domElement);
-  scene=new THREE.Scene();scene.background=new THREE.Color(C.paper);
-  camera=new THREE.PerspectiveCamera(32,1,.05,60);
-  controls=new THREE.OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.08;controls.enablePan=false;controls.minDistance=.7;controls.maxDistance=5;
-  scene.add(new THREE.HemisphereLight(0xffffff,0xd6d2c8,.75));
-  const sun=new THREE.DirectionalLight(0xffffff,.75);sun.position.set(1.6,3.2,2.4);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
-  Object.assign(sun.shadow.camera,{left:-2,right:2,top:2,bottom:-2,near:.5,far:8});sun.shadow.bias=-.0004;sun.shadow.radius=4;scene.add(sun);
-  const wall=new THREE.Mesh(new THREE.PlaneGeometry(10,5),new THREE.MeshStandardMaterial({color:lin('#EDEAE3'),roughness:1}));wall.position.set(0,2.5,-.035);wall.receiveShadow=true;
-  const floor=new THREE.Mesh(new THREE.PlaneGeometry(10,8),new THREE.MeshStandardMaterial({color:lin(C.stone),roughness:.9}));floor.rotation.x=-Math.PI/2;floor.position.z=3.5;floor.receiveShadow=true;
-  const bench=new THREE.Mesh(new THREE.BoxGeometry(1.5,.42,.38),new THREE.MeshStandardMaterial({color:lin(C.ink),roughness:.7}));bench.position.set(0,.21,.2);bench.castShadow=bench.receiveShadow=true;
-  room=[wall,floor,bench];room.forEach(m=>scene.add(m));
-  new ResizeObserver(resize).observe(stage);resize();
-  ready=true;rebuild(true);return true;
-}
-function resize(){if(!renderer)return;const s=document.getElementById('stage');const w=s.clientWidth,h=s.clientHeight;if(!w||!h)return;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}
-
-function rebuild(resetCam){
-  if(!ready)return;
-  if(group){scene.remove(group);group.traverse(o=>{if(o.geometry)o.geometry.dispose()})}
-  group=new THREE.Group();
-  const [pwm,phm]=state.size.mm,pw=pwm/1000,ph=phm/1000;
-  const tex=new THREE.CanvasTexture(art(state.poster));tex.encoding=THREE.sRGBEncoding;tex.anisotropy=renderer.capabilities.getMaxAnisotropy();
-  const posterMat=new THREE.MeshStandardMaterial({map:tex,roughness:.85});
-  const f=state.frame;let H;
-  if(f.id==='none'){
-    const sheet=new THREE.Mesh(new THREE.BoxGeometry(pw,ph,.0015),[0,0,0,0,posterMat,0].map(m=>m||new THREE.MeshStandardMaterial({color:lin('#FBFAF7'),roughness:.9})));
-    sheet.castShadow=true;group.add(sheet);H=ph;group.userData.depth=.002;
-  }else{
-    const m=pw<.35?.05:.065,fw=.024,fd=.032,W=pw+2*m+2*fw;H=ph+2*m+2*fw;
-    const wood=new THREE.MeshStandardMaterial({color:0xffffff,map:grainTex(f.col,f.grain),roughness:.62});
-    const bar=(w,h,x,y,rot)=>{const g=new THREE.BoxGeometry(w,h,fd);const b=new THREE.Mesh(g,wood);b.position.set(x,y,0);b.castShadow=true;b.receiveShadow=true;if(rot){b.material=wood.clone();b.material.map=wood.map.clone();b.material.map.rotation=Math.PI/2;b.material.map.needsUpdate=true}group.add(b)};
-    bar(W,fw,0,H/2-fw/2);bar(W,fw,0,-H/2+fw/2);bar(fw,H-2*fw,-W/2+fw/2,0,true);bar(fw,H-2*fw,W/2-fw/2,0,true);
-    const back=new THREE.Mesh(new THREE.BoxGeometry(W-2*fw,H-2*fw,.004),new THREE.MeshStandardMaterial({color:lin('#B79A73'),roughness:1}));back.position.z=-fd/2+.002;group.add(back);
-    const mount=new THREE.Mesh(new THREE.PlaneGeometry(W-2*fw,H-2*fw),new THREE.MeshStandardMaterial({color:lin('#FBFAF7'),roughness:.95}));mount.position.z=-fd/2+.0045;mount.receiveShadow=true;group.add(mount);
-    const art3=new THREE.Mesh(new THREE.PlaneGeometry(pw,ph),posterMat);art3.position.z=-fd/2+.005;group.add(art3);
-    const glass=new THREE.Mesh(new THREE.PlaneGeometry(W-2*fw,H-2*fw),new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.07,roughness:.05,metalness:.2,depthWrite:false}));glass.position.z=fd/2-.003;group.add(glass);
-    const lbl=new THREE.Mesh(new THREE.PlaneGeometry(.15,.08),new THREE.MeshStandardMaterial({map:labelTex(state.poster),roughness:.9}));lbl.rotation.y=Math.PI;lbl.position.set(0,-H/2+.12,-fd/2-.0005);group.add(lbl);
-    const wireM=new THREE.MeshStandardMaterial({color:lin('#8A8A8A'),metalness:.8,roughness:.4});
-    const wire=new THREE.Mesh(new THREE.CylinderGeometry(.0012,.0012,W*.62,8),wireM);wire.rotation.z=Math.PI/2;wire.position.set(0,H/2-.12,-fd/2-.004);group.add(wire);
-    group.userData.depth=fd;
-  }
-  group.position.set(0,Math.max(1.45,.42+.18+H/2),group.userData.depth/2-.03+.001);
-  scene.add(group);
-  group.scale.setScalar(reduce?1:.94);group.userData.t0=performance.now();
-  if(resetCam)resetView();
-  applyMode();
-}
-function resetView(){
-  if(!group)return;const c=group.position.clone();
-  const dist=state.mode==='room'?2.9:1.6+state.size.mm[1]/1000;
-  controls.target.copy(c);
-  camera.position.set(c.x+(state.mode==='room'?.55:.9),c.y+.08,c.z+dist);controls.update();
-}
-function applyMode(){
-  const free=state.mode==='free';room.forEach(m=>m.visible=!free);
-  controls.minAzimuthAngle=free?-Infinity:-1.05;controls.maxAzimuthAngle=free?Infinity:1.05;
-  controls.minPolarAngle=free?.15:.95;controls.maxPolarAngle=free?Math.PI-.15:1.72;
-  controls.autoRotate=free&&!reduce;controls.autoRotateSpeed=1.4;
-  if(group)group.position.z=free?0:group.userData.depth/2-.03+.001;
-}
-function setMode(m){state.mode=m;document.getElementById('v-room').setAttribute('aria-pressed',m==='room');document.getElementById('v-free').setAttribute('aria-pressed',m==='free');applyMode();resetView()}
-document.getElementById('v-room').addEventListener('click',()=>setMode('room'));
-document.getElementById('v-free').addEventListener('click',()=>setMode('free'));
-document.getElementById('v-reset').addEventListener('click',resetView);
-function loop(){if(!running)return;requestAnimationFrame(loop);
-  if(group&&group.scale.x<1){const k=Math.min(1,(performance.now()-group.userData.t0)/240);const e=1-Math.pow(1-k,3);group.scale.setScalar(.94+.06*e)}
-  controls.update();renderer.render(scene,camera)}
-
-/* ---------- Routing ---------- */
-function route(){
-  const h=(location.hash||'').slice(1);const shop=h==='shop';
-  document.getElementById('view-home').hidden=shop;document.getElementById('view-shop').hidden=!shop;
-  document.querySelectorAll('[data-nav]').forEach(a=>{if(a.dataset.nav===h)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
-  if(shop){window.scrollTo(0,0);syncPanel();if(init3D()){rebuild(true);resize();if(!running){running=true;loop()}}}
-  else{running=false;fitGiant();const t=h&&document.getElementById(h);if(t&&h!=='home')t.scrollIntoView();else if(h==='home')window.scrollTo(0,0)}
-}
-optButtons(document.getElementById('o-size'),SIZES,'size');
-optButtons(document.getElementById('o-frame'),FRAMES,'frame',true);
-window.addEventListener('hashchange',route);
-window.addEventListener('resize',fitGiant);
-function start(){buildLists();syncPanel();fitGiant();route()}
-fitGiant();
-(document.fonts&&document.fonts.ready?Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1500))]):Promise.resolve()).then(()=>{
-  Promise.all([document.fonts.load(`900 100px Archivo`),document.fonts.load(`700 20px 'Inter Tight'`)].map(p=>p.catch(()=>{}))).finally(start)});
-})();
-</script>
+<script src="/assets/js/site.js"></script>
+<script src="/assets/js/posters.js"></script>
+</body>
+</html>

@@ -12,16 +12,24 @@ Personal site for Berns (Bernard Bannor). "Berns" is the main name; Berns Studio
 - Presenting credits: Guardian Black History Month event (host), Wave and Dave listening party (presenter), BULLY THE ROADS events (host). Formats: launches, panels, listening parties, sports events.
 
 ## Current state
-`index.html` is a single-file prototype: homepage + shop view switched by hash (`#shop`). It was built as a preview, so it uses Google Font stand-ins (Archivo, Inter Tight) alongside the real Typekit kit. On the live site, drop the stand-ins and rely on the kit.
+Split into real static pages, no build step. Root-relative paths, so serve from the site root (`python3 -m http.server`).
 
-Placeholders still to replace: poster artwork (canvas-drawn mock-ups), prices, paper/edition specs, project images, showreel, BULLY THE ROADS and Track + Play links, Instagram/LinkedIn links.
+- Pages: `/`, `/studios/`, `/presenting/`, `/shop/`, `/shop/<poster>/` (feel, duality, smooth, motion), `/community/`, `/contact/`. Each is `<folder>/index.html`; header and footer are duplicated per page, so edit all when they change.
+- `assets/css/site.css`: all styles, brand tokens at the top.
+- `assets/js/site.js`: giant wordmark fit (home) and copy-email.
+- `assets/js/posters.js`: poster list, canvas-drawn placeholder artwork, example sizes/frames/prices, poster cards.
+- `assets/js/shop.js`: poster page options, buy button and the three.js 3D view.
+- `assets/js/links.js`: Stripe Payment Links, keyed `poster:size:frame`. Empty for now; the buy button falls back to a mailto enquiry until a link exists.
+- Google Font stand-ins removed. Fonts come only from the Typekit kit (add bernsds.com to the kit's domains).
+
+Placeholders still to replace: poster artwork, prices, paper/edition specs, project images, showreel, BULLY THE ROADS and Track + Play links, Instagram/LinkedIn links (removed from the footer until the URLs exist).
 
 ## Next steps
-1. Split into real pages: `/`, `/studios`, `/presenting`, `/shop`, `/shop/<poster>`, `/community`, `/contact`.
-2. Replace canvas posters with Berns's real poster files (high-res JPG/WebP as three.js textures).
-3. Wire each size/frame combo to a Stripe Payment Link.
-4. Contact and booking forms (Hostinger PHP mail or a form service), routed Studio vs Presenting.
-5. Studios case-study template, Presenting page with showreel.
+1. Replace canvas posters with Berns's real poster files (high-res JPG/WebP as three.js textures).
+2. Create the Stripe Payment Links and paste them into `assets/js/links.js`.
+3. Contact and booking forms (Hostinger PHP mail or a form service), routed Studio vs Presenting. Currently mailto buttons.
+4. Studios case-study template, Presenting page with showreel.
+5. Add per-page social/OG images, a favicon, `sitemap.xml` and `robots.txt`.
 6. Deploy to Hostinger, point bernsds.com at it, then cancel Cargo.
 
 ## Brand (2026 identity) — follow exactly
