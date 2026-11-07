@@ -175,6 +175,10 @@ a.tile:hover .media img,a.tile:hover .media video{transform:scale(1.025)}
 .hero-portrait{justify-self:center;align-self:center;will-change:transform;width:min(clamp(150px,14vw,540px),calc(34svh * .853));max-width:100%;aspect-ratio:367/430;margin:clamp(24px,5svh,96px) 0;overflow:hidden;background:var(--g3)}
 .hero-portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 62%;transform:scale(1.02);transition:transform 1.4s var(--ease)}
 .hero-portrait:hover img{transform:scale(1.06)}
+.hero-portrait{position:relative;z-index:5;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.hero-portrait img{pointer-events:none}
+.hero-portrait.lifted{z-index:30}
+.hero-portrait.lifted img{transform:scale(1.08)}
 .hero-intro{display:grid;grid-template-columns:minmax(0,41.25fr) minmax(0,43.75fr);column-gap:0;align-items:end}
 .hero-name{font-family:'scale-variable','Arial Black',sans-serif;font-variation-settings:'wdth' 125,'wght' 900;font-weight:900;font-size:clamp(44px,5.18vw,199px);line-height:.86;text-transform:uppercase;margin-left:-.04em}
 .hero-side{display:grid;gap:clamp(14px,1.8vw,34px);padding-bottom:.15em;min-width:0}

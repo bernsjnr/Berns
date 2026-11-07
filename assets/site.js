@@ -92,19 +92,45 @@
     check();
   }
 
-  /* Home: the portrait turns slightly as you scroll (up to ~7deg by the time the hero has gone), eased so it glides */
+  /* Home portrait: a photo pinned to a noteboard.
+     Drag it anywhere (mouse or finger) and it stays where you drop it, swinging a little as it moves.
+     It also turns up to ~7deg as you scroll through the hero. */
   const portrait = document.querySelector('.hero-portrait');
-  if (portrait && !reduce) {
-    let cur = 0;
-    const turn = () => {
-      const target = Math.min(1, scrollY / innerHeight) * 7;
-      cur += (target - cur) * .12;
-      portrait.style.transform = `rotate(${cur.toFixed(2)}deg)`;
-      if (Math.abs(target - cur) > .01) requestAnimationFrame(turn); else running = false;
+  if (portrait) {
+    let px = 0, py = 0;            // where it's been dropped
+    let scrollRot = 0, swing = 0;  // eased rotations
+    let drag = null, running = false;
+    const render = () => {
+      const target = reduce ? 0 : Math.min(1, scrollY / innerHeight) * 7;
+      scrollRot += (target - scrollRot) * .12;
+      if (!drag) swing *= .85;
+      portrait.style.transform = `translate3d(${px.toFixed(1)}px,${py.toFixed(1)}px,0) rotate(${(scrollRot + swing).toFixed(2)}deg)`;
+      if (drag || Math.abs(target - scrollRot) > .01 || Math.abs(swing) > .01) requestAnimationFrame(render); else running = false;
     };
-    let running = false;
-    addEventListener('scroll', () => { if (!running) { running = true; requestAnimationFrame(turn); } }, { passive: true });
-    if (scrollY) { running = true; requestAnimationFrame(turn); }
+    const kick = () => { if (!running) { running = true; requestAnimationFrame(render); } };
+    addEventListener('scroll', kick, { passive: true });
+    portrait.addEventListener('pointerdown', e => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      portrait.setPointerCapture(e.pointerId);
+      drag = { x: e.clientX - px, y: e.clientY - py, lx: e.clientX };
+      portrait.classList.add('lifted');
+      kick();
+    });
+    portrait.addEventListener('pointermove', e => {
+      if (!drag) return;
+      const r = portrait.getBoundingClientRect(), m = 24;
+      // keep at least a corner on screen sideways
+      px = Math.max(-(r.left - px) - r.width + m, Math.min(innerWidth - (r.left - px) - m, e.clientX - drag.x));
+      py = e.clientY - drag.y;
+      if (!reduce) swing = Math.max(-12, Math.min(12, swing * .7 + (e.clientX - drag.lx) * .6));
+      drag.lx = e.clientX;
+    });
+    const drop = () => { if (!drag) return; drag = null; portrait.classList.remove('lifted'); kick(); };
+    portrait.addEventListener('pointerup', drop);
+    portrait.addEventListener('pointercancel', drop);
+    portrait.addEventListener('dblclick', () => { px = 0; py = 0; kick(); });
+    kick();
   }
 
   /* Cursor: Berns Blue. Breathes at rest, pulses while scrolling, grows on hover. */

@@ -18,7 +18,7 @@ Home hero (v4, Nov 2026) is built from Berns's artboard "Website for Berns Studi
 
 Top bar (all pages, replaces the old BERNS studios logo header, London clock and bottom nav): solid white, BERNARD BANNOR left, WORK / ABOUT / SHOP / CONTACT right. On the home page it takes over from the hero on scroll: once the hero nav leaves, the bar appears and the nav slides from its spread-out hero positions to the right; once the hero name leaves, BERNARD BANNOR rises into the bar. ABOUT goes to the About block on the home page, which links Studios, Presenting and Community.
 
-Portrait (home): turns up to ~7deg as you scroll through the hero, eased; off for reduced motion.
+Portrait (home): a photo pinned to a noteboard. Drag it anywhere with mouse or finger, it swings as it moves and stays where dropped (double-click resets; resets on reload). Also turns up to ~7deg as you scroll through the hero. Swing and turn are off for reduced motion.
 
 Cursor (all pages, mouse/trackpad only): Berns Blue dot that breathes gently, pulses a little deeper with a soft ripple ring while scrolling, and grows ~4.5x over links, tiles and the portrait. Lives in `assets/site.js` and the end of `assets/site.css`. Respects prefers-reduced-motion. This is the one place blue is used beyond hover and selection.
 
