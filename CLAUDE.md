@@ -12,7 +12,7 @@ Personal site for Berns (Bernard Bannor). "Berns" is the main name; Berns Studio
 - Presenting credits: Guardian Black History Month event (host), Wave and Dave listening party (presenter), BULLY THE ROADS events (host). Formats: launches, panels, listening parties, sports events.
 
 ## Current state
-`index.html` is v2 (Nov 2026), rebuilt from Berns's references: clean editorial grid, small corner labels, floating rounded cards over full-bleed colour, stacked uppercase type, Atmosphere-style split for Presenting, tall condensed type for Community. Single page, smooth scroll (Lenis via jsdelivr). v1 is kept as `prototype-v1.html`. Adobe Fonts kit only. Work images in `assets/work/` (1200px WebP from iCloud Berns Studios > Portfolio).
+`index.html` is v3 (Nov 2026). It is built from the live bernsds.com (Cargo) layout and stays close to it: white page, BERNS studios logo top left, live London clock top right, centred "Welcome" label and one-sentence intro, a two-column grid of rounded (20px) 16:9 tiles with 12px gaps, and a fixed bottom nav. Additions from Berns's references are deliberately small: a caption row under each tile (name left, discipline right), centred label + sentence heads for each section, soft fade-up reveals, smooth scroll (Lenis). Berns rejected v2 (busy gradients, moving type) as too much; it is kept as `prototype-v2.html`, and v1 as `prototype-v1.html`. Media: `assets/work/` (WebP stills), `assets/video/` (short muted 1280x720 loops with poster frames, play only on screen), `assets/posters/`.
 
 Positioning copy: Studios is "my independent studio for design and motion" (web is part of design, not a headline service; no client-sector lists). Presenting leads with "Looking for a host?" and how Berns's world brings creativity and sport together, moderating and keeping the energy up.
 
@@ -43,9 +43,8 @@ Placeholders still to replace: poster prices, paper/edition specs, case-study pa
   - Body: `neue-haas-grotesk-text` 400, 17px
   - Labels: `neue-haas-grotesk-text` 700, uppercase, letter-spacing 0.16em
 - Luxury minimalist, typography-led, lots of white space. No drop shadows. Cards and images use 16px radius (24px for big panels). Dividers are 1px.
-- Gradients ARE part of Berns's style (overrides the kit's no-gradient rule for the site): soft, grainy, blurred colour fields with the circle/sun motif, matching his poster series. Palette: Berns Blue plus periwinkle #7A7FE0, lilac #A194C4, peach #F6D9C4, orange #EC6A2C, pink #F07FA8, sky #7EB7D8, navy #2A2560. Animated grain overlay.
-- Type should feel alive: Scale's `wdth` axis is the moving part. BERNS letters widen towards the pointer and breathe in a slow wave when idle; section titles stretch from wdth 50 to 150 as they scroll up; condensed titles widen on hover.
-- Motion is smooth and soft: long ease-out (`cubic-bezier(.22,1,.36,1)`, around 0.7-1.2s), line-by-line text reveals, slow parallax, header hides on scroll down. Always respect prefers-reduced-motion.
+- Keep it calm. Gradients live in the poster artwork, not as page backgrounds. No moving or stretching type, no grain, no busy layouts. Motion is limited to soft fade-up reveals (~0.9s ease-out), gentle image zoom on hover, smooth scroll and the clock. Always respect prefers-reduced-motion.
+- Live-site order of work tiles: This Bed I Made, Holibobs (Guardian Labs), TOGETHER, Track + Play, then BULLY THE ROADS, Official Visit Denmark, Everyone Wants Posters, V&A on the live site. The live site also links Nwaka Okparaeke.
 - No phone number anywhere. Never "Ltd" on the site.
 - Voice: first person, direct, warm, concise. No em dashes. British spelling. Intro "Hello, I'm Berns." Sign-off "Let's make something you're proud of."
 
