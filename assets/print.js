@@ -8,14 +8,19 @@
   const $ = id => document.getElementById(id);
   const id = new URLSearchParams(location.search).get('p');
   const poster = D.posters.find(p => p.id === id) || D.posters[0];
-  const state = { size: D.sizes[1], frame: D.frames[0], mode: 'flat' };
+  const qs = new URLSearchParams(location.search);
+  const state = {
+    size: D.sizes.find(s => s.id === qs.get('s')) || D.sizes[1],
+    frame: D.frames.find(f => f.id === qs.get('f')) || D.frames[0],
+    mode: 'flat'
+  };
 
   /* ---------- Panel ---------- */
   document.title = poster.name + '. Berns';
   $('p-name').textContent = poster.name;
   $('p-ed').textContent = 'Edition of ' + poster.edition;
   $('flat-img').src = U.url(poster.img);
-  $('flat-img').alt = poster.name + ', gradient print';
+  $('flat-img').alt = poster.name + ', print';
 
   const opts = (el, list, key, swatch) => {
     el.innerHTML = list.map(o => `<button type="button" data-id="${o.id}" aria-pressed="${state[key].id === o.id}">${swatch ? `<span class="sw" style="background:${o.swatch}"></span>` : ''}${o.label}</button>`).join('');
@@ -23,7 +28,7 @@
       const b = e.target.closest('button'); if (!b) return;
       state[key] = list.find(o => o.id === b.dataset.id);
       el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x === b));
-      sync(); rebuild();
+      sync(); rebuild(); prepAR();
     });
   };
   opts($('o-size'), D.sizes, 'size');
@@ -109,7 +114,7 @@
     const bench = new THREE.Mesh(new THREE.BoxGeometry(1.5, .42, .38), new THREE.MeshStandardMaterial({ color: lin(C.ink), roughness: .7 }));
     bench.position.set(0, .21, .2); bench.castShadow = bench.receiveShadow = true;
     room = [wall, floor, bench]; room.forEach(m => scene.add(m));
-    new THREE.TextureLoader().load(U.url(poster.img), t => { t.encoding = THREE.sRGBEncoding; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); tex = t; rebuild(); });
+    new THREE.TextureLoader().load(U.url(poster.img), t => { t.encoding = THREE.sRGBEncoding; t.format = THREE.RGBFormat; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); tex = t; rebuild(); });
     new ResizeObserver(resize).observe(stage); resize();
     ready = true; rebuild(); return true;
   }
@@ -117,42 +122,51 @@
     if (!renderer) return; const s = $('stage'); const w = s.clientWidth, h = s.clientHeight; if (!w || !h) return;
     renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix();
   }
-  function rebuild() {
-    if (!ready) return;
+  /* Builds the print (sheet or framed) as a THREE.Group, in metres.
+     forExport drops the glass (transparent layers export badly to AR). */
+  function makeGroup(forExport) {
     const lin = h => new THREE.Color(h).convertSRGBToLinear();
-    if (group) { scene.remove(group); group.traverse(o => { if (o.geometry) o.geometry.dispose(); }); }
-    group = new THREE.Group();
+    const g = new THREE.Group();
     const [pwm, phm] = state.size.mm, pw = pwm / 1000, ph = phm / 1000;
-    const posterMat = new THREE.MeshStandardMaterial({ map: tex, color: tex ? 0xffffff : lin(C.floor), roughness: .85 });
+    const posterMat = new THREE.MeshStandardMaterial({ map: tex, color: tex ? 0xffffff : lin('#CDD0D3'), roughness: .85 });
     const f = state.frame; let H;
     if (f.id === 'none') {
       const paper = new THREE.MeshStandardMaterial({ color: lin('#FBFBFA'), roughness: .9 });
       const sheet = new THREE.Mesh(new THREE.BoxGeometry(pw, ph, .0015), [paper, paper, paper, paper, posterMat, paper]);
-      sheet.castShadow = true; group.add(sheet); H = ph; group.userData.depth = .002;
+      sheet.castShadow = true; g.add(sheet); H = ph; g.userData.depth = .002;
     } else {
       const m = pw < .35 ? .05 : .065, fw = .024, fd = .032, W = pw + 2 * m + 2 * fw; H = ph + 2 * m + 2 * fw;
       const wood = new THREE.MeshStandardMaterial({ color: 0xffffff, map: grainTex(f.col, f.grain), roughness: .62 });
       const bar = (w, h, x, y, rot) => {
         const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, fd), wood); b.position.set(x, y, 0); b.castShadow = b.receiveShadow = true;
         if (rot) { b.material = wood.clone(); b.material.map = wood.map.clone(); b.material.map.rotation = Math.PI / 2; b.material.map.needsUpdate = true; }
-        group.add(b);
+        g.add(b);
       };
       bar(W, fw, 0, H / 2 - fw / 2); bar(W, fw, 0, -H / 2 + fw / 2); bar(fw, H - 2 * fw, -W / 2 + fw / 2, 0, true); bar(fw, H - 2 * fw, W / 2 - fw / 2, 0, true);
       const back = new THREE.Mesh(new THREE.BoxGeometry(W - 2 * fw, H - 2 * fw, .004), new THREE.MeshStandardMaterial({ color: lin('#B79A73'), roughness: 1 }));
-      back.position.z = -fd / 2 + .002; group.add(back);
+      back.position.z = -fd / 2 + .002; g.add(back);
       const mount = new THREE.Mesh(new THREE.PlaneGeometry(W - 2 * fw, H - 2 * fw), new THREE.MeshStandardMaterial({ color: lin('#FBFBFA'), roughness: .95 }));
-      mount.position.z = -fd / 2 + .0045; mount.receiveShadow = true; group.add(mount);
-      const art = new THREE.Mesh(new THREE.PlaneGeometry(pw, ph), posterMat); art.position.z = -fd / 2 + .005; group.add(art);
-      const glass = new THREE.Mesh(new THREE.PlaneGeometry(W - 2 * fw, H - 2 * fw), new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: .07, roughness: .05, metalness: .2, depthWrite: false }));
-      glass.position.z = fd / 2 - .003; group.add(glass);
-      const lbl = new THREE.Mesh(new THREE.PlaneGeometry(.15, .08), new THREE.MeshStandardMaterial({ map: labelTex(), roughness: .9 }));
-      lbl.rotation.y = Math.PI; lbl.position.set(0, -H / 2 + .12, -fd / 2 - .0005); group.add(lbl);
-      const wire = new THREE.Mesh(new THREE.CylinderGeometry(.0012, .0012, W * .62, 8), new THREE.MeshStandardMaterial({ color: lin('#8A8A8A'), metalness: .8, roughness: .4 }));
-      wire.rotation.z = Math.PI / 2; wire.position.set(0, H / 2 - .12, -fd / 2 - .004); group.add(wire);
-      group.userData.depth = fd;
+      mount.position.z = -fd / 2 + .0045; mount.receiveShadow = true; g.add(mount);
+      const art = new THREE.Mesh(new THREE.PlaneGeometry(pw, ph), posterMat); art.position.z = -fd / 2 + .005; g.add(art);
+      if (!forExport) {
+        const glass = new THREE.Mesh(new THREE.PlaneGeometry(W - 2 * fw, H - 2 * fw), new THREE.MeshStandardMaterial({ color: 0xffffff, transparent: true, opacity: .07, roughness: .05, metalness: .2, depthWrite: false }));
+        glass.position.z = fd / 2 - .003; g.add(glass);
+        const lbl = new THREE.Mesh(new THREE.PlaneGeometry(.15, .08), new THREE.MeshStandardMaterial({ map: labelTex(), roughness: .9 }));
+        lbl.rotation.y = Math.PI; lbl.position.set(0, -H / 2 + .12, -fd / 2 - .0005); g.add(lbl);
+        const wire = new THREE.Mesh(new THREE.CylinderGeometry(.0012, .0012, W * .62, 8), new THREE.MeshStandardMaterial({ color: lin('#8A8A8A'), metalness: .8, roughness: .4 }));
+        wire.rotation.z = Math.PI / 2; wire.position.set(0, H / 2 - .12, -fd / 2 - .004); g.add(wire);
+      }
+      g.userData.depth = fd;
     }
-    group.userData.H = H;
-    group.position.set(0, Math.max(1.45, .42 + .18 + H / 2), group.userData.depth / 2 - .03 + .001);
+    g.userData.H = H;
+    return g;
+  }
+
+  function rebuild() {
+    if (!ready) return;
+    if (group) { scene.remove(group); group.traverse(o => { if (o.geometry) o.geometry.dispose(); }); }
+    group = makeGroup(false);
+    group.position.set(0, Math.max(1.45, .42 + .18 + group.userData.H / 2), group.userData.depth / 2 - .03 + .001);
     scene.add(group);
     applyMode();
   }
@@ -174,4 +188,50 @@
     group.position.z = free ? 0 : group.userData.depth / 2 - .03 + .001;
   }
   function loop() { if (!running) return; requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); }
+
+  /* ---------- AR: "View in your room" ----------
+     Phones: export the chosen print + frame as a GLB, hand it to <model-viewer>,
+     which opens Quick Look on iPhone (it converts to USDZ itself) or WebXR on Android.
+     Computers: show a QR code that opens this page, with the same choices, on a phone. */
+  const arBtn = $('ar-btn'), mv = $('mv');
+  const isIOS = (() => { const a = document.createElement('a'); return !!(a.relList && a.relList.supports && a.relList.supports('ar')); })();
+  let isAndroidAR = false;
+  if (navigator.xr && navigator.xr.isSessionSupported) navigator.xr.isSessionSupported('immersive-ar').then(v => { isAndroidAR = v; if (v) prepAR(); }).catch(() => {});
+  const phoneAR = () => isIOS || isAndroidAR;
+  let arURL = null, arPending = null;
+
+  function ensureTexture() {
+    if (tex) return Promise.resolve();
+    return new Promise((res, rej) => new THREE.TextureLoader().load(U.url(poster.img), t => { t.encoding = THREE.sRGBEncoding; t.format = THREE.RGBFormat; tex = t; res(); }, undefined, rej));
+  }
+  function prepAR() {
+    if (!phoneAR() || !window.THREE || !THREE.GLTFExporter) return Promise.resolve();
+    arPending = ensureTexture().then(() => new Promise(res => {
+      const g = makeGroup(true);
+      new THREE.GLTFExporter().parse(g, glb => {
+        if (arURL) URL.revokeObjectURL(arURL);
+        arURL = URL.createObjectURL(new Blob([glb], { type: 'model/gltf-binary' }));
+        mv.addEventListener('load', () => res(), { once: true });
+        mv.src = arURL;
+      }, { binary: true });
+    }));
+    return arPending;
+  }
+  if (isIOS) addEventListener('load', prepAR);
+
+  arBtn.addEventListener('click', async () => {
+    if (phoneAR()) {
+      arBtn.textContent = 'Opening…';
+      try { await (arPending || prepAR()); await mv.activateAR(); }
+      finally { arBtn.textContent = 'View in your room'; }
+      return;
+    }
+    const box = $('ar-qr');
+    box.hidden = !box.hidden;
+    if (!box.hidden && window.QRCode) {
+      const link = new URL(location.href); link.searchParams.set('s', state.size.id); link.searchParams.set('f', state.frame.id);
+      $('qr').innerHTML = '';
+      new QRCode($('qr'), { text: link.href, width: 224, height: 224, colorDark: '#1A1A1A', colorLight: '#F1F2F3', correctLevel: QRCode.CorrectLevel.M });
+    }
+  });
 })();

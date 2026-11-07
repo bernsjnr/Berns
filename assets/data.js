@@ -42,6 +42,12 @@ window.BERNS = {
      keyed "<size>-<frame>", e.g. checkout: { 'a2-oak': 'https://buy.stripe.com/...' }.
      Missing link = the buy button falls back to an email order. */
   posters: [
+    { id: 'mistakes-are-the-portals-of-discovery', name: "Mistakes are the portals of discovery", img: 'assets/posters/mistakes-are-the-portals-of-discovery.webp', edition: 50, checkout: {} },
+    { id: 'love-god-love-people', name: "Love God, love people", img: 'assets/posters/love-god-love-people.webp', edition: 50, checkout: {} },
+    { id: 'home-is-where-the-heart-is', name: "Home is where the heart is", img: 'assets/posters/home-is-where-the-heart-is.webp', edition: 50, checkout: {} },
+    { id: 'dont-get-tired-of-doing-good', name: "Don't get tired of doing good", img: 'assets/posters/dont-get-tired-of-doing-good.webp', edition: 50, checkout: {} },
+    { id: 'day-by-day', name: "Day by day", img: 'assets/posters/day-by-day.webp', edition: 50, checkout: {} },
+    { id: 'in-gods-time', name: "In God's time", img: 'assets/posters/in-gods-time.webp', edition: 50, checkout: {} },
     { id: 'breathe', name: 'Breathe', img: 'assets/posters/breathe.webp', edition: 50, checkout: {} },
     { id: 'pause', name: 'Pause', img: 'assets/posters/pause.webp', edition: 50, checkout: {} },
     { id: 'warmth', name: 'Warmth', img: 'assets/posters/warmth.webp', edition: 50, checkout: {} },

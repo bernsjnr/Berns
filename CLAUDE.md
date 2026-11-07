@@ -7,7 +7,7 @@ Personal site for Berns (Bernard Bannor). "Berns" is the main name; Berns Studio
 - Hand-built static HTML/CSS/JS, hosted on **Hostinger**. Moving off Cargo.
 - Nav: STUDIOS / PRESENTING / SHOP / COMMUNITY / CONTACT.
 - Shop sells Berns's posters. He prints, checks and posts them himself (quality control). Checkout via **Stripe Payment Links** (no cart backend).
-- Shop: the posters are Berns's gradient series (Breathe, Pause, Warmth, Rest is productive, Breath in breath out, No. 5) in `assets/posters/`. The earlier 3D framed-poster viewer (three.js r128) lives in `prototype-v1.html` and can come back on the poster pages.
+- Shop: 12 prints in `assets/posters/` (listed in `assets/data.js`): Mistakes are the portals of discovery, Love God love people, Home is where the heart is, Don't get tired of doing good, Day by day, In God's time, plus the gradient series (Breathe, Pause, Warmth, Rest is productive, Breath in breath out, No. 5). The six typographic posters are only 620px wide for now; swap in high-res files when Berns sends them.
 - Community section: BULLY THE ROADS (co-founder, London running club), Track + Play (co-founder, annual community sports day), Rule of Thirds (one third, creative collective and podcast, ruleofthirds.co.uk).
 - Presenting credits: Guardian Black History Month event (host), Wave and Dave listening party (presenter), BULLY THE ROADS events (host). Formats: launches, panels, listening parties, sports events.
 
@@ -21,6 +21,10 @@ Pages (relative links, works on GitHub Pages under /Berns/ and on Hostinger):
 - `shop/index.html` print grid. `shop/print.html?p=<id>` product page: Print / On the wall / Turn it views (three.js r128 3D, loaded only on that page), size and frame options, live price, buy button.
 
 Shared files: `assets/site.css` (all styles), `assets/site.js` (injects logo, header, clock, bottom nav; reveals; videos play only on screen; Lenis smooth scroll), `assets/data.js` (projects, posters, sizes, frames, prices, credits: edit content here), `assets/print.js` (product page + 3D). Each page sets `<body data-base="../" data-page="shop">`. Media: `assets/work/` (WebP stills), `assets/video/` (muted 1280x720 loops + poster frames), `assets/posters/`.
+
+AR ("View in your room" on the print page): on phones it exports the chosen print, size and frame as a GLB in the browser (three.js GLTFExporter) and opens it with `<model-viewer>` (iPhone: Quick Look, converted to USDZ automatically; Android: WebXR), placed on a wall at real size. On computers it shows a QR code that opens the same print, size and frame on a phone (`?s=` and `?f=` URL params). Needs testing on a real iPhone and Android phone.
+
+Header and bottom nav sit on soft eased white fades with a light blur (no hard bands). Berns found the earlier straight white gradient too harsh.
 
 Shop flow: each poster in `data.js` has `checkout: {}`. Add a Stripe Payment Link per combo, keyed `<size>-<frame>` (e.g. `'a2-oak'`), and the button becomes "Buy now" and opens Stripe. With no link it says "Order by email" and opens a pre-filled email with the print, size, frame and price. Prices are PLACEHOLDERS from v1 (A3 £45, A2 £70, 50x70 £90; frame +£50/+£70/+£85) until Berns confirms.
 

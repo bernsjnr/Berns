@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Print. Berns</title>
-<meta name="description" content="A print from the Berns gradient series.">
+<meta name="description" content="A print by Berns.">
 <!-- Adobe Fonts kit (Scale variable + Neue Haas Grotesk). Loads anywhere, no domain setup. -->
 <link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
 <link rel="stylesheet" href="../assets/site.css">
@@ -23,6 +23,8 @@
     <div class="flat" id="flat"><img id="flat-img" alt=""></div>
     <p class="label hint" id="hint" hidden>Drag to look around</p>
   </div>
+  <model-viewer id="mv" ar ar-modes="webxr quick-look scene-viewer" ar-placement="wall" ar-scale="fixed" loading="eager" alt="" aria-hidden="true"
+    style="position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none"></model-viewer>
   <aside class="panel rv">
     <div style="display:grid;gap:10px">
       <a class="label" href="index.html">Shop / <span id="p-ed"></span></a>
@@ -34,6 +36,8 @@
     <div class="buy">
       <a class="btn" id="buy" href="#">Buy now</a>
       <p class="note" id="buy-note" hidden></p>
+      <button type="button" class="btn line" id="ar-btn">View in your room</button>
+      <div class="note ar-qr" id="ar-qr" hidden><div id="qr"></div><p>Scan with your phone camera to see this print, at real size, on your own wall.</p></div>
     </div>
     <ul class="specs">
       <li><span class="label">Edition</span><span>Signed and numbered by hand</span></li>
@@ -63,6 +67,9 @@
 <script src="../assets/site.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <script src="../assets/print.js" defer></script>
 </body>
 </html>

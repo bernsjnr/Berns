@@ -30,7 +30,7 @@
   window.BERNS_UI = {
     url, media, price, LOGO,
     projectTile: p => `<a class="tile rv" href="${url('studios/project.html?p=' + p.id)}"><div class="media">${media(p)}</div><div class="cap"><b>${p.name}</b><span>${p.discipline}</span></div></a>`,
-    posterTile: p => `<a class="tile rv" href="${url('shop/print.html?p=' + p.id)}"><div class="media tall"><img src="${url(p.img)}" alt="${p.name}, gradient print" loading="lazy" width="1000" height="1416"></div><div class="cap"><b>${p.name}</b><span>From £${Math.min(...D.sizes.map(s => s.price))}</span></div></a>`
+    posterTile: p => `<a class="tile rv" href="${url('shop/print.html?p=' + p.id)}"><div class="media tall"><img src="${url(p.img)}" alt="${p.name}, print" loading="lazy" width="1000" height="1416"></div><div class="cap"><b>${p.name}</b><span>From £${Math.min(...D.sizes.map(s => s.price))}</span></div></a>`
   };
   document.querySelectorAll('[data-render]').forEach(el => {
     const [what, n] = el.dataset.render.split(':');
