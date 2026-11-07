@@ -7,12 +7,12 @@ Personal site for Berns (Bernard Bannor). "Berns" is the main name; Berns Studio
 - Hand-built static HTML/CSS/JS, hosted on **Hostinger**. Moving off Cargo.
 - Nav: STUDIOS / PRESENTING / SHOP / COMMUNITY / CONTACT.
 - Shop sells Berns's posters. He prints, checks and posts them himself (quality control). Checkout via **Stripe Payment Links** (no cart backend).
-- Shop page shows each poster in 3D: framed on a wall with a bench for scale, plus a free-rotate mode showing the back of the frame (signed/numbered label). Built with three.js r128 + OrbitControls.
+- Shop: the posters are Berns's gradient series (Breathe, Pause, Warmth, Rest is productive, Breath in breath out, No. 5) in `assets/posters/`. The earlier 3D framed-poster viewer (three.js r128) lives in `prototype-v1.html` and can come back on the poster pages.
 - Community section: BULLY THE ROADS (co-founder, London running club), Track + Play (co-founder, annual community sports day), Rule of Thirds (one third, creative collective and podcast, ruleofthirds.co.uk).
 - Presenting credits: Guardian Black History Month event (host), Wave and Dave listening party (presenter), BULLY THE ROADS events (host). Formats: launches, panels, listening parties, sports events.
 
 ## Current state
-`index.html` is a single-file prototype: homepage + shop view switched by hash (`#shop`). It uses the Adobe Fonts kit only (stand-ins removed Nov 2026). Work images live in `assets/work/` as 1200px WebP, taken from iCloud Berns Studios > Portfolio.
+`index.html` is v2 (Nov 2026), rebuilt from Berns's references: clean editorial grid, small corner labels, floating rounded cards over full-bleed colour, stacked uppercase type, Atmosphere-style split for Presenting, tall condensed type for Community. Single page, smooth scroll (Lenis via jsdelivr). v1 is kept as `prototype-v1.html`. Adobe Fonts kit only. Work images in `assets/work/` (1200px WebP from iCloud Berns Studios > Portfolio).
 
 Positioning copy: Studios is "my independent studio for design and motion" (web is part of design, not a headline service; no client-sector lists). Presenting leads with "Looking for a host?" and how Berns's world brings creativity and sport together, moderating and keeping the energy up.
 
@@ -42,8 +42,10 @@ Placeholders still to replace: poster artwork (canvas-drawn mock-ups), prices, p
   - Headings: `neue-haas-grotesk-display` 700
   - Body: `neue-haas-grotesk-text` 400, 17px
   - Labels: `neue-haas-grotesk-text` 700, uppercase, letter-spacing 0.16em
-- Luxury minimalist, typography-led, lots of white space. No gradients, no drop shadows. Panels use 12px radius. Dividers are 1px ink.
-- Motion 150-250ms, ease-out, no bounces.
+- Luxury minimalist, typography-led, lots of white space. No drop shadows. Cards and images use 16px radius (24px for big panels). Dividers are 1px.
+- Gradients ARE part of Berns's style (overrides the kit's no-gradient rule for the site): soft, grainy, blurred colour fields with the circle/sun motif, matching his poster series. Palette: Berns Blue plus periwinkle #7A7FE0, lilac #A194C4, peach #F6D9C4, orange #EC6A2C, pink #F07FA8, sky #7EB7D8, navy #2A2560. Animated grain overlay.
+- Type should feel alive: Scale's `wdth` axis is the moving part. BERNS letters widen towards the pointer and breathe in a slow wave when idle; section titles stretch from wdth 50 to 150 as they scroll up; condensed titles widen on hover.
+- Motion is smooth and soft: long ease-out (`cubic-bezier(.22,1,.36,1)`, around 0.7-1.2s), line-by-line text reveals, slow parallax, header hides on scroll down. Always respect prefers-reduced-motion.
 - No phone number anywhere. Never "Ltd" on the site.
 - Voice: first person, direct, warm, concise. No em dashes. British spelling. Intro "Hello, I'm Berns." Sign-off "Let's make something you're proud of."
 
