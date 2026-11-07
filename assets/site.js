@@ -92,6 +92,21 @@
     check();
   }
 
+  /* Home: the portrait turns slightly as you scroll (up to ~7deg by the time the hero has gone), eased so it glides */
+  const portrait = document.querySelector('.hero-portrait');
+  if (portrait && !reduce) {
+    let cur = 0;
+    const turn = () => {
+      const target = Math.min(1, scrollY / innerHeight) * 7;
+      cur += (target - cur) * .12;
+      portrait.style.transform = `rotate(${cur.toFixed(2)}deg)`;
+      if (Math.abs(target - cur) > .01) requestAnimationFrame(turn); else running = false;
+    };
+    let running = false;
+    addEventListener('scroll', () => { if (!running) { running = true; requestAnimationFrame(turn); } }, { passive: true });
+    if (scrollY) { running = true; requestAnimationFrame(turn); }
+  }
+
   /* Cursor: Berns Blue. Breathes at rest, pulses while scrolling, grows on hover. */
   if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
     const root = document.documentElement;
