@@ -19,7 +19,7 @@
 html{-webkit-text-size-adjust:100%}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
-body{background:var(--white);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased;padding-bottom:84px}
+body{background:var(--white);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 img,video{display:block;max-width:100%}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
@@ -35,28 +35,26 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .prose p + p{margin-top:1em}
 .bs-logo{display:block;height:1em;width:10.535em;fill:currentColor}
 
-/* Header */
-.top{position:fixed;inset:0 0 auto;z-index:20;display:flex;justify-content:space-between;align-items:center;
-  padding:var(--pad) max(var(--pad),env(safe-area-inset-left,0px)) 18px;pointer-events:none}
-.top > *{pointer-events:auto}
-.top .home{color:var(--ink)}
-.top .home .bs-logo{font-size:15px}
-.clock{font-variant-numeric:tabular-nums}
-
-/* Soft fades behind the header and nav: an eased white veil with a light blur,
-   masked so it melts away instead of ending in a hard band. */
-.top::before,.nav::before{content:"";position:absolute;left:0;right:0;z-index:-1;pointer-events:none;
-  background:rgba(255,255,255,.82);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
-.top::before{top:0;height:150%;-webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 0%,rgba(0,0,0,.987) 8.1%,rgba(0,0,0,.951) 15.5%,rgba(0,0,0,.896) 22.5%,rgba(0,0,0,.825) 29%,rgba(0,0,0,.741) 35.3%,rgba(0,0,0,.648) 41.2%,rgba(0,0,0,.55) 47.1%,rgba(0,0,0,.45) 52.9%,rgba(0,0,0,.352) 58.8%,rgba(0,0,0,.259) 64.7%,rgba(0,0,0,.175) 71%,rgba(0,0,0,.104) 77.5%,rgba(0,0,0,.049) 84.5%,rgba(0,0,0,.013) 91.9%,rgba(0,0,0,0) 100%);mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 0%,rgba(0,0,0,.987) 8.1%,rgba(0,0,0,.951) 15.5%,rgba(0,0,0,.896) 22.5%,rgba(0,0,0,.825) 29%,rgba(0,0,0,.741) 35.3%,rgba(0,0,0,.648) 41.2%,rgba(0,0,0,.55) 47.1%,rgba(0,0,0,.45) 52.9%,rgba(0,0,0,.352) 58.8%,rgba(0,0,0,.259) 64.7%,rgba(0,0,0,.175) 71%,rgba(0,0,0,.104) 77.5%,rgba(0,0,0,.049) 84.5%,rgba(0,0,0,.013) 91.9%,rgba(0,0,0,0) 100%)}
-.nav::before{bottom:0;height:190%;-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,1) 0%,rgba(0,0,0,.987) 8.1%,rgba(0,0,0,.951) 15.5%,rgba(0,0,0,.896) 22.5%,rgba(0,0,0,.825) 29%,rgba(0,0,0,.741) 35.3%,rgba(0,0,0,.648) 41.2%,rgba(0,0,0,.55) 47.1%,rgba(0,0,0,.45) 52.9%,rgba(0,0,0,.352) 58.8%,rgba(0,0,0,.259) 64.7%,rgba(0,0,0,.175) 71%,rgba(0,0,0,.104) 77.5%,rgba(0,0,0,.049) 84.5%,rgba(0,0,0,.013) 91.9%,rgba(0,0,0,0) 100%);mask-image:linear-gradient(to top,rgba(0,0,0,1) 0%,rgba(0,0,0,.987) 8.1%,rgba(0,0,0,.951) 15.5%,rgba(0,0,0,.896) 22.5%,rgba(0,0,0,.825) 29%,rgba(0,0,0,.741) 35.3%,rgba(0,0,0,.648) 41.2%,rgba(0,0,0,.55) 47.1%,rgba(0,0,0,.45) 52.9%,rgba(0,0,0,.352) 58.8%,rgba(0,0,0,.259) 64.7%,rgba(0,0,0,.175) 71%,rgba(0,0,0,.104) 77.5%,rgba(0,0,0,.049) 84.5%,rgba(0,0,0,.013) 91.9%,rgba(0,0,0,0) 100%)}
-
-/* Bottom nav */
-.nav{position:fixed;inset:auto 0 0;z-index:20;display:grid;grid-template-columns:repeat(5,1fr);text-align:center;
-  padding:28px max(var(--pad),env(safe-area-inset-left,0px)) calc(var(--pad) + env(safe-area-inset-bottom,0px))}
-.nav a{font-family:'scale-variable',var(--f-body);font-variation-settings:'wdth' 100,'wght' 500;font-weight:500;font-size:14px;letter-spacing:.02em;text-transform:uppercase;justify-self:center;position:relative;padding-block:4px}
-.nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleX(0);transition:transform .5s var(--ease)}
-.nav a:hover::after,.nav a.on::after{transform:scaleX(1)}
-@media (max-width:560px){.nav a{font-size:10.5px;letter-spacing:.05em}}
+/* Top bar: BERNARD BANNOR left, nav right, solid white. Same on every page.
+   On the home page it takes over from the hero as you scroll: the nav slides
+   in from its spread-out hero positions, then the name rises into place. */
+:root{--hx:max(clamp(16px,7.5vw,144px),env(safe-area-inset-left,0px));--bar-h:clamp(56px,4.6vw,88px)}
+.bar{position:fixed;inset:0 0 auto;z-index:20;height:calc(var(--bar-h) + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) var(--hx) 0;
+  display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--white);transition:background .5s var(--ease)}
+.bar-name{display:block;overflow:hidden;font-family:'scale-variable',var(--f-head);font-variation-settings:'wdth' 125,'wght' 900;font-weight:900;
+  font-size:clamp(15px,1.45vw,30px);line-height:1;text-transform:uppercase;white-space:nowrap;padding-block:.08em}
+.bar-name span{display:block;transition:transform .8s var(--ease)}
+.bar-nav{display:flex;gap:clamp(14px,2.4vw,48px)}
+.bar-nav a{font-family:'scale-variable',var(--f-body);font-variation-settings:'wdth' 100,'wght' 500;font-weight:500;font-size:clamp(11px,1vw,19px);
+  line-height:1;text-transform:uppercase;position:relative;padding-block:4px;transition:opacity .5s var(--ease)}
+.bar-nav a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .5s var(--ease)}
+.bar-nav a:hover::after,.bar-nav a.on::after{transform:scaleX(1)}
+@media (max-width:520px){.bar-name{font-size:13px;line-height:.92}.bar-name i{display:block}.bar-nav{gap:12px}.bar-nav a{font-size:10.5px}}
+.bar-name i{font-style:normal}
+/* Home, before the takeover */
+body.has-hero:not(.bar-on) .bar{background:transparent;pointer-events:none}
+body.has-hero:not(.bar-on) .bar-nav a{opacity:0}
+body.has-hero:not(.name-on) .bar-name span{transform:translateY(110%)}
 
 /* Heads: centred label + sentence (intro pattern) */
 .intro{min-height:min(52vh,520px);display:grid;place-content:center;justify-items:center;gap:24px;text-align:center;padding:120px var(--pad) 72px}
@@ -168,16 +166,16 @@ a.tile:hover .media img,a.tile:hover .media video{transform:scale(1.025)}
    BERNARD BANNOR bottom left in Scale, line + READ MORE right.
    Sizes are taken from the 3840x2160 artboard as vw.
    ========================================================= */
-.hero{--hx:max(clamp(16px,7.5vw,144px),env(safe-area-inset-left,0px));display:grid;padding:0 var(--hx) clamp(40px,5vw,96px)}
+.hero{display:grid;grid-template-rows:auto 1fr auto;min-height:100vh;min-height:100svh;padding:0 var(--hx) max(24px,9svh)}
 .hero-nav{display:flex;justify-content:space-between;align-items:center;padding-top:clamp(28px,5.6vw,108px)}
 .hero-nav a{font-family:'scale-variable',var(--f-head);font-variation-settings:'wdth' 100,'wght' 500;font-weight:500;font-size:clamp(14px,1.8vw,70px);line-height:1;letter-spacing:0;text-transform:uppercase;position:relative}
 .hero-nav a::after{content:"";position:absolute;left:0;right:0;bottom:-.12em;height:.07em;background:currentColor;transform:scaleX(0);transform-origin:left;transition:transform .6s var(--ease)}
 .hero-nav a:hover::after{transform:scaleX(1)}
-/* Small, square-cornered, black and white: a photobooth print rather than a profile card. Colour comes back on hover. */
-.hero-portrait{justify-self:center;width:clamp(150px,14vw,540px);max-width:100%;aspect-ratio:367/430;margin:clamp(48px,8.6vw,166px) 0 0;border-radius:0;overflow:hidden;background:var(--g3)}
-.hero-portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 22%;filter:grayscale(1) contrast(.92) brightness(1.1);transition:filter 1.2s var(--ease)}
-.hero-portrait:hover img{filter:grayscale(0) contrast(1) brightness(1)}
-.hero-intro{display:grid;grid-template-columns:minmax(0,41.25fr) minmax(0,43.75fr);column-gap:0;align-items:end;margin-top:clamp(56px,6.8vw,132px)}
+/* Small, square-cornered photo, centred in the space between nav and intro. Capped by height so short or landscape screens still fit. */
+.hero-portrait{justify-self:center;align-self:center;width:min(clamp(150px,14vw,540px),calc(34svh * .853));max-width:100%;aspect-ratio:367/430;margin:clamp(24px,5svh,96px) 0;overflow:hidden;background:var(--g3)}
+.hero-portrait img{width:100%;height:100%;object-fit:cover;object-position:50% 62%;transform:scale(1.02);transition:transform 1.4s var(--ease)}
+.hero-portrait:hover img{transform:scale(1.06)}
+.hero-intro{display:grid;grid-template-columns:minmax(0,41.25fr) minmax(0,43.75fr);column-gap:0;align-items:end}
 .hero-name{font-family:'scale-variable','Arial Black',sans-serif;font-variation-settings:'wdth' 125,'wght' 900;font-weight:900;font-size:clamp(44px,5.18vw,199px);line-height:.86;text-transform:uppercase;margin-left:-.04em}
 .hero-side{display:grid;gap:clamp(14px,1.8vw,34px);padding-bottom:.15em;min-width:0}
 .hero-lede{font-family:var(--f-head);font-weight:700;font-size:clamp(20px,2.63vw,101px);line-height:.94;letter-spacing:-.025em;text-wrap:balance}
@@ -186,11 +184,6 @@ a.tile:hover .media img,a.tile:hover .media video{transform:scale(1.025)}
 a.box{transition:background .5s var(--ease)}
 a.box:hover{background:var(--g2)}
 
-/* On the home page the logo header and bottom nav wait until the hero nav has scrolled away */
-body.has-hero .top,body.has-hero .nav{transition:opacity .6s var(--ease),transform .6s var(--ease)}
-body.has-hero:not(.past-hero) .top{opacity:0;pointer-events:none;transform:translateY(-8px)}
-body.has-hero:not(.past-hero) .nav{opacity:0;pointer-events:none;transform:translateY(8px)}
-body.has-hero:not(.past-hero) .top > *,body.has-hero:not(.past-hero) .nav a{pointer-events:none}
 
 /* =========================================================
    Cursor: Berns Blue dot that breathes gently, pulses a
