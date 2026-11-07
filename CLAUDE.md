@@ -12,9 +12,11 @@ Personal site for Berns (Bernard Bannor). "Berns" is the main name; Berns Studio
 - Presenting credits: Guardian Black History Month event (host), Wave and Dave listening party (presenter), BULLY THE ROADS events (host). Formats: launches, panels, listening parties, sports events.
 
 ## Current state
-`index.html` is a single-file prototype: homepage + shop view switched by hash (`#shop`). It was built as a preview, so it uses Google Font stand-ins (Archivo, Inter Tight) alongside the real Typekit kit. On the live site, drop the stand-ins and rely on the kit.
+`index.html` is a single-file prototype: homepage + shop view switched by hash (`#shop`). It uses the Adobe Fonts kit only (stand-ins removed Nov 2026). Work images live in `assets/work/` as 1200px WebP, taken from iCloud Berns Studios > Portfolio.
 
-Placeholders still to replace: poster artwork (canvas-drawn mock-ups), prices, paper/edition specs, project images, showreel, BULLY THE ROADS and Track + Play links, Instagram/LinkedIn links.
+Positioning copy: Studios is "my independent studio for design and motion" (web is part of design, not a headline service; no client-sector lists). Presenting leads with "Looking for a host?" and how Berns's world brings creativity and sport together, moderating and keeping the energy up.
+
+Placeholders still to replace: poster artwork (canvas-drawn mock-ups), prices, paper/edition specs, case-study pages, showreel, BULLY THE ROADS and Track + Play links, Instagram/LinkedIn links.
 
 ## Next steps
 1. Split into real pages: `/`, `/studios`, `/presenting`, `/shop`, `/shop/<poster>`, `/community`, `/contact`.
@@ -25,18 +27,20 @@ Placeholders still to replace: poster artwork (canvas-drawn mock-ups), prices, p
 6. Deploy to Hostinger, point bernsds.com at it, then cancel Cargo.
 
 ## Brand (2026 identity) — follow exactly
-- Colours: Berns Blue `#080CDF`, ink `#1A1A1A` (never #000), paper `#F3F1EC`, stone `#D6D2C8`, white. Old blue #0E50C8 and old greys are retired.
-- Blue is the signature: full ground for covers/footers/dividers; elsewhere an accent only. No blue text on ink.
+- Source of truth: the 2026 Brand Kit in iCloud (Berns Studios > Branding > 2026 Brand Kit): `Berns Studios Type.css`, logo SVGs, and the Client Guide, Design Agreement, Invoice and email signature templates. Match those.
+- Colours: Berns Blue `#080CDF`, ink `#1A1A1A` (never #000), white, grey-1 `#8A9095`, grey-2 `#E8E9EA` (rules, hover), grey-3 `#F1F2F3` (boxes, image backgrounds). Old blue #0E50C8 is retired. Paper and stone are not in the kit; don't use them.
+- Blue is the signature: full ground for covers/footers/dividers and the Berns Studios panel; elsewhere an accent only. No blue text on ink.
+- Logo: the BERNS studios logo artwork (SVG symbol from the kit templates, `fill:currentColor`), white on blue. Don't rebuild it from live type.
 - Text is solid ink on light, solid white on blue/ink. Never grey or faded.
 - Fonts (Adobe Fonts kit `https://use.typekit.net/tdx4jgk.css`, web project BERNS; never download the font files):
   - The kit has no domain list. It loads on any site and on a local file (tested Nov 2026, Safari engine and Chrome). Nothing to set up for bernsds.com.
   - After changing fonts in the Adobe project, press Save Changes to republish. The kit CSS shows `last_published` at the top.
   - It won't load inside a Claude artifact (blocked by the viewer). Preview by opening `index.html` locally instead.
   - Kit contents: `scale-variable` (wght 200-900, wdth 50-175, set width with `font-variation-settings`), `neue-haas-grotesk-display` 400 (this is 45 Light) and 700, `neue-haas-grotesk-text` 400 and 700, all with italics.
-  - Titles: `scale-variable`, bold, uppercase, wide (wdth ~150-175)
+  - Titles: `scale-variable`, uppercase, `wdth 125, wght 700` (kit value)
   - Wordmark: BERNS in Scale at `wdth 125, wght 900`; "studios" in NHG Text Bold lowercase
   - Headings: `neue-haas-grotesk-display` 700
-  - Body: `neue-haas-grotesk-text` 400
+  - Body: `neue-haas-grotesk-text` 400, 17px
   - Labels: `neue-haas-grotesk-text` 700, uppercase, letter-spacing 0.16em
 - Luxury minimalist, typography-led, lots of white space. No gradients, no drop shadows. Panels use 12px radius. Dividers are 1px ink.
 - Motion 150-250ms, ease-out, no bounces.

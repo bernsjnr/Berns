@@ -3,28 +3,26 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <!-- Adobe Fonts kit (Scale + Neue Haas Grotesk). No domain setup needed; loads anywhere, including a local file. -->
 <link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
-<!-- Preview stand-ins only (the artifact sandbox blocks Typekit) -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Inter+Tight:wght@400;500;700&display=swap">
 <style>
-/* Layout: white page, typography-led. Giant BERNS wordmark, stone and ink panels, one blue footer as the back cover. */
+/* Layout: white page, typography-led (2026 brand kit). Giant BERNS wordmark, blue Studios panel, ink Presenting panel, grey-3 boxes, blue footer as the back cover. */
 :root{
-  --blue:#080CDF; --ink:#1A1A1A; --paper:#F3F1EC; --stone:#D6D2C8; --white:#FFFFFF;
-  --f-title:'scale-variable','Archivo','Arial Black',Arial,sans-serif;
-  --f-head:'neue-haas-grotesk-display','Helvetica Neue',Helvetica,'Inter Tight',Arial,sans-serif;
-  --f-body:'neue-haas-grotesk-text','Helvetica Neue',Helvetica,'Inter Tight',Arial,sans-serif;
+  --blue:#080CDF; --ink:#1A1A1A; --g1:#8A9095; --g2:#E8E9EA; --g3:#F1F2F3; --white:#FFFFFF;
+  --f-title:'scale-variable','Helvetica Neue',Arial,sans-serif;
+  --f-head:'neue-haas-grotesk-display','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --f-body:'neue-haas-grotesk-text','Helvetica Neue',Helvetica,Arial,sans-serif;
   --r:12px; --max:1280px;
   --ease:cubic-bezier(.2,.7,.2,1);
   color-scheme:light;
 }
 *{box-sizing:border-box}
-body{background:var(--white);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+body{background:var(--white);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
 a{color:inherit}
 img{max-width:100%;display:block}
 .wrap{max-width:var(--max);margin:0 auto;padding-left:max(24px,env(safe-area-inset-left,0px));padding-right:max(24px,env(safe-area-inset-right,0px))}
 @media (max-width:480px){.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}}
 
 /* Type roles */
-.title{font-family:var(--f-title);font-weight:900;font-variation-settings:'wdth' 150,'wght' 900;font-stretch:125%;text-transform:uppercase;line-height:.9;letter-spacing:0;margin:0}
+.title{font-family:var(--f-title);font-weight:700;font-variation-settings:'wdth' 125,'wght' 700;text-transform:uppercase;line-height:.92;letter-spacing:-.01em;margin:0}
 .h{font-family:var(--f-head);font-weight:700;line-height:1.1;letter-spacing:-.01em;margin:0;text-wrap:balance}
 .label{font-family:var(--f-body);font-weight:700;font-size:11px;line-height:16px;letter-spacing:.16em;text-transform:uppercase;margin:0}
 .lede{font-family:var(--f-head);font-weight:700;font-size:clamp(24px,3.2vw,40px);line-height:1.12;letter-spacing:-.015em;max-width:22ch;margin:0;text-wrap:balance}
@@ -33,8 +31,11 @@ p{margin:0;max-width:62ch}
 
 /* Wordmark */
 .wm{display:inline-flex;align-items:baseline;gap:.28em;text-decoration:none;white-space:nowrap}
-.wm b{font-family:var(--f-title);font-weight:900;font-variation-settings:'wdth' 125,'wght' 900;font-stretch:125%;letter-spacing:0}
+.wm b{font-family:var(--f-title);font-weight:900;font-variation-settings:'wdth' 125,'wght' 900;letter-spacing:0}
 .wm span{font-family:var(--f-body);font-weight:700;text-transform:lowercase}
+
+/* Logo (2026 brand kit artwork) */
+.bs-logo{display:block;height:1em;width:10.535em;max-width:100%;fill:currentColor;overflow:visible}
 
 /* Header */
 .site-header{padding-block:24px}
@@ -60,7 +61,7 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offse
 .hero-top{display:grid;grid-template-columns:1fr auto;gap:32px;align-items:end}
 .hero-meta{display:grid;gap:6px;text-align:right}
 .giant{margin-top:clamp(40px,7vw,96px);line-height:.78;white-space:nowrap;overflow:hidden;padding-bottom:.02em}
-.giant span{display:inline-block;font-family:var(--f-title);font-weight:900;font-variation-settings:'wdth' 125,'wght' 900;font-stretch:125%;font-size:24vw;letter-spacing:-.01em}
+.giant span{display:inline-block;font-family:var(--f-title);font-weight:900;font-variation-settings:'wdth' 125,'wght' 900;font-size:24vw;letter-spacing:-.01em}
 @media (max-width:720px){.hero-top{grid-template-columns:1fr}.hero-meta{text-align:left}}
 
 section{scroll-margin-top:16px}
@@ -72,21 +73,22 @@ section{scroll-margin-top:16px}
 .doors{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-top:clamp(48px,6vw,80px)}
 .door{border-radius:var(--r);padding:clamp(24px,3.5vw,48px);display:flex;flex-direction:column;gap:20px;min-height:340px;min-width:0}
 .door .grow{flex:1}
-.door-studios{background:var(--stone)}
-.door-studios .wm b{font-size:clamp(28px,4vw,48px)}
-.door-studios .wm span{font-size:clamp(28px,4vw,48px)}
+.door-studios{background:var(--blue);color:var(--white)}
+.door-studios .bs-logo{font-size:clamp(26px,3.6vw,44px);max-width:100%}
+.door .h{font-size:clamp(28px,4vw,48px)}
 .door-present{background:var(--ink);color:var(--white)}
-.door-present .h{font-size:clamp(28px,4vw,48px)}
 @media (max-width:760px){.doors{grid-template-columns:1fr}}
 
 /* Work */
-.work{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.work{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,24px) 16px}
 .tile{display:grid;gap:12px;text-decoration:none;min-width:0}
-.ph{aspect-ratio:4/5;border-radius:var(--r);background:var(--paper);display:grid;place-items:center;overflow:hidden;transition:background .2s var(--ease)}
-.tile:hover .ph{background:var(--stone)}
+.ph{aspect-ratio:16/9;border-radius:var(--r);background:var(--g3);display:grid;place-items:center;overflow:hidden;transition:background .2s var(--ease)}
+.ph img{width:100%;height:100%;object-fit:cover;transition:transform .25s var(--ease)}
+.tile:hover .ph img{transform:scale(1.02)}
 .tile .h{font-size:18px}
 @media (max-width:960px){.work{grid-template-columns:repeat(2,1fr)}}
-.services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
+@media (max-width:560px){.work{grid-template-columns:1fr}}
+.services{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:56px}
 .svc{border-top:1px solid var(--ink);padding-top:16px;display:grid;gap:8px;align-content:start}
 .svc .h{font-size:22px}
 @media (max-width:760px){.services{grid-template-columns:1fr}}
@@ -109,8 +111,8 @@ section{scroll-margin-top:16px}
 
 /* Shop teaser */
 .posters{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.poster-card{background:var(--paper);border-radius:var(--r);padding:clamp(16px,2.5vw,32px);display:grid;gap:16px;text-decoration:none;min-width:0;transition:background .2s var(--ease)}
-.poster-card:hover{background:var(--stone)}
+.poster-card{background:var(--g3);border-radius:var(--r);padding:clamp(16px,2.5vw,32px);display:grid;gap:16px;text-decoration:none;min-width:0;transition:background .2s var(--ease)}
+.poster-card:hover{background:var(--g2)}
 .poster-card img{aspect-ratio:1/1.414;width:100%;object-fit:cover;outline:1px solid rgba(26,26,26,.12)}
 .poster-card .row{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
 .poster-card .h{font-size:16px}
@@ -119,6 +121,7 @@ section{scroll-margin-top:16px}
 /* Community */
 .comm{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .comm-item{border-top:1px solid var(--ink);padding-top:20px;display:grid;gap:14px;align-content:start;min-width:0}
+.comm-item .ph{aspect-ratio:16/9}
 .comm-item .title{font-size:clamp(22px,2.4vw,30px);line-height:1}
 @media (max-width:860px){.comm{grid-template-columns:1fr}}
 
@@ -128,7 +131,7 @@ section{scroll-margin-top:16px}
 .contact-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:40px}
 .email{font-family:var(--f-head);font-weight:700;font-size:clamp(20px,2.4vw,28px);user-select:all;margin-right:8px}
 .foot-base{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline;border-top:1px solid var(--white);margin-top:clamp(56px,8vw,112px);padding-top:20px}
-.foot-base .wm b,.foot-base .wm span{font-size:15px}
+.foot-base .bs-logo{font-size:15px}
 .socials{display:flex;gap:24px;flex-wrap:wrap}
 .socials a{text-decoration:none}
 
@@ -136,7 +139,7 @@ section{scroll-margin-top:16px}
 .shop-head{padding-block:clamp(32px,5vw,64px) 32px;display:grid;gap:16px}
 .shop-head .title{font-size:clamp(48px,10vw,140px)}
 .shop{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:clamp(16px,3vw,48px);align-items:start}
-.stage{position:relative;border-radius:var(--r);overflow:hidden;background:var(--paper);height:clamp(440px,72vh,780px);touch-action:none}
+.stage{position:relative;border-radius:var(--r);overflow:hidden;background:var(--g3);height:clamp(440px,72vh,780px);touch-action:none}
 .stage canvas{display:block;width:100%;height:100%;cursor:grab}
 .stage canvas:active{cursor:grabbing}
 .stage-ui{position:absolute;left:16px;right:16px;top:16px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;pointer-events:none}
@@ -161,8 +164,8 @@ section{scroll-margin-top:16px}
 .specs li:last-child{border-bottom:1px solid var(--ink)}
 .buy{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .picker{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px}
-.pick{border:0;background:var(--paper);border-radius:var(--r);padding:16px;display:grid;gap:12px;text-align:left;cursor:pointer;font:inherit;color:inherit;transition:background .2s var(--ease)}
-.pick:hover{background:var(--stone)}
+.pick{border:0;background:var(--g3);border-radius:var(--r);padding:16px;display:grid;gap:12px;text-align:left;cursor:pointer;font:inherit;color:inherit;transition:background .2s var(--ease)}
+.pick:hover{background:var(--g2)}
 .pick img{aspect-ratio:1/1.414;width:100%}
 .pick[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--blue)}
 .pick .h{font-size:15px}
@@ -173,6 +176,66 @@ section{scroll-margin-top:16px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 </style>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+<g>
+<g id="bsg-0-0">
+<path d="M 14.40625 -234.625 L 207.46875 -234.625 C 231.15625 -234.625 251.429688 -233.171875 268.296875 -230.265625 C 285.171875 -227.359375 298.859375 -221.546875 309.359375 -212.828125 C 319.859375 -204.117188 325.109375 -191.492188 325.109375 -174.953125 C 325.109375 -156.859375 318.960938 -143.171875 306.671875 -133.890625 C 294.390625 -124.617188 277.859375 -119.984375 257.078125 -119.984375 L 257.078125 -116.96875 C 272.710938 -116.96875 286.335938 -115.40625 297.953125 -112.28125 C 309.578125 -109.15625 318.910156 -103.679688 325.953125 -95.859375 C 332.992188 -88.035156 336.515625 -77.421875 336.515625 -64.015625 C 336.515625 -49.046875 331.597656 -36.8125 321.765625 -27.3125 C 311.929688 -17.820312 297.570312 -10.894531 278.6875 -6.53125 C 259.8125 -2.175781 236.410156 0 208.484375 0 L 14.40625 0 Z M 118.65625 -58.65625 L 183.34375 -58.65625 C 193.613281 -58.65625 200.925781 -59.828125 205.28125 -62.171875 C 209.644531 -64.515625 211.828125 -68.925781 211.828125 -75.40625 C 211.828125 -81.894531 209.757812 -86.476562 205.625 -89.15625 C 201.488281 -91.832031 194.507812 -93.171875 184.6875 -93.171875 L 128.703125 -93.171875 L 128.703125 -142.78125 L 177.3125 -142.78125 C 186.019531 -142.78125 192.441406 -144.117188 196.578125 -146.796875 C 200.710938 -149.484375 202.78125 -153.84375 202.78125 -159.875 C 202.78125 -165.90625 200.597656 -170.207031 196.234375 -172.78125 C 191.878906 -175.351562 185.007812 -176.640625 175.625 -176.640625 L 118.65625 -176.640625 L 133.734375 -195.0625 L 133.734375 -40.21875 Z M 118.65625 -58.65625 "/>
+</g>
+<g id="bsg-0-1">
+<path d="M 14.40625 -234.625 L 277.1875 -234.625 L 277.1875 -159.875 L 134.0625 -159.875 L 134.0625 -143.78125 L 270.15625 -143.78125 L 270.15625 -92.5 L 134.0625 -92.5 L 134.0625 -74.75 L 277.1875 -74.75 L 277.1875 0 L 14.40625 0 Z M 14.40625 -234.625 "/>
+</g>
+<g id="bsg-0-2">
+<path d="M 14.40625 -234.625 L 203.453125 -234.625 C 233.617188 -234.625 258.140625 -232.441406 277.015625 -228.078125 C 295.898438 -223.722656 310.035156 -216.40625 319.421875 -206.125 C 328.804688 -195.851562 333.5 -181.78125 333.5 -163.90625 C 333.5 -149.375 330.476562 -136.96875 324.4375 -126.6875 C 318.40625 -116.414062 308.96875 -108.597656 296.125 -103.234375 C 283.28125 -97.867188 266.910156 -95.1875 247.015625 -95.1875 L 247.015625 -92.171875 C 265.566406 -92.390625 280.367188 -90.988281 291.421875 -87.96875 C 302.484375 -84.957031 311.195312 -80.046875 317.5625 -73.234375 C 323.9375 -66.421875 328.800781 -57.09375 332.15625 -45.25 L 345.234375 0 L 221.890625 0 L 211.15625 -42.90625 C 209.59375 -48.707031 207.691406 -53.226562 205.453125 -56.46875 C 203.222656 -59.71875 200.375 -62.007812 196.90625 -63.34375 C 193.445312 -64.6875 188.8125 -65.359375 183 -65.359375 L 133.734375 -65.359375 L 133.734375 0 L 14.40625 0 Z M 190.71875 -123.671875 C 198.09375 -123.671875 203.675781 -125.066406 207.46875 -127.859375 C 211.269531 -130.660156 213.171875 -135.410156 213.171875 -142.109375 C 213.171875 -146.578125 212.273438 -150.207031 210.484375 -153 C 208.703125 -155.800781 206.132812 -157.867188 202.78125 -159.203125 C 199.425781 -160.546875 195.289062 -161.21875 190.375 -161.21875 L 133.734375 -161.21875 L 133.734375 -123.671875 Z M 190.71875 -123.671875 "/>
+</g>
+<g id="bsg-0-3">
+<path d="M 14.40625 -234.625 L 125.015625 -234.625 L 264.109375 -102.234375 L 239.3125 -102.234375 L 239.3125 -234.625 L 346.5625 -234.625 L 346.5625 0 L 236.625 0 L 97.53125 -137.078125 L 121.671875 -137.078125 L 121.671875 0 L 14.40625 0 Z M 14.40625 -234.625 "/>
+</g>
+<g id="bsg-0-4">
+<path d="M 170.609375 4.359375 C 135.523438 4.359375 106.640625 1.625 83.953125 -3.84375 C 61.273438 -9.320312 43.507812 -17.867188 30.65625 -29.484375 C 17.8125 -41.109375 8.929688 -56.640625 4.015625 -76.078125 L 128.03125 -76.078125 C 129.375 -71.160156 131.5 -67.191406 134.40625 -64.171875 C 137.3125 -61.160156 142.113281 -58.757812 148.8125 -56.96875 C 155.519531 -55.1875 165.019531 -54.296875 177.3125 -54.296875 C 191.164062 -54.296875 200.828125 -55.410156 206.296875 -57.640625 C 211.773438 -59.878906 214.515625 -63.125 214.515625 -67.375 C 214.515625 -70.945312 212.054688 -73.679688 207.140625 -75.578125 C 202.222656 -77.484375 196.019531 -78.828125 188.53125 -79.609375 C 181.050781 -80.390625 170.046875 -81.335938 155.515625 -82.453125 C 126.691406 -84.679688 102.503906 -87.640625 82.953125 -91.328125 C 63.398438 -95.015625 46.25 -102.273438 31.5 -113.109375 C 16.757812 -123.953125 9.390625 -139.539062 9.390625 -159.875 C 9.390625 -175.289062 14.25 -188.863281 23.96875 -200.59375 C 33.6875 -212.332031 50.382812 -221.71875 74.0625 -228.75 C 97.75 -235.789062 129.484375 -239.3125 169.265625 -239.3125 C 202.554688 -239.3125 230.648438 -236.570312 253.546875 -231.09375 C 276.453125 -225.625 294.382812 -216.800781 307.34375 -204.625 C 320.3125 -192.445312 327.6875 -176.414062 329.46875 -156.53125 L 211.828125 -156.53125 C 210.929688 -161.882812 209.03125 -166.125 206.125 -169.25 C 203.226562 -172.382812 198.59375 -174.789062 192.21875 -176.46875 C 185.851562 -178.144531 176.972656 -178.984375 165.578125 -178.984375 C 155.960938 -178.984375 148.414062 -178.421875 142.9375 -177.296875 C 137.46875 -176.179688 133.785156 -174.785156 131.890625 -173.109375 C 129.992188 -171.441406 129.046875 -169.601562 129.046875 -167.59375 C 129.046875 -163.789062 131.554688 -160.828125 136.578125 -158.703125 C 141.609375 -156.578125 148.035156 -155.066406 155.859375 -154.171875 C 163.679688 -153.285156 175.078125 -152.28125 190.046875 -151.15625 C 218.640625 -149.375 242.597656 -146.691406 261.921875 -143.109375 C 281.253906 -139.535156 298.128906 -132.332031 312.546875 -121.5 C 326.960938 -110.664062 334.171875 -94.859375 334.171875 -74.078125 C 334.171875 -58.660156 329.363281 -45.195312 319.75 -33.6875 C 310.144531 -22.175781 293.273438 -12.957031 269.140625 -6.03125 C 245.003906 0.894531 212.160156 4.359375 170.609375 4.359375 Z M 170.609375 4.359375 "/>
+</g>
+<g id="bsg-1-0">
+<path d="M 72.5 4.515625 C 109.15625 4.515625 136.234375 -11.421875 136.234375 -41.96875 C 136.234375 -77.546875 107.5625 -84.1875 82.328125 -88.703125 C 62.9375 -92.15625 47.53125 -93.75 47.53125 -104.375 C 47.53125 -113.40625 55.765625 -118.71875 68.515625 -118.71875 C 81.796875 -118.71875 89.765625 -113.671875 92.421875 -103.578125 L 131.203125 -103.578125 C 127.484375 -128.28125 107.828125 -145.265625 68.515625 -145.265625 C 35.328125 -145.265625 9.03125 -130.140625 9.03125 -101.1875 C 9.03125 -68.25 34.53125 -61.875 59.75 -57.09375 C 79.40625 -53.375 96.140625 -51.78125 96.140625 -39.046875 C 96.140625 -28.953125 87.640625 -22.84375 72.765625 -22.84375 C 56.5625 -22.84375 46.46875 -30.28125 44.09375 -43.5625 L 4.78125 -43.5625 C 6.90625 -15.140625 31.609375 4.515625 72.5 4.515625 Z M 72.5 4.515625 "/>
+</g>
+<g id="bsg-1-1">
+<path d="M 5.578125 -114.734375 L 26.828125 -114.734375 L 26.828125 -35.59375 C 26.828125 -6.90625 44.609375 1.59375 70.90625 1.59375 C 82.0625 1.59375 90.5625 0.265625 95.078125 -0.53125 L 95.078125 -31.609375 L 92.953125 -31.609375 C 90.296875 -31.34375 86.046875 -31.078125 83.390625 -31.078125 C 73.5625 -31.078125 67.71875 -34 67.71875 -44.609375 L 67.71875 -114.734375 L 95.34375 -114.734375 L 95.34375 -141.28125 L 67.71875 -141.28125 L 67.71875 -186.4375 L 26.828125 -186.4375 L 26.828125 -141.28125 L 5.578125 -141.28125 Z M 5.578125 -114.734375 "/>
+</g>
+<g id="bsg-1-2">
+<path d="M 145.265625 0 L 145.265625 -141.28125 L 104.109375 -141.28125 L 104.109375 -61.34375 C 104.109375 -43.828125 93.75 -31.078125 77.015625 -31.078125 C 62.140625 -31.078125 54.4375 -40.109375 54.4375 -55.765625 L 54.4375 -141.28125 L 12.75 -141.28125 L 12.75 -47.796875 C 12.75 -16.734375 30.28125 3.984375 62.40625 3.984375 C 81.796875 3.984375 94.546875 -3.71875 104.90625 -20.1875 L 105.703125 -20.1875 L 105.703125 0 Z M 145.265625 0 "/>
+</g>
+<g id="bsg-1-3">
+<path d="M 67.71875 4.515625 C 86.84375 4.515625 102.515625 -3.453125 110.75 -20.71875 L 111.28125 -20.71875 L 111.28125 0 L 151.375 0 L 151.375 -197.59375 L 109.6875 -197.59375 L 109.6875 -154.296875 C 109.6875 -142.34375 110.21875 -130.40625 110.75 -121.640625 L 110.21875 -121.640625 C 100.65625 -136.234375 87.640625 -145.265625 68.25 -145.265625 C 31.609375 -145.265625 7.171875 -113.9375 7.171875 -70.640625 C 7.171875 -23.90625 31.078125 4.515625 67.71875 4.515625 Z M 78.875 -28.953125 C 59.484375 -28.953125 49.65625 -45.40625 49.65625 -70.90625 C 49.65625 -96.140625 59.484375 -113.671875 79.140625 -113.671875 C 100.65625 -113.671875 111.015625 -95.609375 111.015625 -70.640625 C 111.015625 -45.9375 99.0625 -28.953125 78.875 -28.953125 Z M 78.875 -28.953125 "/>
+</g>
+<g id="bsg-1-4">
+<path d="M 13.546875 -161.203125 L 55.765625 -161.203125 L 55.765625 -197.59375 L 13.546875 -197.59375 Z M 13.8125 0 L 55.5 0 L 55.5 -141.28125 L 13.8125 -141.28125 Z M 13.8125 0 "/>
+</g>
+<g id="bsg-1-5">
+<path d="M 82.0625 4.515625 C 126.953125 4.515625 156.421875 -28.15625 156.421875 -70.375 C 156.421875 -112.875 126.953125 -145.265625 82.0625 -145.265625 C 36.921875 -145.265625 7.171875 -112.875 7.171875 -70.375 C 7.171875 -28.15625 36.921875 4.515625 82.0625 4.515625 Z M 81.796875 -25.765625 C 60.546875 -25.765625 49.390625 -43.828125 49.390625 -70.375 C 49.390625 -97.203125 60.546875 -115.53125 81.796875 -115.53125 C 102.515625 -115.53125 114.203125 -97.203125 114.203125 -70.375 C 114.203125 -43.828125 102.515625 -25.765625 81.796875 -25.765625 Z M 81.796875 -25.765625 "/>
+</g>
+</g>
+<symbol id="bs-logo" viewBox="630.98 930.87 2578.01 244.70">
+<g fill="currentColor" fill-opacity="1">
+<use href="#bsg-0-0" x="616.9062" y="1170.2813"/>
+</g>
+<g fill="currentColor" fill-opacity="1">
+<use href="#bsg-0-1" x="949.396526" y="1170.2813"/>
+<use href="#bsg-0-2" x="1221.220775" y="1170.2813"/>
+<use href="#bsg-0-3" x="1557.062818" y="1170.2813"/>
+</g>
+<g fill="currentColor" fill-opacity="1">
+<use href="#bsg-0-4" x="1906.31173" y="1170.2813"/>
+</g>
+<g fill="currentColor" fill-opacity="1">
+<use href="#bsg-1-0" x="2304.5469" y="1160.5625"/>
+</g>
+<g fill="currentColor" fill-opacity="1">
+<use href="#bsg-1-1" x="2438.401034" y="1160.5625"/>
+<use href="#bsg-1-2" x="2536.401383" y="1160.5625"/>
+<use href="#bsg-1-3" x="2690.174287" y="1160.5625"/>
+<use href="#bsg-1-4" x="2850.055614" y="1160.5625"/>
+<use href="#bsg-1-5" x="2914.061262" y="1160.5625"/>
+<use href="#bsg-1-0" x="3072.349088" y="1160.5625"/>
+</g>
+</symbol></defs></svg>
 <header class="site-header">
   <div class="wrap">
     <a class="wm" href="#home" aria-label="Berns, home"><b>BERNS</b></a>
@@ -195,7 +258,7 @@ section{scroll-margin-top:16px}
       <div class="hero-top">
         <div style="display:grid;gap:20px">
           <div class="rule"></div>
-          <h1 class="lede">Hello, I'm Berns. I design brands, motion and websites, and I host the rooms where people come together.</h1>
+          <h1 class="lede">Hello, I'm Berns. I design and animate brands, and I host the rooms where creativity and sport meet.</h1>
         </div>
         <div class="hero-meta">
           <p class="label">Designer and presenter</p>
@@ -206,15 +269,15 @@ section{scroll-margin-top:16px}
 
       <div class="doors">
         <article class="door door-studios">
-          <p class="label">Design</p>
-          <div class="wm"><b>BERNS</b><span>studios</span></div>
-          <p class="grow">My independent studio. Brand identity, motion and web for music, hospitality, sport, the arts, faith and community groups.</p>
+          <p class="label">Design / Motion</p>
+          <svg class="bs-logo" viewBox="0 0 2578.01 244.70" role="img" aria-label="Berns Studios"><use href="#bs-logo"/></svg>
+          <p class="grow">My independent studio for design and motion.</p>
           <a class="go" href="#studios">See the work</a>
         </article>
         <article class="door door-present">
           <p class="label">Presenting</p>
-          <h2 class="h">Host. MC. Moderator.</h2>
-          <p class="grow">Launches, panels, listening parties and sports events. I keep the room warm and the run of show tight.</p>
+          <h2 class="h">Looking for a host?</h2>
+          <p class="grow">My world brings creativity and sport together. If you need someone to moderate the conversation and keep the energy up, let's talk.</p>
           <a class="go" href="#presenting">Book me for your event</a>
         </article>
       </div>
@@ -225,18 +288,19 @@ section{scroll-margin-top:16px}
     <div class="wrap">
       <div class="sec-head">
         <h2 class="title">Studios</h2>
-        <p class="label">Selected work</p>
+        <p class="label">Design / Motion</p>
       </div>
       <div class="work">
-        <a class="tile" href="#studios"><div class="ph"><span class="label">Image</span></div><h3 class="h">Grace Baptist Church</h3><p class="label">Brand identity · Web</p></a>
-        <a class="tile" href="#studios"><div class="ph"><span class="label">Image</span></div><h3 class="h">ReRooted</h3><p class="label">Motion</p></a>
-        <a class="tile" href="#studios"><div class="ph"><span class="label">Image</span></div><h3 class="h">ILUMO Kenya</h3><p class="label">Illustration</p></a>
-        <a class="tile" href="#studios"><div class="ph"><span class="label">Image</span></div><h3 class="h">The Way</h3><p class="label">Web</p></a>
+        <a class="tile" href="#studios"><div class="ph"><img src="assets/work/together.webp" alt="TOGETHER" width="1200" height="675"></div><h3 class="h">TOGETHER for The Guardian Advertising</h3><p class="label">Brand identity / Motion</p></a>
+        <a class="tile" href="#studios"><div class="ph"><img src="assets/work/this-bed-i-made.webp" alt="This Bed I Made" width="1200" height="675"></div><h3 class="h">This Bed I Made</h3><p class="label">Title design / Motion</p></a>
+        <a class="tile" href="#studios"><div class="ph"><img src="assets/work/nteriors.webp" alt="NTERIORS" width="1200" height="675"></div><h3 class="h">NTERIORS</h3><p class="label">Brand identity</p></a>
+        <a class="tile" href="#studios"><div class="ph"><img src="assets/work/monzo-guardian-labs.webp" alt="Monzo" width="1200" height="675"></div><h3 class="h">Monzo for The Guardian Labs</h3><p class="label">Advertising design</p></a>
+        <a class="tile" href="#studios"><div class="ph"><img src="assets/work/everyone-wants-posters.webp" alt="Everyone Wants Posters" width="1200" height="675"></div><h3 class="h">Everyone Wants Posters</h3><p class="label">Poster design</p></a>
+        <a class="tile" href="#studios"><div class="ph"><img src="assets/work/track-and-play.webp" alt="Track + Play" width="1200" height="675"></div><h3 class="h">Track + Play</h3><p class="label">Logo animation</p></a>
       </div>
       <div class="services">
-        <div class="svc"><h3 class="h">Brand identity</h3><p>Logos, colour, typography, imagery direction and brand books your team can actually use.</p></div>
-        <div class="svc"><h3 class="h">Motion</h3><p>Animated logos, social content, title sequences and motion systems that bring a brand to life on screen.</p></div>
-        <div class="svc"><h3 class="h">Web</h3><p>Websites that carry your identity online, built to be clear, fast and easy to update.</p></div>
+        <div class="svc"><h3 class="h">Design</h3><p>Brand identities, art direction, campaigns and the websites that carry them.</p></div>
+        <div class="svc"><h3 class="h">Motion</h3><p>Animated logos, title sequences, social content and motion systems that bring a brand to life on screen.</p></div>
       </div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:40px">
         <a class="btn btn-blue" href="#contact">Start a project</a>
@@ -249,12 +313,12 @@ section{scroll-margin-top:16px}
     <div class="wrap">
       <div class="sec-head">
         <h2 class="title">Presenting</h2>
-        <p class="label">Host · MC · Moderator</p>
+        <p class="label">Looking for a host?</p>
       </div>
       <div class="present-grid">
         <div class="reel"><span class="label">Showreel</span><div class="play" aria-hidden="true"></div></div>
         <div>
-          <p class="lede" style="font-size:clamp(22px,2.4vw,30px);max-width:26ch">I bring a designer's eye for detail and a host's feel for the room.</p>
+          <p class="lede" style="font-size:clamp(22px,2.4vw,30px);max-width:26ch">My world brings creativity and sport together. I moderate the conversation and keep the energy up.</p>
           <ul class="credits">
             <li><span class="h">Guardian Black History Month</span><span class="label">Host</span></li>
             <li><span class="h">Wave and Dave listening party</span><span class="label">Presenter</span></li>
@@ -286,18 +350,21 @@ section{scroll-margin-top:16px}
       <div class="comm">
         <article class="comm-item">
           <p class="label">Co-founder</p>
+          <div class="ph"><img src="assets/work/bully-the-roads.webp" alt="BULLY THE ROADS runners at the track" width="1200" height="675"></div>
           <h3 class="title">Bully the Roads</h3>
           <p>A grassroots London running club. Weekly runs, big energy, everyone welcome whatever your pace.</p>
           <a class="go" href="#community">Run with us</a>
         </article>
         <article class="comm-item">
           <p class="label">Co-founder</p>
+          <div class="ph"><img src="assets/work/track-and-play.webp" alt="Track + Play logo" width="1200" height="675"></div>
           <h3 class="title">Track + Play</h3>
           <p>An annual community sports day. Races, games and a day out for the whole community.</p>
           <a class="go" href="#community">Next sports day</a>
         </article>
         <article class="comm-item">
           <p class="label">One third</p>
+          <div class="ph"><img src="assets/work/va.webp" alt="Rule of Thirds at the V&A" width="1200" height="675"></div>
           <h3 class="title">Rule of Thirds</h3>
           <p>A creative collective and podcast. Conversations about faith, creativity and building things.</p>
           <a class="go" href="https://ruleofthirds.co.uk" target="_blank" rel="noopener">Listen</a>
@@ -380,7 +447,7 @@ section{scroll-margin-top:16px}
       <a class="btn" href="mailto:info@bernsds.com?subject=Presenting%20booking">Presenting booking</a>
     </div>
     <div class="foot-base">
-      <div class="wm"><b>BERNS</b><span>studios</span></div>
+      <svg class="bs-logo" viewBox="0 0 2578.01 244.70" role="img" aria-label="Berns Studios"><use href="#bs-logo"/></svg>
       <p class="label">Design / Motion / Presenting</p>
       <div class="socials label"><a href="#contact">Instagram</a><a href="#contact">LinkedIn</a></div>
     </div>
@@ -391,9 +458,9 @@ section{scroll-margin-top:16px}
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 (function(){
-const C={blue:'#080CDF',ink:'#1A1A1A',paper:'#F3F1EC',stone:'#D6D2C8',white:'#FFFFFF'};
-const TITLE="'scale-variable','Archivo','Arial Black',sans-serif";
-const BODY="'neue-haas-grotesk-text','Helvetica Neue',Helvetica,'Inter Tight',Arial,sans-serif";
+const C={blue:'#080CDF',ink:'#1A1A1A',paper:'#F1F2F3',stone:'#E8E9EA',white:'#FFFFFF'};
+const TITLE="'scale-variable','Helvetica Neue',Arial,sans-serif";
+const BODY="'neue-haas-grotesk-text','Helvetica Neue',Helvetica,Arial,sans-serif";
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ---------- Giant wordmark fit ---------- */
@@ -587,6 +654,6 @@ window.addEventListener('resize',fitGiant);
 function start(){buildLists();syncPanel();fitGiant();route()}
 fitGiant();
 (document.fonts&&document.fonts.ready?Promise.race([document.fonts.ready,new Promise(r=>setTimeout(r,1500))]):Promise.resolve()).then(()=>{
-  Promise.all([document.fonts.load(`900 100px Archivo`),document.fonts.load(`700 20px 'Inter Tight'`)].map(p=>p.catch(()=>{}))).finally(start)});
+  Promise.all([document.fonts.load(`900 100px 'scale-variable'`),document.fonts.load(`700 20px 'neue-haas-grotesk-text'`)].map(p=>p.catch(()=>{}))).finally(start)});
 })();
 </script>
