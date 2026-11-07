@@ -92,6 +92,18 @@
     check();
   }
 
+  /* Home poster: bar sits see-through over the blue, then turns white and the name rises once the blue has gone */
+  const posterEl = document.querySelector('.poster');
+  if (posterEl) {
+    const bar = document.querySelector('.bar');
+    let on = null;
+    const check = () => {
+      const o = posterEl.getBoundingClientRect().bottom < bar.getBoundingClientRect().height;
+      if (o !== on) { on = o; body.classList.toggle('bar-on', o); body.classList.toggle('name-on', o); }
+    };
+    addEventListener('scroll', check, { passive: true }); addEventListener('resize', check); check();
+  }
+
   /* Home portrait: a photo pinned to a noteboard.
      Drag it anywhere (mouse or finger) and it stays where you drop it, swinging a little as it moves.
      It also turns up to ~7deg as you scroll through the hero. */
@@ -141,13 +153,14 @@
     const HOT = 'a,button,[role="button"],input,select,textarea,label,.media,.hero-portrait,.stage canvas';
     let mx = -100, my = -100, x = mx, y = my, seen = false;
     let hover = 0, hoverTo = 0, energy = 0, lastY = scrollY;
-    const sense = () => { const el = document.elementFromPoint(mx, my); hoverTo = el && el.closest(HOT) ? 1 : 0; };
+    const sense = () => { const el = document.elementFromPoint(mx, my); hoverTo = el && el.closest(HOT) ? 1 : 0; root.classList.toggle('cursor-light', !!(el && el.closest('.poster, .on-blue'))); };
     addEventListener('pointermove', e => {
       if (e.pointerType && e.pointerType !== 'mouse') return;
       mx = e.clientX; my = e.clientY;
       if (!seen) { x = mx; y = my; seen = true; root.classList.add('has-cursor'); }
       root.classList.remove('cursor-out');
       hoverTo = e.target.closest && e.target.closest(HOT) ? 1 : 0;
+      root.classList.toggle('cursor-light', !!(e.target.closest && e.target.closest('.poster, .on-blue')));
     }, { passive: true });
     document.addEventListener('mouseleave', () => root.classList.add('cursor-out'));
     addEventListener('scroll', () => {
