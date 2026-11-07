@@ -16,11 +16,11 @@ Personal site for Berns (Bernard Bannor). "Berns" is the main name; Berns Studio
 
 Positioning copy: Studios is "my independent studio for design and motion" (web is part of design, not a headline service; no client-sector lists). Presenting leads with "Looking for a host?" and how Berns's world brings creativity and sport together, moderating and keeping the energy up.
 
-Placeholders still to replace: poster artwork (canvas-drawn mock-ups), prices, paper/edition specs, case-study pages, showreel, BULLY THE ROADS and Track + Play links, Instagram/LinkedIn links.
+Placeholders still to replace: poster prices, paper/edition specs, case-study pages, showreel, BULLY THE ROADS and Track + Play links, Instagram/LinkedIn links.
 
 ## Next steps
 1. Split into real pages: `/`, `/studios`, `/presenting`, `/shop`, `/shop/<poster>`, `/community`, `/contact`.
-2. Replace canvas posters with Berns's real poster files (high-res JPG/WebP as three.js textures).
+2. Poster pages: bring back the 3D frame viewer from prototype-v1 using the real gradient posters.
 3. Wire each size/frame combo to a Stripe Payment Link.
 4. Contact and booking forms (Hostinger PHP mail or a form service), routed Studio vs Presenting.
 5. Studios case-study template, Presenting page with showreel.
