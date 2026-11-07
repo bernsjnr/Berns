@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Project. Berns Studios</title>
+<meta name="description" content="A Berns Studios project.">
+<!-- Adobe Fonts kit (Scale variable + Neue Haas Grotesk). Loads anywhere, no domain setup. -->
+<link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-base="../" data-page="studios">
+<main>
+<section class="p-head">
+  <div style="display:grid;gap:16px"><a class="label rv" href="index.html">Berns Studios / Work</a><h1 class="big rv" id="p-name"></h1></div>
+  <div class="meta-grid rv" id="p-meta"></div>
+</section>
+<div class="hero-media rv"><div class="media" id="p-media"></div></div>
+<section class="p-body">
+  <p class="label rv">About the project</p>
+  <div class="prose rv" id="p-about"></div>
+</section>
+<div class="head" style="padding-top:24px">
+  <p class="label rv">Next project</p>
+  
+</div>
+<div class="grid" id="p-next"></div>
+<section class="contact">
+  <p class="label rv">Contact</p>
+  <h2 class="big rv">Let's make something you're proud of.</h2>
+  <a class="mail rv" href="mailto:info@bernsds.com">info@bernsds.com</a>
+  <div class="actions rv">
+    <a class="btn" href="mailto:info@bernsds.com?subject=Studio%20enquiry">Studio enquiry</a>
+    <a class="btn line" href="mailto:info@bernsds.com?subject=Presenting%20booking">Presenting booking</a>
+  </div>
+  <div class="mark rv" data-logo></div>
+</section>
+</main>
+<script src="../assets/data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="../assets/site.js"></script>
+<script>
+(() => {
+  const D = BERNS, U = BERNS_UI;
+  const id = new URLSearchParams(location.search).get('p');
+  const i = Math.max(0, D.projects.findIndex(p => p.id === id));
+  const p = D.projects[i];
+  document.title = p.name + '. Berns Studios';
+  document.getElementById('p-name').textContent = p.name;
+  document.getElementById('p-meta').innerHTML = [['Client', p.client], ['Discipline', p.discipline], ['Year', p.year]]
+    .map(([k, v]) => `<div><span class="label">${k}</span><span>${v || '–'}</span></div>`).join('');
+  document.getElementById('p-media').innerHTML = U.media(p);
+  document.getElementById('p-about').innerHTML = p.about ? p.about.split('\n\n').map(t => `<p>${t}</p>`).join('') : '<p>Write-up to come.</p>';
+  const next = [1, 2].map(k => D.projects[(i + k) % D.projects.length]);
+  document.getElementById('p-next').innerHTML = next.map(U.projectTile).join('');
+  U.observe();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Print. Berns</title>
+<meta name="description" content="A print from the Berns gradient series.">
+<!-- Adobe Fonts kit (Scale variable + Neue Haas Grotesk). Loads anywhere, no domain setup. -->
+<link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-base="../" data-page="shop">
+<main>
+<section class="print">
+  <div class="stage rv" id="stage">
+    <div class="stage-ui">
+      <div class="seg" role="group" aria-label="View">
+        <button type="button" data-mode="flat" aria-pressed="true">Print</button>
+        <button type="button" data-mode="room" aria-pressed="false">On the wall</button>
+        <button type="button" data-mode="free" aria-pressed="false">Turn it</button>
+      </div>
+    </div>
+    <div class="flat" id="flat"><img id="flat-img" alt=""></div>
+    <p class="label hint" id="hint" hidden>Drag to look around</p>
+  </div>
+  <aside class="panel rv">
+    <div style="display:grid;gap:10px">
+      <a class="label" href="index.html">Shop / <span id="p-ed"></span></a>
+      <h1 class="name" id="p-name"></h1>
+      <p class="price" id="p-price"></p>
+    </div>
+    <div class="opt"><p class="label">Size</p><div class="opts" id="o-size"></div></div>
+    <div class="opt"><p class="label">Frame</p><div class="opts" id="o-frame"></div></div>
+    <div class="buy">
+      <a class="btn" id="buy" href="#">Buy now</a>
+      <p class="note" id="buy-note" hidden></p>
+    </div>
+    <ul class="specs">
+      <li><span class="label">Edition</span><span>Signed and numbered by hand</span></li>
+      <li><span class="label">Checked</span><span>I print, check and pack every one myself</span></li>
+      <li><span class="label">Checkout</span><span>Secure payment with Stripe</span></li>
+    </ul>
+  </aside>
+</section>
+<div class="head" style="padding-bottom:40px">
+  <p class="label rv">More prints</p>
+  
+</div>
+<div class="grid three" id="more"></div>
+<section class="contact">
+  <p class="label rv">Contact</p>
+  <h2 class="big rv">Let's make something you're proud of.</h2>
+  <a class="mail rv" href="mailto:info@bernsds.com">info@bernsds.com</a>
+  <div class="actions rv">
+    <a class="btn" href="mailto:info@bernsds.com?subject=Studio%20enquiry">Studio enquiry</a>
+    <a class="btn line" href="mailto:info@bernsds.com?subject=Presenting%20booking">Presenting booking</a>
+  </div>
+  <div class="mark rv" data-logo></div>
+</section>
+</main>
+<script src="../assets/data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="../assets/site.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" defer></script>
+<script src="../assets/print.js" defer></script>
+</body>
+</html>
