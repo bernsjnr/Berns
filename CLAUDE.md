@@ -14,6 +14,10 @@ Personal site for Berns (Bernard Bannor). "Berns" is the main name; Berns Studio
 ## Current state
 Multi-page static site (v3, Nov 2026), built from the live bernsds.com (Cargo) layout: white page, BERNS studios logo top left, live London clock top right, centred label + one-sentence heads, two-column grid of rounded (20px) 16:9 tiles with captions, fixed bottom nav. Berns rejected v2 (busy gradients, moving type) as too much; v1 and v2 are kept as `prototype-v1.html` and `prototype-v2.html` for reference only.
 
+Home hero (v4, Nov 2026) is built from Berns's artboard "Website for Berns Studios.ai": WORK / ABOUT / SHOP / CONTACT across the top, centred rounded portrait (`assets/img/berns-portrait.webp`), BERNARD BANNOR bottom left in Scale (wdth 125, wght 900), "A designer and presenter working between culture, sport and community." on the right with a READ MORE link in Space Mono Bold (Google Fonts, home page only). On the home page the logo header and bottom nav fade in once the hero nav scrolls away.
+
+Cursor (all pages, mouse/trackpad only): Berns Blue dot that breathes gently, pulses a little deeper with a soft ripple ring while scrolling, and grows ~4.5x over links, tiles and the portrait. Lives in `assets/site.js` and the end of `assets/site.css`. Respects prefers-reduced-motion. This is the one place blue is used beyond hover and selection.
+
 Pages (relative links, works on GitHub Pages under /Berns/ and on Hostinger):
 - `index.html` home: intro, 4 work tiles, previews of Studios, Presenting and Shop, contact.
 - `studios/index.html` all work, what I do, how a project runs (six steps from the Client Guide). `studios/project.html?p=<id>` is the case-study template (client, discipline, year, hero media, write-up, next projects).
