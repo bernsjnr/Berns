@@ -190,20 +190,6 @@ a.box:hover{background:var(--g2)}
 
 
 /* =========================================================
-   Cursor: Berns Blue dot that breathes gently, pulses a
-   little more while scrolling and grows over anything
-   clickable. Mouse and trackpad only; touch is untouched.
-   ========================================================= */
-.cursor,.cursor-ring{position:fixed;left:0;top:0;z-index:100;pointer-events:none;border-radius:50%;opacity:0;will-change:transform}
-.cursor{width:14px;height:14px;margin:-7px 0 0 -7px;background:var(--blue);mix-blend-mode:multiply;transition:opacity .3s}
-.cursor-ring{width:14px;height:14px;margin:-7px 0 0 -7px;box-shadow:inset 0 0 0 1.5px var(--blue)}
-@media (hover:hover) and (pointer:fine){
-  html.has-cursor,html.has-cursor *{cursor:none!important}
-  html.has-cursor .cursor{opacity:1}
-  html.has-cursor.cursor-out .cursor{opacity:0}
-}
-
-/* =========================================================
    Home poster hero (v5): full-bleed Berns Blue, white Scale type.
    The stack is taller than the window and centred, so the first
    and last words are cut off by the edges, like a gig poster.
@@ -226,9 +212,6 @@ body.has-poster:not(.bar-on) .bar{background:var(--blue);color:var(--white)}
 body.has-poster:not(.bar-on) .bar-nav a{opacity:1}
 body.has-poster:not(.bar-on) .bar{pointer-events:auto}
 .bar{transition:background .5s var(--ease),color .5s var(--ease)}
-/* Cursor turns white over Berns Blue */
-html.cursor-light .cursor{background:var(--white);mix-blend-mode:normal}
-html.cursor-light .cursor-ring{box-shadow:inset 0 0 0 1.5px var(--white)}
 
 /* Opening page: one blue screen, no scrolling, photo floating over the name.
    Centred with left/top so the drag code is free to use transform. */
@@ -312,3 +295,10 @@ a.corner:hover{text-decoration:underline;text-underline-offset:.2em}
   .p-detail{grid-template-columns:minmax(0,1fr)}
   .p-info{position:static}
 }
+
+/* Cursor: old-school arrow and hands (see site.js). Desktop hides the system cursor; phones show it where you touch. */
+.cur{position:fixed;left:0;top:0;z-index:100;pointer-events:none;opacity:0;will-change:transform}
+html.cur-on .cur{opacity:1}
+.cur svg{position:absolute;display:none;overflow:visible}
+.cur[data-k="arrow"] .cur-arrow,.cur[data-k="pointer"] .cur-pointer,.cur[data-k="grab"] .cur-grab,.cur[data-k="grabbing"] .cur-grabbing{display:block}
+html.cur-hide-native,html.cur-hide-native *{cursor:none!important}

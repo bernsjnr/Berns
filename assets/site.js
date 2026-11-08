@@ -199,44 +199,50 @@
     kick();
   }
 
-  /* Cursor: Berns Blue. Breathes at rest, pulses while scrolling, grows on hover. */
-  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  /* Cursor: old-school white-with-black-outline set. Arrow by default, pointing hand on links,
+     open hand over the draggable photo, closed hand while dragging. On phones it jumps to
+     wherever you touch and follows your finger. */
+  {
     const root = document.documentElement;
-    body.insertAdjacentHTML('beforeend', '<div class="cursor-ring" aria-hidden="true"></div><div class="cursor" aria-hidden="true"></div>');
-    const dot = body.querySelector('.cursor'), ring = body.querySelector('.cursor-ring');
-    const HOT = 'a,button,[role="button"],input,select,textarea,label,.media,.hero-portrait,.stage canvas';
-    let mx = -100, my = -100, x = mx, y = my, seen = false;
-    let hover = 0, hoverTo = 0, energy = 0, lastY = scrollY;
-    const sense = () => { const el = document.elementFromPoint(mx, my); hoverTo = el && el.closest(HOT) ? 1 : 0; root.classList.toggle('cursor-light', !!(el && el.closest('.poster, .on-blue, .split-panel, .contact'))); };
-    addEventListener('pointermove', e => {
-      if (e.pointerType && e.pointerType !== 'mouse') return;
-      mx = e.clientX; my = e.clientY;
-      if (!seen) { x = mx; y = my; seen = true; root.classList.add('has-cursor'); }
-      root.classList.remove('cursor-out');
-      hoverTo = e.target.closest && e.target.closest(HOT) ? 1 : 0;
-      root.classList.toggle('cursor-light', !!(e.target.closest && e.target.closest('.poster, .on-blue, .split-panel, .contact')));
-    }, { passive: true });
-    document.addEventListener('mouseleave', () => root.classList.add('cursor-out'));
-    addEventListener('scroll', () => {
-      energy = Math.min(1, energy + Math.abs(scrollY - lastY) / 280);
-      lastY = scrollY;
-      if (seen) sense();
-    }, { passive: true });
-    const t0 = performance.now();
-    const loop = now => {
-      const t = (now - t0) / 1000;
-      x += (mx - x) * .22; y += (my - y) * .22;
-      hover += (hoverTo - hover) * .14;
-      energy *= .94;
-      const grow = 1 + hover * 3.6;
-      const breath = reduce ? 1 : 1 + Math.sin(t * Math.PI * (1.4 + energy * 2.2)) * (.06 + energy * .14);
-      dot.style.transform = `translate3d(${x}px,${y}px,0) scale(${(grow * breath).toFixed(3)})`;
-      const ph = (t * (.8 + energy)) % 1;
-      ring.style.transform = `translate3d(${x}px,${y}px,0) scale(${(grow * (1 + ph * (1.3 + energy))).toFixed(3)})`;
-      ring.style.opacity = reduce ? 0 : (energy * .5 * (1 - ph)).toFixed(3);
-      requestAnimationFrame(loop);
+    const OUT = 'fill="#1A1A1A" stroke="#1A1A1A" stroke-width="2.6" stroke-linejoin="round"';
+    const hand = (fingers, thumb, gaps) => {
+      const shapes = fingers.map(([x, y, w, h]) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${w / 2}"/>`).join('') +
+        `<rect x="${thumb[0]}" y="${thumb[1]}" width="3.6" height="9" rx="1.8" transform="rotate(${thumb[2]} ${thumb[0] + 1.8} ${thumb[1] + 4.5})"/>`;
+      return `<g ${OUT}>${shapes}</g><g fill="#fff">${shapes}</g><g stroke="#1A1A1A" stroke-width="1.1" stroke-linecap="round">${gaps.map(([x, y1, y2]) => `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"/>`).join('')}</g>`;
     };
-    requestAnimationFrame(loop);
+    const SVG = {
+      arrow: { hx: 2, hy: 2, w: 22, h: 30, body: '<path d="M2 2 L2 22 L7 17.2 L10.6 25.4 L14 23.9 L10.5 15.9 L17 15.9 Z" fill="#fff" stroke="#1A1A1A" stroke-width="1.6" stroke-linejoin="miter"/>' },
+      pointer: { hx: 10, hy: 2, w: 28, h: 30, body: hand([[8, 1.5, 4, 15], [12, 9, 3.8, 9], [15.8, 10.4, 3.6, 8], [19.4, 12, 3.2, 7], [8, 14, 14.6, 13.5]], [3.2, 13.5, -38], [[12, 11.5, 16], [15.8, 12.8, 16.5], [19.4, 14.2, 17]]) },
+      grab: { hx: 13, hy: 13, w: 28, h: 30, body: hand([[7, 5, 3.6, 12], [10.6, 2.5, 3.6, 13], [14.2, 3.5, 3.6, 12], [17.8, 6.5, 3.2, 10], [7, 13, 14, 13.5]], [2.2, 12, -40], [[10.6, 8, 15], [14.2, 7, 15], [17.8, 9.5, 15]]) },
+      grabbing: { hx: 13, hy: 13, w: 28, h: 30, body: hand([[7, 10, 3.6, 7], [10.6, 9, 3.6, 8], [14.2, 9.5, 3.6, 7.5], [17.8, 11, 3.2, 6], [7, 13, 14, 13.5]], [4, 13.5, -70], [[10.6, 11, 15.5], [14.2, 11, 15.5], [17.8, 12.5, 15.5]]) }
+    };
+    const scale = 1.25;
+    body.insertAdjacentHTML('beforeend', `<div class="cur" aria-hidden="true">${Object.entries(SVG).map(([k, s]) =>
+      `<svg class="cur-${k}" width="${s.w * scale}" height="${s.h * scale}" viewBox="0 0 ${s.w} ${s.h}" style="left:${-s.hx * scale}px;top:${-s.hy * scale}px">${s.body}</svg>`).join('')}</div>`);
+    const cur = body.querySelector('.cur');
+    const LINK = 'a,button,[role="button"],label,select,summary,input[type="submit"],input[type="button"],.seg button,.opts button';
+    let mx = -100, my = -100;
+    const kind = el => {
+      if (!el || !el.closest) return 'arrow';
+      if (el.closest('.hero-portrait.lifted')) return 'grabbing';
+      if (el.closest('.hero-portrait, .stage canvas')) return 'grab';
+      if (el.closest(LINK)) return 'pointer';
+      return 'arrow';
+    };
+    const place = (x, y, el) => {
+      mx = x; my = y;
+      cur.style.transform = `translate3d(${x}px,${y}px,0)`;
+      cur.dataset.k = kind(el || document.elementFromPoint(x, y));
+      root.classList.add('cur-on');
+    };
+    addEventListener('pointermove', e => place(e.clientX, e.clientY, e.target), { passive: true });
+    addEventListener('pointerdown', e => place(e.clientX, e.clientY, e.target), { passive: true });
+    addEventListener('pointerup', e => { cur.dataset.k = kind(document.elementFromPoint(e.clientX, e.clientY)); }, { passive: true });
+    addEventListener('touchstart', e => { const t = e.touches[0]; if (t) place(t.clientX, t.clientY, e.target); }, { passive: true });
+    addEventListener('touchmove', e => { const t = e.touches[0]; if (t) place(t.clientX, t.clientY); }, { passive: true });
+    addEventListener('scroll', () => { if (root.classList.contains('cur-on')) cur.dataset.k = kind(document.elementFromPoint(mx, my)); }, { passive: true });
+    document.addEventListener('mouseleave', () => root.classList.remove('cur-on'));
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) root.classList.add('cur-hide-native');
   }
 
   /* Smooth scroll */
