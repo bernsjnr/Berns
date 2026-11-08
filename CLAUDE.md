@@ -18,6 +18,14 @@ Opening page (`index.html`, v6, Nov 2026): a single Berns Blue screen before you
 
 Top bar (all pages, replaces the old BERNS studios logo header, London clock and bottom nav): solid white, BERNARD BANNOR left, WORK / ABOUT / SHOP / CONTACT right. On the home page it starts as a Berns Blue band with white nav over the poster, then turns white and BERNARD BANNOR rises into it once the poster has scrolled away. Every nav item is its own page: WORK = studios/, ABOUT = about/ (bio, links to Studios, Presenting and Community), SHOP = shop/, CONTACT = contact/.
 
+Inner pages (v7, Nov 2026): the opening page's feel carried through, using two references Berns sent (Marameo: blue panel left, huge stacked words right with a photo floating on top; Artworld: flowing name index, detail pages with a slim info column). Shared pieces in site.css/site.js:
+- `.split`: sticky Berns Blue `.split-panel` on the left (page title in Scale, auto-fitted to one line; centred `.split-say` line in NHG Display; `.corner` details bottom left and right) and `.split-list` on the right.
+- `.stack`: huge stacked Scale words with small superscript labels. `.names`: flowing Artworld-style index, alternating NHG Display Bold and Light. Work builds its stack from `data-stack="projects"`, Shop its index from `data-names="posters"`.
+- `.float`: a photo floating in the middle of the list. Shows the item you hover, or the one in the middle of the screen as you scroll (phones). Items opt in with `data-img` (and `data-video`).
+- Project page (`studios/project.html`): slim sticky info column (label, name, client/discipline/year, write-up) beside big media, then NEXT PROJECT as a big Scale link.
+- `.contact` is now a Berns Blue band with a Scale headline and white buttons; Contact page is a full blue screen.
+Shop print page is unchanged apart from the shared bar and contact band.
+
 Portrait (home): a photo pinned to a noteboard. Drag it anywhere with mouse or finger, it swings as it moves and stays where dropped (double-click resets; resets on reload). Also turns up to ~7deg as you scroll through the hero. Swing and turn are off for reduced motion.
 
 Cursor (all pages, mouse/trackpad only): Berns Blue dot that breathes gently, pulses a little deeper with a soft ripple ring while scrolling, and grows ~4.5x over links, tiles and the portrait. Lives in `assets/site.js` and the end of `assets/site.css`. Respects prefers-reduced-motion. This is the one place blue is used beyond hover and selection.

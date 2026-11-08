@@ -11,20 +11,16 @@
 </head>
 <body data-base="../" data-page="studios">
 <main>
-<section class="p-head">
-  <div style="display:grid;gap:16px"><a class="label rv" href="index.html">Berns Studios / Work</a><h1 class="big rv" id="p-name"></h1></div>
-  <div class="meta-grid rv" id="p-meta"></div>
+<section class="p-detail">
+  <aside class="p-info">
+    <a class="label rv" href="index.html">Work</a>
+    <h1 class="p-title rv" id="p-name"></h1>
+    <div class="p-meta rv" id="p-meta"></div>
+    <div class="prose rv" id="p-about"></div>
+  </aside>
+  <div class="media rv" id="p-media"></div>
 </section>
-<div class="hero-media rv"><div class="media" id="p-media"></div></div>
-<section class="p-body">
-  <p class="label rv">About the project</p>
-  <div class="prose rv" id="p-about"></div>
-</section>
-<div class="head" style="padding-top:24px">
-  <p class="label rv">Next project</p>
-  
-</div>
-<div class="grid" id="p-next"></div>
+<a class="p-next" id="p-next"><span class="label">Next project</span><span class="split-title" id="p-next-name"></span></a>
 <section class="contact">
   <p class="label rv">Contact</p>
   <h2 class="big rv">Let's make something you're proud of.</h2>
@@ -51,8 +47,9 @@
     .map(([k, v]) => `<div><span class="label">${k}</span><span>${v || '–'}</span></div>`).join('');
   document.getElementById('p-media').innerHTML = U.media(p);
   document.getElementById('p-about').innerHTML = p.about ? p.about.split('\n\n').map(t => `<p>${t}</p>`).join('') : '<p>Write-up to come.</p>';
-  const next = [1, 2].map(k => D.projects[(i + k) % D.projects.length]);
-  document.getElementById('p-next').innerHTML = next.map(U.projectTile).join('');
+  const next = D.projects[(i + 1) % D.projects.length];
+  document.getElementById('p-next').href = 'project.html?p=' + next.id;
+  document.getElementById('p-next-name').textContent = next.name;
   U.observe();
 })();
 </script>

@@ -92,6 +92,60 @@
     check();
   }
 
+  /* Word stacks and name indexes, built from data.js where a page asks for them */
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const num = i => String(i + 1).padStart(2, '0');
+  document.querySelectorAll('[data-stack="projects"]').forEach(el => {
+    el.innerHTML = D.projects.map((p, i) => `<a href="${url('studios/project.html?p=' + p.id)}" data-img="${url(p.poster || p.img)}"${p.video ? ` data-video="${url(p.video)}"` : ''}>${esc(p.name)}<sup>${num(i)}</sup></a>`).join('');
+  });
+  document.querySelectorAll('[data-names="posters"]').forEach(el => {
+    el.innerHTML = D.posters.map((p, i) => `<a href="${url('shop/print.html?p=' + p.id)}" data-img="${url(p.img)}">${esc(p.name)}<sup>${num(i)}</sup></a>`).join(' ');
+  });
+
+  /* Page titles in the blue panels shrink to fit on one line */
+  const fitTitles = () => document.querySelectorAll('.split-panel .split-title').forEach(el => {
+    el.style.fontSize = '';
+    const r = el.clientWidth / el.scrollWidth;
+    if (r < 1) el.style.fontSize = (parseFloat(getComputedStyle(el).fontSize) * r * .98) + 'px';
+  });
+  fitTitles();
+  if (document.fonts) document.fonts.ready.then(fitTitles);
+  addEventListener('resize', fitTitles);
+
+  /* Floating photo over a list: shows the item you hover, or the one in the middle of the screen as you scroll */
+  document.querySelectorAll('.split-list').forEach(list => {
+    const items = [...list.querySelectorAll('[data-img]')];
+    const fl = list.querySelector('.float');
+    if (!fl) return;
+    if (!items.length) { fl.classList.add('empty'); return; }
+    const box = fl.querySelector('.float-in');
+    const layers = new Map();
+    items.forEach(it => {
+      const key = it.dataset.video || it.dataset.img;
+      if (layers.has(key)) return;
+      let m;
+      if (it.dataset.video && !reduce) { m = document.createElement('video'); m.src = it.dataset.video; m.poster = it.dataset.img; m.muted = true; m.loop = true; m.playsInline = true; m.preload = 'none'; }
+      else { m = document.createElement('img'); m.src = it.dataset.img; m.alt = ''; m.loading = 'lazy'; }
+      box.appendChild(m); layers.set(key, m);
+    });
+    let cur = null, hovering = false;
+    const show = it => {
+      const m = layers.get(it.dataset.video || it.dataset.img);
+      if (!m || m === cur) return;
+      if (cur) { cur.classList.remove('on'); if (cur.pause) cur.pause(); }
+      m.classList.add('on'); if (m.play) { m.preload = 'auto'; m.play().catch(() => {}); }
+      cur = m;
+    };
+    show(items[0]);
+    items.forEach(it => {
+      it.addEventListener('pointerenter', () => { hovering = true; show(it); });
+      it.addEventListener('pointerleave', () => { hovering = false; });
+      it.addEventListener('focus', () => show(it));
+    });
+    const mid = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !hovering) show(e.target); }), { rootMargin: '-45% 0px -45% 0px' });
+    items.forEach(it => mid.observe(it));
+  });
+
   /* Home poster: bar sits see-through over the blue, then turns white and the name rises once the blue has gone */
   const posterEl = document.querySelector('.poster');
   if (posterEl) {
@@ -153,14 +207,14 @@
     const HOT = 'a,button,[role="button"],input,select,textarea,label,.media,.hero-portrait,.stage canvas';
     let mx = -100, my = -100, x = mx, y = my, seen = false;
     let hover = 0, hoverTo = 0, energy = 0, lastY = scrollY;
-    const sense = () => { const el = document.elementFromPoint(mx, my); hoverTo = el && el.closest(HOT) ? 1 : 0; root.classList.toggle('cursor-light', !!(el && el.closest('.poster, .on-blue'))); };
+    const sense = () => { const el = document.elementFromPoint(mx, my); hoverTo = el && el.closest(HOT) ? 1 : 0; root.classList.toggle('cursor-light', !!(el && el.closest('.poster, .on-blue, .split-panel, .contact'))); };
     addEventListener('pointermove', e => {
       if (e.pointerType && e.pointerType !== 'mouse') return;
       mx = e.clientX; my = e.clientY;
       if (!seen) { x = mx; y = my; seen = true; root.classList.add('has-cursor'); }
       root.classList.remove('cursor-out');
       hoverTo = e.target.closest && e.target.closest(HOT) ? 1 : 0;
-      root.classList.toggle('cursor-light', !!(e.target.closest && e.target.closest('.poster, .on-blue')));
+      root.classList.toggle('cursor-light', !!(e.target.closest && e.target.closest('.poster, .on-blue, .split-panel, .contact')));
     }, { passive: true });
     document.addEventListener('mouseleave', () => root.classList.add('cursor-out'));
     addEventListener('scroll', () => {
