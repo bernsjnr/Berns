@@ -14,16 +14,17 @@ Personal site for Berns (Bernard Bannor). "Berns" is the main name; Berns Studio
 ## Current state
 Multi-page static site (v3, Nov 2026), built from the live bernsds.com (Cargo) layout: white page, BERNS studios logo top left, live London clock top right, centred label + one-sentence heads, two-column grid of rounded (20px) 16:9 tiles with captions, fixed bottom nav. Berns rejected v2 (busy gradients, moving type) as too much; v1 and v2 are kept as `prototype-v1.html` and `prototype-v2.html` for reference only.
 
-Home hero (v5, Nov 2026, replaces the v4 .ai hero): gig-poster layout from a reference Berns sent. Full-bleed Berns Blue, white type, centred: "A designer and presenter working between culture, sport and community." (Neue Haas Grotesk Display, sentence case; the .ai uses 65 Medium, the site uses Bold until Medium is added to the Adobe kit) / BERNARD BANNOR in Scale (wdth 125, wght 900) / the same line repeated. Fills the window on every device. The v4 hero CSS (portrait, .hero-*) and the drag/tilt portrait code are still in the files, unused, in case he wants the photo back. Cursor turns white over the blue.
+Opening page (`index.html`, v6, Nov 2026): a single Berns Blue screen before you go into the site, no scrolling. White, centred: "A designer and presenter working between culture, sport and community." (Neue Haas Grotesk Display; 65 Medium in the .ai, Bold until Medium is added to the Adobe kit) / BERNARD BANNOR in Scale (wdth 125, wght 900) / the same line repeated. Berns's colour photo floats on top in the middle and can be dragged anywhere like a pinned photo (swings as it moves, double-click resets). The bar's nav (WORK / ABOUT / SHOP / CONTACT) is the way in. Cursor turns white over the blue. The old v4 .hero-* CSS is still in site.css, unused.
 
-Top bar (all pages, replaces the old BERNS studios logo header, London clock and bottom nav): solid white, BERNARD BANNOR left, WORK / ABOUT / SHOP / CONTACT right. On the home page it starts as a Berns Blue band with white nav over the poster, then turns white and BERNARD BANNOR rises into it once the poster has scrolled away. ABOUT goes to the About block on the home page, which links Studios, Presenting and Community.
+Top bar (all pages, replaces the old BERNS studios logo header, London clock and bottom nav): solid white, BERNARD BANNOR left, WORK / ABOUT / SHOP / CONTACT right. On the home page it starts as a Berns Blue band with white nav over the poster, then turns white and BERNARD BANNOR rises into it once the poster has scrolled away. Every nav item is its own page: WORK = studios/, ABOUT = about/ (bio, links to Studios, Presenting and Community), SHOP = shop/, CONTACT = contact/.
 
 Portrait (home): a photo pinned to a noteboard. Drag it anywhere with mouse or finger, it swings as it moves and stays where dropped (double-click resets; resets on reload). Also turns up to ~7deg as you scroll through the hero. Swing and turn are off for reduced motion.
 
 Cursor (all pages, mouse/trackpad only): Berns Blue dot that breathes gently, pulses a little deeper with a soft ripple ring while scrolling, and grows ~4.5x over links, tiles and the portrait. Lives in `assets/site.js` and the end of `assets/site.css`. Respects prefers-reduced-motion. This is the one place blue is used beyond hover and selection.
 
 Pages (relative links, works on GitHub Pages under /Berns/ and on Hostinger):
-- `index.html` home: intro, 4 work tiles, previews of Studios, Presenting and Shop, contact.
+- `index.html` opening page (poster + floating photo only).
+- `about/index.html` about: hello line, short bio, boxes linking Studios, Presenting and Community, contact.
 - `studios/index.html` all work, what I do, how a project runs (six steps from the Client Guide). `studios/project.html?p=<id>` is the case-study template (client, discipline, year, hero media, write-up, next projects).
 - `presenting/index.html`, `community/index.html`, `contact/index.html`.
 - `shop/index.html` print grid. `shop/print.html?p=<id>` product page: Print / On the wall / Turn it views (three.js r128 3D, loaded only on that page), size and frame options, live price, buy button.

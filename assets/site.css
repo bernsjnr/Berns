@@ -229,3 +229,10 @@ body.has-poster:not(.bar-on) .bar{pointer-events:auto}
 /* Cursor turns white over Berns Blue */
 html.cursor-light .cursor{background:var(--white);mix-blend-mode:normal}
 html.cursor-light .cursor-ring{box-shadow:inset 0 0 0 1.5px var(--white)}
+
+/* Opening page: one blue screen, no scrolling, photo floating over the name.
+   Centred with left/top so the drag code is free to use transform. */
+body.opening{overflow:hidden;height:100svh}
+.poster .hero-portrait{--pw:min(clamp(110px,15vw,560px),calc(36svh * .853));position:absolute;z-index:6;margin:0;width:var(--pw);
+  left:calc(50% - var(--pw) / 2);top:calc(var(--bar-h) + (100svh - var(--bar-h)) / 2 - var(--pw) * 430 / 367 / 2);cursor:grab}
+.poster .hero-portrait.lifted{cursor:grabbing}
