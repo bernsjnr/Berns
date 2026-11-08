@@ -210,17 +210,17 @@ a.box:hover{background:var(--g2)}
    --F is the big type size; gaps are worked out so roughly half
    of each edge word shows on any screen.
    ========================================================= */
-.poster{--F:min(12vw,24svh);--m:clamp(10px,1.15vw,24px);--top:var(--bar-h);position:relative;height:100vh;height:100svh;overflow:hidden;
+.poster{--F:min(12vw,24svh);--top:var(--bar-h);position:relative;height:100vh;height:100svh;overflow:hidden;
   background:var(--blue);color:var(--white)}
 /* Centred in the blue below the bar; visible area = window minus bar */
 .poster-stack{position:absolute;left:0;right:0;top:calc(var(--top) + (100svh - var(--top)) / 2);transform:translateY(-50%);display:grid;justify-items:center;text-align:center;
-  gap:max(12px,calc((100svh - var(--top) - 2.46 * var(--F) - 6.6 * var(--m)) / 4 - .06 * var(--F)))}
+  gap:clamp(28px,7svh,120px)}
 .poster-word{display:block;font-family:'scale-variable','Arial Black',sans-serif;font-variation-settings:'wdth' 125,'wght' 900;font-weight:900;
   font-size:var(--F);line-height:.82;text-transform:uppercase;white-space:nowrap;letter-spacing:-.005em}
 .poster-name{padding-block:.02em}
 a.poster-word{transition:opacity .6s var(--ease)}
 a.poster-word:hover{opacity:.85}
-.poster-meta{font-family:'scale-variable',var(--f-head);font-variation-settings:'wdth' 125,'wght' 800;font-weight:800;font-size:var(--m);line-height:1.1;text-transform:uppercase}
+.poster-meta{font-family:var(--f-head);font-weight:700;font-size:clamp(15px,1.75vw,40px);line-height:.98;letter-spacing:-.025em}  /* NHG Display; 65 Medium in the .ai, Bold until Medium is added to the kit */
 /* Bar over the blue: see-through with white nav, until the poster has scrolled away */
 body.has-poster:not(.bar-on) .bar{background:var(--blue);color:var(--white)}
 body.has-poster:not(.bar-on) .bar-nav a{opacity:1}
