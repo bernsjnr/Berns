@@ -32,7 +32,7 @@ Cursor (all pages, desktop and phone): old-school white cursors with an ink outl
 
 Pages (relative links, works on GitHub Pages under /Berns/ and on Hostinger):
 - `index.html` opening page (poster + floating photo only).
-- `about/index.html` about: hello line, short bio, boxes linking Studios, Presenting and Community, contact.
+- `about/index.html` about: blue panel (hello line) beside a full-frame photo, then the bio Berns wrote (third person, with a presenting paragraph added), contact.
 - `studios/index.html` all work, what I do, how a project runs (six steps from the Client Guide). `studios/project.html?p=<id>` is the case-study template (client, discipline, year, hero media, write-up, next projects).
 - `presenting/index.html`, `community/index.html`, `contact/index.html`.
 - `shop/index.html` print grid. `shop/print.html?p=<id>` product page: Print / On the wall / Turn it views (three.js r128 3D, loaded only on that page), size and frame options, live price, buy button.
