@@ -28,7 +28,7 @@ Shop print page is unchanged apart from the shared bar and contact band.
 
 Portrait (home): a photo pinned to a noteboard. Drag it anywhere with mouse or finger, it swings as it moves and stays where dropped (double-click resets; resets on reload). Also turns up to ~7deg as you scroll through the hero. Swing and turn are off for reduced motion.
 
-Cursor (all pages, desktop and phone): old-school white cursors with an ink outline, drawn as inline SVG in `assets/site.js`. Arrow by default, pointing hand on links and buttons, open hand over the draggable photo (and the print page's 3D canvas), closed hand while dragging. Desktop hides the system cursor; on phones the cursor jumps to wherever you touch and follows your finger. Replaces the earlier pulsing Berns Blue dot.
+Cursor (all pages, desktop and phone): the classic pixel set Berns picked (rw-designer.com "Classic" teaser), cropped into `assets/cursor/` (arrow, hand, hourglass at 2x pixels, `image-rendering:pixelated`). Arrow by default, pointing hand on links, buttons and the draggable photo, hourglass until the page has loaded. Desktop hides the system cursor; on phones it jumps to wherever you touch and follows your finger. Logic in `assets/site.js`.
 
 Pages (relative links, works on GitHub Pages under /Berns/ and on Hostinger):
 - `index.html` opening page (poster + floating photo only).

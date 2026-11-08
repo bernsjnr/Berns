@@ -299,8 +299,8 @@ a.corner:hover{text-decoration:underline;text-underline-offset:.2em}
 /* Cursor: old-school arrow and hands (see site.js). Desktop hides the system cursor; phones show it where you touch. */
 .cur{position:fixed;left:0;top:0;z-index:100;pointer-events:none;opacity:0;will-change:transform}
 html.cur-on .cur{opacity:1}
-.cur svg{position:absolute;display:none;overflow:visible}
-.cur[data-k="arrow"] .cur-arrow,.cur[data-k="pointer"] .cur-pointer,.cur[data-k="grab"] .cur-grab,.cur[data-k="grabbing"] .cur-grabbing{display:block}
+.cur img{position:absolute;display:none;max-width:none;image-rendering:pixelated}
+.cur[data-k="arrow"] .cur-arrow,.cur[data-k="pointer"] .cur-pointer,.cur[data-k="wait"] .cur-wait{display:block}
 html.cur-hide-native,html.cur-hide-native *{cursor:none!important}
 
 /* About: full-frame photo filling the right half, then the bio */

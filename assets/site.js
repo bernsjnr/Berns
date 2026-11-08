@@ -199,34 +199,24 @@
     kick();
   }
 
-  /* Cursor: old-school white-with-black-outline set. Arrow by default, pointing hand on links,
-     open hand over the draggable photo, closed hand while dragging. On phones it jumps to
-     wherever you touch and follows your finger. */
+  /* Cursor: the classic pixel set (arrow, pointing hand, hourglass) from rw-designer.com "Classic".
+     Arrow by default, hand on links and the draggable photo, hourglass while the page loads.
+     On phones it jumps to wherever you touch and follows your finger. */
   {
     const root = document.documentElement;
-    const OUT = 'fill="#1A1A1A" stroke="#1A1A1A" stroke-width="2.6" stroke-linejoin="round"';
-    const hand = (fingers, thumb, gaps) => {
-      const shapes = fingers.map(([x, y, w, h]) => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${w / 2}"/>`).join('') +
-        `<rect x="${thumb[0]}" y="${thumb[1]}" width="3.6" height="9" rx="1.8" transform="rotate(${thumb[2]} ${thumb[0] + 1.8} ${thumb[1] + 4.5})"/>`;
-      return `<g ${OUT}>${shapes}</g><g fill="#fff">${shapes}</g><g stroke="#1A1A1A" stroke-width="1.1" stroke-linecap="round">${gaps.map(([x, y1, y2]) => `<line x1="${x}" y1="${y1}" x2="${x}" y2="${y2}"/>`).join('')}</g>`;
-    };
-    const SVG = {
-      arrow: { hx: 2, hy: 2, w: 22, h: 30, body: '<path d="M2 2 L2 22 L7 17.2 L10.6 25.4 L14 23.9 L10.5 15.9 L17 15.9 Z" fill="#fff" stroke="#1A1A1A" stroke-width="1.6" stroke-linejoin="miter"/>' },
-      pointer: { hx: 10, hy: 2, w: 28, h: 30, body: hand([[8, 1.5, 4, 15], [12, 9, 3.8, 9], [15.8, 10.4, 3.6, 8], [19.4, 12, 3.2, 7], [8, 14, 14.6, 13.5]], [3.2, 13.5, -38], [[12, 11.5, 16], [15.8, 12.8, 16.5], [19.4, 14.2, 17]]) },
-      grab: { hx: 13, hy: 13, w: 28, h: 30, body: hand([[7, 5, 3.6, 12], [10.6, 2.5, 3.6, 13], [14.2, 3.5, 3.6, 12], [17.8, 6.5, 3.2, 10], [7, 13, 14, 13.5]], [2.2, 12, -40], [[10.6, 8, 15], [14.2, 7, 15], [17.8, 9.5, 15]]) },
-      grabbing: { hx: 13, hy: 13, w: 28, h: 30, body: hand([[7, 10, 3.6, 7], [10.6, 9, 3.6, 8], [14.2, 9.5, 3.6, 7.5], [17.8, 11, 3.2, 6], [7, 13, 14, 13.5]], [4, 13.5, -70], [[10.6, 11, 15.5], [14.2, 11, 15.5], [17.8, 12.5, 15.5]]) }
-    };
-    const scale = 1.25;
-    body.insertAdjacentHTML('beforeend', `<div class="cur" aria-hidden="true">${Object.entries(SVG).map(([k, s]) =>
-      `<svg class="cur-${k}" width="${s.w * scale}" height="${s.h * scale}" viewBox="0 0 ${s.w} ${s.h}" style="left:${-s.hx * scale}px;top:${-s.hy * scale}px">${s.body}</svg>`).join('')}</div>`);
+    const SET = { arrow: [0, 0, 24, 42], pointer: [11, 0, 34, 44], wait: [13, 22, 26, 44] };
+    const FILE = { arrow: 'arrow', pointer: 'hand', wait: 'hourglass' };
+    body.insertAdjacentHTML('beforeend', `<div class="cur" aria-hidden="true" data-k="wait">${Object.entries(SET).map(([k, [hx, hy, w, h]]) =>
+      `<img class="cur-${k}" src="${url('assets/cursor/' + FILE[k] + '.png')}" width="${w}" height="${h}" alt="" style="left:${-hx}px;top:${-hy}px">`).join('')}</div>`);
     const cur = body.querySelector('.cur');
     const LINK = 'a,button,[role="button"],label,select,summary,input[type="submit"],input[type="button"],.seg button,.opts button';
     let mx = -100, my = -100;
+    let loading = document.readyState !== 'complete';
+    addEventListener('load', () => { loading = false; cur.dataset.k = kind(document.elementFromPoint(mx, my)); });
     const kind = el => {
+      if (loading) return 'wait';
       if (!el || !el.closest) return 'arrow';
-      if (el.closest('.hero-portrait.lifted')) return 'grabbing';
-      if (el.closest('.hero-portrait, .stage canvas')) return 'grab';
-      if (el.closest(LINK)) return 'pointer';
+      if (el.closest('.hero-portrait, .stage canvas') || el.closest(LINK)) return 'pointer';
       return 'arrow';
     };
     const place = (x, y, el) => {
