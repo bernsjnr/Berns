@@ -27,7 +27,10 @@
       <div class="shelf">
         <div class="shelf-row">${r.map((p, i) => `
           <a class="book" href="print.html?p=${encodeURIComponent(p.id)}" data-id="${p.id}" aria-label="${p.name}, from £${from}">
-            <span class="book-face"><img src="${base + p.img}" alt="" ${ri ? 'loading="lazy"' : ''} draggable="false"></span>
+            <span class="slab">
+              <span class="f f-front"><img src="${base + p.img}" alt="" ${ri ? 'loading="lazy"' : ''} draggable="false"></span>
+              <span class="f f-back"></span><span class="f f-l"></span><span class="f f-r"></span><span class="f f-t"></span>
+            </span>
           </a>`).join('')}
         </div>
         <div class="shelf-board" aria-hidden="true"></div>
@@ -43,7 +46,7 @@
       row.classList.toggle('has-active', h > -1);
       books.forEach((b, i) => {
         b.classList.toggle('on', i === h);
-        b.style.setProperty('--o', h < 0 ? 0 : Math.sign(i - h) * Math.max(0, 1 - (Math.abs(i - h) - 1) * 0.35));
+        b.style.setProperty('--o', h < 0 ? 0 : Math.sign(i - h));
       });
     });
     if (!el) { idle(); return; }
