@@ -440,7 +440,7 @@ body.shop{height:100vh;height:100svh;overflow:hidden}
 .book{--w:calc(174 * var(--u));position:relative;display:block;flex:none;width:var(--w);margin:0 calc(-12 * var(--u));transform-style:preserve-3d;transform-origin:50% 100%;
   transform:translate3d(calc(var(--o,0) * 96 * var(--u) + var(--dx,0px)),var(--dy,0px),0) rotateY(-54deg);
   transition:transform .45s var(--out),opacity .3s var(--out)}
-.slab{--t:calc(18 * var(--u));position:relative;display:block;aspect-ratio:1/1.414;transform-style:preserve-3d}
+.slab{--t:max(2px,calc(3 * var(--u)));position:relative;display:block;aspect-ratio:1/1.414;transform-style:preserve-3d}
 /* every side carries the print's own artwork: the edges are the strip of the poster nearest that edge, a touch darker, so the slab reads as one solid piece */
 .slab .f{position:absolute;display:block;backface-visibility:hidden;background-color:var(--ink);background-repeat:no-repeat}
 .slab .f::after{content:'';position:absolute;inset:0;background:var(--ink);opacity:var(--sh,0)}
