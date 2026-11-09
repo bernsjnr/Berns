@@ -235,11 +235,12 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
    The logos carry the names (aria-label), so there are no titles. */
 .groups{list-style:none;margin-top:calc(96 * var(--u));border-top:1px solid currentColor}
 .groups li{border-bottom:1px solid currentColor}
-.group{display:grid;grid-template-columns:calc(220 * var(--u)) minmax(0,1fr);align-items:center;gap:calc(48 * var(--u));padding:calc(32 * var(--u)) 0}
-.group-logo{display:flex;align-items:center;justify-content:flex-start;height:calc(96 * var(--u))}
+.group{display:grid;grid-template-columns:calc(196 * var(--u)) minmax(0,1fr);align-items:center;gap:calc(48 * var(--u));padding:calc(32 * var(--u)) 0}
+/* logos share one centre line, so the narrow Track + Play mark sits under the middle of BULLY THE ROADS */
+.group-logo{display:flex;align-items:center;justify-content:center;height:calc(96 * var(--u))}
 .group-logo svg{display:block;height:100%;width:auto;max-width:100%}
 .group-logo--btr svg{height:calc(80 * var(--u))}
-.group-logo--rot svg{height:calc(30 * var(--u))}
+.group-logo--rot svg{height:auto;width:100%}
 .group-text{display:flex;flex-direction:column;align-items:flex-start;gap:calc(8 * var(--u))}
 .group-role{font-size:calc(15 * var(--u));line-height:1}
 .group-line{font-family:var(--f-head);font-weight:700;font-size:calc(30 * var(--u));line-height:1.1;letter-spacing:-.015em}
@@ -305,7 +306,7 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
   .group{grid-template-columns:96px minmax(0,1fr);gap:20px;padding:22px 0}
   .group-logo{height:56px}
   .group-logo--btr svg{height:44px}
-  .group-logo--rot svg{height:18px}
+  .group-logo--rot svg{height:auto;width:100%}
   .group-role,.group .go{font-size:11px}
   .group-line{font-size:18px}
   .hosted-n{margin-top:56px}
