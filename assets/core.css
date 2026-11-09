@@ -213,6 +213,7 @@ a:hover .go::after,a.go:hover::after{transform:translateX(4px)}
 .hosted-logo svg{display:block;height:100%;width:auto}
 .hosted-logo--sq svg{height:calc(72 * var(--u))}
 .hosted-logo--wide svg{height:calc(28 * var(--u))}
+.hosted-logo--va svg{height:calc(96 * var(--u));margin-bottom:calc(-14 * var(--u))}
 
 /* Logo slots: dashed box with the name until the real artwork lands. Swap the inner text for an inline SVG. */
 .slot{display:inline-flex;align-items:center;justify-content:center;height:100%;min-width:calc(170 * var(--u));padding:0 calc(16 * var(--u));
@@ -305,10 +306,10 @@ html[data-ground="white"] .photo{outline:1px solid var(--ink)}
   .hosted-n{margin-top:56px}
   .hosted{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));justify-items:center;gap:32px 16px;margin-top:16px;padding-top:28px}
   .hosted li{align-items:center;gap:12px;text-align:center}
-  .hosted li:last-child{grid-column:1/-1}
   .hosted-logo{height:40px;justify-content:center}
   .hosted-logo--sq svg{height:46px}
   .hosted-logo--wide svg{height:18px}
+  .hosted-logo--va svg{height:62px;margin-bottom:-9px}
   .btns{justify-content:center;gap:10px;margin-top:36px}
   .btn{font-size:12px;padding:14px 20px}
   .prints{flex-direction:column;align-items:center;gap:16px;margin-bottom:48px}
