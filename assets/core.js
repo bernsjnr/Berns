@@ -140,6 +140,13 @@
     apply();
   });
 
+  /* Scrolled: once you leave the top, the fixed bar sits on a solid band in the page colour,
+     so titles slide under it instead of through the clock */
+  {
+    const s = () => root.classList.toggle('scrolled', scrollY > 40);
+    addEventListener('scroll', s, { passive: true }); s();
+  }
+
   /* Grounds: the chapter holding the middle of the screen sets the page colour (ink, white or blue) */
   {
     const chaps = [...document.querySelectorAll('body [data-ground]')];
