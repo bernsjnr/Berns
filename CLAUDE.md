@@ -5,13 +5,21 @@ Personal site for Berns (Bernard Bannor). "Berns" is the main name; Berns Studio
 ## Decisions so far
 - Domain stays **bernsds.com**. Email on Zoho must keep working (don't touch MX records).
 - Hand-built static HTML/CSS/JS, hosted on **Hostinger**. Moving off Cargo.
-- Nav: STUDIOS / PRESENTING / SHOP / COMMUNITY / CONTACT.
+- Nav (v9, Nov 2026): HOME / WORK / ABOUT / SHOP / CONTACT, in a full-screen menu behind MENU. Presenting and Community to be folded in later.
 - Shop sells Berns's posters. He prints, checks and posts them himself (quality control). Checkout via **Stripe Payment Links** (no cart backend).
 - Shop: 12 prints in `assets/posters/` (listed in `assets/data.js`): Mistakes are the portals of discovery, Love God love people, Home is where the heart is, Don't get tired of doing good, Day by day, In God's time, plus the gradient series (Breathe, Pause, Warmth, Rest is productive, Breath in breath out, No. 5). The six typographic posters are only 620px wide for now; swap in high-res files when Berns sends them.
 - Community section: BULLY THE ROADS (co-founder, London running club), Track + Play (co-founder, annual community sports day), Rule of Thirds (one third, creative collective and podcast, ruleofthirds.co.uk).
 - Presenting credits: Guardian Black History Month event (host), Wave and Dave listening party (presenter), BULLY THE ROADS events (host). Formats: launches, panels, listening parties, sports events.
 
 ## Current state
+**v9 rebuild (Nov 2026): starting from scratch, page by page.** Home is done; inner pages still run the old v7 code (`site.css`/`site.js`) until each is rebuilt.
+- New shared files: `assets/core.css` and `assets/core.js` (top bar, live date and time, battery, full-screen menu, rotatable photo, pixel cursor). Rebuilt pages use these only, not site.css/site.js.
+- Home (`index.html`, from Berns's Illustrator artboard): ink ground, one screen. BERNARD BANNOR top left in Scale (wdth 125, wght 900). Top right: visitor's local date and time in Space Mono Bold (Google Fonts, stand-in until Berns picks a mono; time only on phones), a battery icon (real level via navigator.getBattery; Chrome/Edge/Android only, hidden elsewhere), MENU in Scale. Centre: portrait in a white frame, starts at 3deg, drag to turn (clamped to 20deg either way), arrow keys turn it, double-click straightens. Bottom: "A designer and presenter working between culture, sport and community." in NHG Display Bold with designer/presenter on Berns Blue highlights (Berns's call, overrides the accent-only rule here), READ MORE in mono to about/.
+- Menu: MENU opens a full-screen Berns Blue takeover (clip from top, 250ms ease-out, items stagger in), MENU becomes CLOSE, Esc closes. Items in Scale with mono numbers, current page underlined.
+- Layout is drawn at 1600x900 and scales by `--u` (fits width or height, whichever is tighter). Below 760px the bar stacks (time, battery, MENU above the name).
+- Cursor: same classic pixel set, now 75% size (crisp on retina: 3 device px per art pixel).
+
+### Before v9
 Multi-page static site (v3, Nov 2026), built from the live bernsds.com (Cargo) layout: white page, BERNS studios logo top left, live London clock top right, centred label + one-sentence heads, two-column grid of rounded (20px) 16:9 tiles with captions, fixed bottom nav. Berns rejected v2 (busy gradients, moving type) as too much; v1 and v2 are kept as `prototype-v1.html` and `prototype-v2.html` for reference only.
 
 Opening page (`index.html`, v8, Nov 2026, from Berns's hand sketch): one Berns Blue screen, no scrolling. Bar shows HOME / WORK / ABOUT / SHOP / CONTACT spread across (no name in the bar on this page). Left: rounded white panel with Berns cut out (`assets/img/berns-cutout.webp`, background removed with rembg isnet), his head breaking out above the panel's top edge (the photo is layered twice: once clipped inside the panel, once clipped to the part above it). Right: BERNARD BANNOR in Scale, a rule, "A designer and presenter working between culture, sport and community." and a white READ MORE pill to About. Stacks on phones. The older poster (.poster) and draggable-photo code is still in the files, unused.

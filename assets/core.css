@@ -1,0 +1,109 @@
+/* =========================================================
+   BERNS: core styles (v9, Nov 2026, rebuild from scratch)
+   Shared by every rebuilt page: top bar (name, live date and
+   time, battery, MENU), full-screen blue menu, pixel cursor.
+   Page-specific sections follow below.
+   ========================================================= */
+:root{
+  --blue:#080CDF; --ink:#1A1A1A; --white:#FFFFFF;
+  --f-scale:'scale-variable','Arial Black','Helvetica Neue',Arial,sans-serif;
+  --f-head:'neue-haas-grotesk-display','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --f-body:'neue-haas-grotesk-text','Helvetica Neue',Helvetica,Arial,sans-serif;
+  --f-mono:'Space Mono',ui-monospace,Menlo,Consolas,monospace;
+  /* 1 design pixel: the layout is drawn at 1600 x 900 and scales to fit the screen */
+  --u:min(calc(100vw / 1600), calc(100svh / 900));
+  --hx:calc(80 * var(--u));
+  --out:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--ink);color:var(--white);font-family:var(--f-body);font-size:17px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+::selection{background:var(--blue);color:var(--white)}
+:focus-visible{outline:2px solid var(--white);outline-offset:4px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Shared type */
+.scale{font-family:var(--f-scale);font-weight:900;font-variation-settings:'wdth' 125,'wght' 900;text-transform:uppercase;letter-spacing:0}
+.mono{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:0}
+
+/* ---------- Top bar ---------- */
+.bar{position:relative;z-index:60;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding:calc(56 * var(--u)) var(--hx) 0}
+.bar-name{font-size:calc(84 * var(--u));line-height:.86}
+.bar-name a{display:block}
+.bar-right{display:flex;align-items:center;gap:calc(30 * var(--u));padding-top:calc(4 * var(--u))}
+.bar-clock{font-size:calc(21 * var(--u));line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.bar-batt{display:block;width:calc(40 * var(--u));height:calc(20 * var(--u))}
+.bar-batt[hidden]{display:none}
+.bar-batt svg{display:block;width:100%;height:100%;overflow:visible}
+.bar-batt .bolt{display:none}
+.bar-batt.charging .bolt{display:block}
+.bar-menu{font-size:calc(40 * var(--u));line-height:.8;padding:calc(6 * var(--u)) 0}
+
+/* ---------- Full-screen menu ---------- */
+.menu{position:fixed;inset:0;z-index:50;background:var(--blue);color:var(--white);display:flex;align-items:flex-end;
+  padding:0 var(--hx) calc(56 * var(--u));visibility:hidden;clip-path:inset(0 0 100% 0);
+  transition:clip-path .25s var(--out),visibility 0s linear .25s}
+html.menu-open .menu{visibility:visible;clip-path:inset(0);transition:clip-path .25s var(--out)}
+html.menu-open,html.menu-open body{overflow:hidden}
+.menu ol{list-style:none;width:100%}
+.menu li{opacity:0;transform:translateY(14px);transition:opacity .2s var(--out),transform .2s var(--out)}
+html.menu-open .menu li{opacity:1;transform:none}
+html.menu-open .menu li:nth-child(2){transition-delay:.03s}
+html.menu-open .menu li:nth-child(3){transition-delay:.06s}
+html.menu-open .menu li:nth-child(4){transition-delay:.09s}
+html.menu-open .menu li:nth-child(5){transition-delay:.12s}
+.menu a{display:flex;align-items:flex-start;gap:calc(18 * var(--u));font-size:min(calc(104 * var(--u)),11vw);line-height:.9;padding:.04em 0}
+.menu .t{text-decoration-line:underline;text-decoration-color:transparent;text-decoration-thickness:.07em;text-underline-offset:.08em;transition:text-decoration-color .15s var(--out)}
+.menu a:hover .t,.menu a:focus-visible .t,.menu a[aria-current="page"] .t{text-decoration-color:currentColor}
+.menu .n{font-size:max(11px,calc(18 * var(--u)));line-height:1;padding-top:.3em}
+
+/* ---------- Pixel cursor (classic set, 75% of the old size) ---------- */
+.cur{position:fixed;left:0;top:0;z-index:100;pointer-events:none;opacity:0;will-change:transform}
+html.cur-on .cur{opacity:1}
+.cur img{position:absolute;display:none;max-width:none;image-rendering:pixelated}
+.cur[data-k="arrow"] .cur-arrow,.cur[data-k="pointer"] .cur-pointer,.cur[data-k="wait"] .cur-wait{display:block}
+html.cur-hide-native,html.cur-hide-native *{cursor:none!important}
+
+/* =========================================================
+   Home
+   ========================================================= */
+body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:auto 1fr auto}
+.home-photo{display:grid;place-items:center;padding:calc(24 * var(--u)) 0}
+.photo{--a:3deg;width:calc(272 * var(--u));aspect-ratio:272/316;background:var(--white);padding:calc(7 * var(--u));
+  transform:rotate(var(--a));touch-action:none;user-select:none;-webkit-user-select:none}
+.photo.settle{transition:transform .25s var(--out)}
+.photo img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;pointer-events:none;-webkit-user-drag:none}
+.home-foot{padding:0 var(--hx) calc(48 * var(--u))}
+.home-line{font-family:var(--f-head);font-weight:700;font-size:calc(76 * var(--u));line-height:.88;letter-spacing:-.022em}
+.hl{background:var(--blue);padding:0 .06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.home-more{display:inline-block;margin-top:calc(34 * var(--u));font-size:calc(28 * var(--u));line-height:1;
+  text-decoration:underline;text-decoration-thickness:.09em;text-underline-offset:.16em;transition:background-color .15s var(--out)}
+.home-more:hover,.home-more:focus-visible{background:var(--blue)}
+
+/* Phones and narrow screens: name gets its own row, sizes follow the width */
+@media (max-width:760px){
+  :root{--u:calc(100vw / 600);--hx:20px}
+  .bar{flex-direction:column-reverse;gap:22px;padding-top:18px}
+  .bar-right{width:100%;justify-content:space-between;gap:14px;padding:0}
+  .bar-clock{font-size:13px;margin-right:auto}
+  .bar-batt{width:26px;height:13px}
+  .bar-menu{font-size:22px}
+  .bar-name{font-size:calc(72 * var(--u))}
+  .clock-date{display:none}
+  .photo{width:min(56vw,34svh)}
+  .home-line{font-size:calc(52 * var(--u));line-height:1.02}
+  .home-line br{display:none}
+  .home-foot{padding-bottom:28px}
+  .home-more{font-size:15px;margin-top:20px}
+  .menu{padding-bottom:28px}
+  .menu a{font-size:11.5vw}
+  .menu .n{font-size:11px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .menu,html.menu-open .menu,.menu li,.photo.settle{transition:none}
+  .menu li{transform:none}
+}
