@@ -311,3 +311,32 @@ html.cur-hide-native,html.cur-hide-native *{cursor:none!important}
 .bio .actions{grid-column:2}
 .bio-text{display:grid;gap:1em;max-width:34ch;font-family:var(--f-head);font-weight:700;font-size:clamp(22px,2.2vw,42px);line-height:1.08;letter-spacing:-.022em}
 @media (max-width:860px){.split-photo{position:relative;top:0;height:auto;aspect-ratio:4/5}.bio{grid-template-columns:minmax(0,1fr)}.bio .actions{grid-column:1}}
+
+/* Opening page (v8), from Berns's sketch: cut-out photo in a rounded panel, head breaking out of the top edge */
+body.opening{background:var(--blue);color:var(--white)}
+.front{min-height:100vh;min-height:100svh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:clamp(24px,5vw,96px);
+  padding:calc(var(--bar-h) + clamp(16px,4svh,48px)) var(--hx) clamp(24px,6svh,72px)}
+.cutout{--W:min(32vw,56svh);position:relative;width:var(--W);aspect-ratio:1000/1158;margin:0;justify-self:end}
+.cutout img{position:absolute;left:5%;bottom:0;width:90%;height:auto;max-width:none}
+.cutout-shape{position:absolute;left:0;right:0;bottom:0;height:58%;background:var(--white);border-radius:clamp(16px,1.8vw,28px);overflow:hidden}
+/* Same photo again, cropped to just the part above the panel, so the head sits outside it */
+.cutout-head{position:absolute;inset:0;clip-path:inset(0 0 calc(58% - 1px) 0)}
+.cutout img{transition:transform 1.2s var(--ease);transform-origin:50% 100%}
+.cutout:hover img{transform:scale(1.025)}
+.front-text{display:grid;gap:clamp(16px,2.2vw,36px);justify-items:start;min-width:0}
+.front-name{font-family:'scale-variable','Arial Black',sans-serif;font-variation-settings:'wdth' 125,'wght' 900;font-weight:900;font-size:clamp(44px,6vw,150px);line-height:.84;text-transform:uppercase}
+.front-line{font-family:var(--f-head);font-weight:700;font-size:clamp(17px,1.6vw,36px);line-height:1;letter-spacing:-.02em;padding-top:clamp(10px,1.2vw,22px);border-top:2px solid currentColor}
+.pill{display:inline-flex;align-items:center;height:44px;padding:0 22px;border-radius:999px;background:var(--white);color:var(--ink);
+  font-family:'scale-variable',var(--f-body);font-variation-settings:'wdth' 100,'wght' 500;font-weight:500;font-size:13px;text-transform:uppercase;letter-spacing:.02em;transition:background .4s var(--ease),color .4s var(--ease)}
+.pill:hover{background:var(--ink);color:var(--white)}
+/* Bar on the opening page: HOME at left, the rest spread across, like the sketch */
+body.opening .bar{background:var(--blue);color:var(--white)}
+body.opening .bar-name{display:none}
+body.opening .bar-nav{flex:1;justify-content:space-between}
+body.opening .bar-nav a{opacity:1}
+@media (max-width:760px){
+  .front{grid-template-columns:minmax(0,1fr);align-content:center;justify-items:center;text-align:left}
+  .cutout{--W:min(70vw,40svh);justify-self:center}
+  .front-text{justify-self:stretch}
+  .front-name{font-size:clamp(36px,11vw,64px)}
+}

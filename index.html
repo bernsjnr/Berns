@@ -9,19 +9,20 @@
 <link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
 <link rel="stylesheet" href="assets/site.css">
 </head>
-<body data-base="" data-page="home" class="has-hero has-poster opening">
+<body data-base="" data-page="home" class="opening">
 <main>
-<!-- Opening page: Berns Blue poster with a photo floating on top that you can drag around.
-     The nav in the bar is the way into the site. -->
-<section class="poster" id="top" aria-label="Bernard Bannor">
-  <div class="poster-stack">
-    <p class="poster-meta">A designer and presenter working<br>between culture, sport and community.</p>
-    <h1 class="poster-word poster-name">Bernard<br>Bannor</h1>
-    <p class="poster-meta">A designer and presenter working<br>between culture, sport and community.</p>
-  </div>
-  <figure class="hero-portrait">
-    <img draggable="false" src="assets/img/berns-portrait.webp" alt="Bernard Bannor in a black knit cardigan against an orange curtain" width="1000" height="1500" fetchpriority="high">
+<!-- Opening page (v8): from Berns's sketch. Rounded white panel on the left with his cut-out photo,
+     head breaking out above the top edge; name, line and a button on the right. -->
+<section class="front">
+  <figure class="cutout" aria-label="Bernard Bannor">
+    <div class="cutout-shape"><img src="assets/img/berns-cutout.webp" alt="" width="1000" height="1158" fetchpriority="high"></div>
+    <div class="cutout-head" aria-hidden="true"><img src="assets/img/berns-cutout.webp" alt="" width="1000" height="1158"></div>
   </figure>
+  <div class="front-text">
+    <h1 class="front-name">Bernard<br>Bannor</h1>
+    <p class="front-line">A designer and presenter working<br>between culture, sport and community.</p>
+    <a class="pill" href="about/index.html">Read more</a>
+  </div>
 </section>
 </main>
 <script src="assets/data.js"></script>
