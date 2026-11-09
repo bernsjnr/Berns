@@ -16,13 +16,14 @@
   --out:cubic-bezier(.22,1,.36,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
-body{background:var(--ink);color:var(--white);font-family:var(--f-body);font-size:17px;line-height:1.45;-webkit-font-smoothing:antialiased}
+html{-webkit-text-size-adjust:100%;overflow-x:clip}
+body{overflow-x:clip}
+body{background:var(--ink);color:var(--white);transition:background-color .6s var(--out),color .6s var(--out);font-family:var(--f-body);font-size:17px;line-height:1.45;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 ::selection{background:var(--blue);color:var(--white)}
-:focus-visible{outline:2px solid var(--white);outline-offset:4px}
+:focus-visible{outline:2px solid currentColor;outline-offset:4px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* Shared type */
@@ -122,4 +123,159 @@ body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:aut
 @media (prefers-reduced-motion:reduce){
   .menu,html.menu-open .menu,.menu li,.photo.settle,.pm::after{transition:none}
   .menu li{transform:none}
+}
+
+/* =========================================================
+   Scrolling pages (About): grounds, reveals, chapters
+   Each chapter sets data-ground (ink, white, blue). As it takes the
+   middle of the screen, the whole page eases to that colour.
+   ========================================================= */
+html{--ground:var(--ink)}
+html[data-ground="white"]{--ground:var(--white)}
+html[data-ground="blue"]{--ground:var(--blue)}
+html[data-ground="white"] body{background:var(--white);color:var(--ink)}
+html[data-ground="blue"] body{background:var(--blue);color:var(--white)}
+html.menu-open .bar,html.menu-open .bar-right{color:var(--white)}
+html[data-ground="white"] .hl{color:var(--white)}
+
+/* MENU, clock and battery stay with you on long pages */
+/* Once you scroll, it sits on a solid band in the page colour so chapter titles slide under it cleanly */
+body.scroll .bar-right{position:fixed;top:0;left:0;right:0;z-index:60;justify-content:flex-end;padding:calc(62 * var(--u)) var(--hx) calc(22 * var(--u));
+  background:transparent;transition:background-color .6s var(--out)}
+html.scrolled body.scroll .bar-right{background:var(--ground)}
+html.menu-open body.scroll .bar-right{background:transparent}
+
+/* Fade up into place as it comes on screen */
+[data-reveal]{opacity:0;transform:translateY(28px);transition:opacity .9s var(--out),transform .9s var(--out)}
+[data-reveal].in{opacity:1;transform:none}
+[data-reveal="2"]{transition-delay:.12s}
+[data-reveal="3"]{transition-delay:.24s}
+[data-reveal="4"]{transition-delay:.36s}
+
+/* Opening scene: pinned while you scroll. The greeting fades in, then gives way to the one-line bio, word by word. */
+.hello{position:relative;height:280vh;height:280svh}
+.hello-pin{position:sticky;top:0;height:100vh;height:100svh;display:grid;place-items:center;padding:0 var(--hx);overflow:hidden}
+.hello-greet,.hello-say{grid-area:1/1;text-align:center}
+.hello-greet{transform:scale(calc(1 - var(--g, 0) * .08));opacity:calc(1 - var(--g, 0))}
+.hello-greet span{display:block;opacity:0;transform:translateY(24px);animation:rise .9s var(--out) forwards}
+.hello-greet .g1{font-family:var(--f-head);font-weight:700;font-size:calc(64 * var(--u));line-height:1;letter-spacing:-.02em;animation-delay:.25s}
+.hello-greet .g2{font-size:calc(150 * var(--u));line-height:.9;margin-top:calc(18 * var(--u));animation-delay:.85s}
+.hello-say{max-width:21ch;font-family:var(--f-head);font-weight:700;font-size:calc(70 * var(--u));line-height:1;letter-spacing:-.022em}
+.hello-say .w{opacity:0;transition:opacity .35s var(--out)}
+.hello-say .w.on{opacity:1}
+.hello-cue{position:absolute;left:50%;bottom:calc(44 * var(--u));transform:translateX(-50%);font-size:calc(16 * var(--u));opacity:0;animation:cue .9s var(--out) 1.6s forwards}
+.hello.past .hello-cue{visibility:hidden}
+@keyframes rise{to{opacity:1;transform:none}}
+@keyframes cue{to{opacity:1}}
+
+/* Chapters */
+.chap{position:relative;min-height:100vh;min-height:100svh;padding:calc(180 * var(--u)) var(--hx) calc(200 * var(--u))}
+.chap-n{display:block;font-size:calc(18 * var(--u));line-height:1;margin-bottom:calc(28 * var(--u))}
+.chap-title{font-size:min(8.4vw,calc(160 * var(--u)));line-height:.86}
+.chap-title[data-reveal]{transform:translateY(40px) scale(.94);transform-origin:0 100%}
+.chap-title[data-reveal].in{transform:none}
+.chap-lede{max-width:24ch;margin-top:calc(56 * var(--u));font-family:var(--f-head);font-weight:700;font-size:calc(52 * var(--u));line-height:1.02;letter-spacing:-.02em}
+.chap-body{max-width:46ch;margin-top:calc(32 * var(--u));font-size:calc(21 * var(--u));line-height:1.5}
+
+/* Design: two cards, The Guardian and Berns Studios */
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(24 * var(--u));max-width:calc(1060 * var(--u));margin-top:calc(80 * var(--u))}
+.card{display:flex;flex-direction:column;gap:calc(14 * var(--u));min-height:calc(300 * var(--u));padding:calc(36 * var(--u));border:1px solid currentColor;border-radius:24px;
+  transition:background-color .2s var(--out),color .2s var(--out)}
+.card .logo{height:calc(44 * var(--u));margin-bottom:auto}
+.card .logo svg{display:block;height:100%;width:auto;max-width:100%}
+.card-role{font-family:var(--f-head);font-weight:700;font-size:calc(40 * var(--u));line-height:1;letter-spacing:-.02em;margin-top:calc(60 * var(--u))}
+.card-meta{font-size:calc(16 * var(--u));line-height:1.3}
+a.card:hover,a.card:focus-visible{background:var(--ink);color:var(--white)}
+html[data-ground="ink"] a.card:hover,html[data-ground="ink"] a.card:focus-visible{background:var(--blue)}
+.go{display:inline-flex;align-items:center;gap:.5em}
+.go::after{content:'\2192';font-family:var(--f-body);font-weight:700;transition:transform .2s var(--out)}
+a:hover .go::after,a.go:hover::after{transform:translateX(4px)}
+
+/* Logo slots: dashed box with the name until the real artwork lands. Swap the inner text for an inline SVG. */
+.slot{display:inline-flex;align-items:center;justify-content:center;height:100%;min-width:calc(170 * var(--u));padding:0 calc(16 * var(--u));
+  border:1px dashed currentColor;border-radius:8px;font-size:calc(13 * var(--u));line-height:1.2;text-align:center}
+
+/* Presenting: credits as ruled rows */
+.credits{list-style:none;max-width:calc(1000 * var(--u));margin-top:calc(80 * var(--u));border-top:1px solid currentColor}
+.credits li{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;align-items:baseline;gap:calc(24 * var(--u));
+  padding:calc(26 * var(--u)) 0;border-bottom:1px solid currentColor}
+.credits .who{font-family:var(--f-head);font-weight:700;font-size:calc(44 * var(--u));line-height:1;letter-spacing:-.02em}
+.credits .what{font-size:calc(19 * var(--u));line-height:1.3}
+.credits .role{font-size:calc(16 * var(--u));line-height:1}
+.btns{display:flex;flex-wrap:wrap;gap:calc(14 * var(--u));margin-top:calc(56 * var(--u))}
+.btn{display:inline-flex;align-items:center;gap:.5em;padding:calc(18 * var(--u)) calc(28 * var(--u));border:1px solid currentColor;border-radius:999px;
+  font-size:calc(17 * var(--u));line-height:1;transition:background-color .2s var(--out),color .2s var(--out),border-color .2s var(--out)}
+.btn:hover,.btn:focus-visible{background:var(--white);color:var(--ink);border-color:var(--white)}
+html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visible{background:var(--ink);color:var(--white);border-color:var(--ink)}
+
+/* Community: three tiles with the logos Berns designed */
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(24 * var(--u));margin-top:calc(80 * var(--u))}
+.tile{display:flex;flex-direction:column;gap:calc(12 * var(--u));padding:calc(32 * var(--u));border:1px solid currentColor;border-radius:24px;transition:background-color .2s var(--out),color .2s var(--out)}
+.tile .logo{height:calc(150 * var(--u));margin-bottom:calc(36 * var(--u))}
+.tile .slot{width:100%}
+.tile .tile-name{font-family:var(--f-head);font-weight:700;font-size:calc(34 * var(--u));line-height:1;letter-spacing:-.02em}
+.tile-role{font-size:calc(15 * var(--u));line-height:1.2}
+.tile p{font-size:calc(18 * var(--u));line-height:1.45}
+.tile .go{margin-top:auto;padding-top:calc(16 * var(--u));font-size:calc(15 * var(--u))}
+a.tile:hover,a.tile:focus-visible{background:var(--white);color:var(--blue)}
+
+/* Photo placeholders: same draggable prints as Home, scattered through the chapters */
+.chap .photo{position:absolute;width:calc(250 * var(--u))}
+.photo .ph{display:grid;place-items:center;width:100%;height:100%;background:#F1F2F3;color:var(--ink);font-size:calc(13 * var(--u));text-align:center;padding:12px}
+html[data-ground="white"] .photo{outline:1px solid var(--ink)}
+
+/* Close */
+.close{display:flex;flex-direction:column;justify-content:center}
+.close-title{font-size:min(8.6vw,calc(150 * var(--u)));line-height:.88;max-width:12ch}
+.close-mail{display:inline-block;margin-top:calc(56 * var(--u));font-family:var(--f-head);font-weight:700;font-size:calc(52 * var(--u));line-height:1;letter-spacing:-.02em;
+  text-decoration:underline;text-decoration-thickness:.06em;text-underline-offset:.14em;align-self:flex-start;transition:background-color .15s var(--out)}
+.close-mail:hover,.close-mail:focus-visible{background:var(--blue)}
+.foot{display:flex;justify-content:space-between;gap:16px;padding:0 var(--hx) calc(40 * var(--u));font-size:calc(14 * var(--u))}
+
+@media (max-width:760px){
+  body.scroll .bar{padding-top:58px}
+  body.scroll .bar-right{width:auto;padding:18px 20px 12px;justify-content:space-between}
+  .hello-greet .g1{font-size:30px}
+  .hello-greet .g2{font-size:15vw}
+  .hello-say{font-size:8.6vw}
+  .hello-cue{font-size:11px;bottom:28px}
+  .chap{padding:110px 20px 120px}
+  .chap-n{font-size:12px;margin-bottom:16px}
+  .chap-title{font-size:9.3vw}
+  .chap-lede{font-size:7.4vw;margin-top:28px}
+  .chap-body{font-size:16px}
+  .cards,.tiles{grid-template-columns:minmax(0,1fr);gap:14px;margin-top:40px}
+  .card,.tile{padding:22px;min-height:0;gap:10px}
+  .card .logo{height:auto;max-height:34px}
+  .card .logo svg{height:auto;width:100%}
+  .card-role{font-size:26px;margin-top:28px}
+  .card-meta,.tile-role,.tile .go{font-size:12px}
+  .slot{font-size:11px;min-width:150px}
+  .tile .logo{height:110px;margin-bottom:16px}
+  .tile .tile-name{font-size:26px}
+  .tile p{font-size:15px}
+  .credits{margin-top:40px}
+  .credits li{grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:16px 0}
+  .credits .who{font-size:24px}
+  .credits .what{grid-column:1;font-size:14px}
+  .credits .role{grid-row:1;grid-column:2;font-size:11px}
+  .btns{gap:10px;margin-top:32px}
+  .btn{font-size:12px;padding:14px 20px}
+  .chap .photo{position:relative;width:min(60vw,240px);margin:56px auto 0;left:auto!important;top:auto!important;right:auto!important}
+  .photo .ph{font-size:11px}
+  .close-title{font-size:12vw}
+  .close-mail{font-size:7vw;margin-top:32px}
+  .foot{font-size:11px;padding-bottom:24px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  body{transition:none}
+  [data-reveal],.chap-title[data-reveal]{opacity:1;transform:none;transition:none}
+  .hello{height:auto}
+  .hello-pin{position:relative;height:auto;min-height:100svh;gap:48px;padding-top:120px;padding-bottom:120px}
+  .hello-greet,.hello-say{grid-area:auto}
+  .hello-greet{opacity:1;transform:none}
+  .hello-greet span,.hello-cue{animation:none;opacity:1;transform:none}
+  .hello-say .w{opacity:1}
+  .hello-cue{display:none}
 }

@@ -85,10 +85,10 @@
 
   /* Photo: pick it up and move it anywhere on screen (mouse or finger). Like a real print, grabbing it
      off-centre makes it turn as you drag, but never past 20deg either way. Stays where you leave it.
-     Arrow keys turn it when focused; double-click puts it back, straight. */
-  {
-    const ph = document.querySelector('[data-rotate]');
-    if (ph) {
+     Arrow keys turn it when focused; double-click puts it back, straight.
+     Works for every [data-rotate] print. On long pages a print stays inside its [data-bounds] chapter. */
+  document.querySelectorAll('[data-rotate]').forEach(ph => {
+    {
       const MAX = 20;
       let a = parseFloat(getComputedStyle(ph).getPropertyValue('--a')) || 0;
       let x = 0, y = 0, drag = null;
@@ -99,12 +99,14 @@
         ph.style.setProperty('--a', a.toFixed(2) + 'deg');
         ph.setAttribute('aria-valuenow', Math.round(a));
       };
-      /* Keep at least the middle of the photo on screen */
+      const box = ph.closest('[data-bounds]');
+      /* Keep at least the middle of the photo on screen (or inside its chapter) */
       const keepIn = (x0 = x, y0 = y) => {
         /* the rect still shows the last applied position (x0, y0), so shift it by what's changed since */
         const r = ph.getBoundingClientRect();
+        const b = box ? box.getBoundingClientRect() : { left: 0, top: 0, right: innerWidth, bottom: innerHeight };
         const cx = r.left + r.width / 2 + (x - x0), cy = r.top + r.height / 2 + (y - y0);
-        const nx = Math.max(16, Math.min(innerWidth - 16, cx)), ny = Math.max(16, Math.min(innerHeight - 16, cy));
+        const nx = Math.max(b.left + 16, Math.min(b.right - 16, cx)), ny = Math.max(b.top + 16, Math.min(b.bottom - 16, cy));
         x += nx - cx; y += ny - cy;
       };
       ph.addEventListener('pointerdown', e => {
@@ -147,6 +149,77 @@
       });
       addEventListener('resize', () => { keepIn(); apply(); });
       apply();
+    }
+  });
+
+  /* Scrolled: lets the fixed bar put a solid band behind itself once you've left the top */
+  {
+    const s = () => root.classList.toggle('scrolled', scrollY > 40);
+    addEventListener('scroll', s, { passive: true }); s();
+  }
+
+  /* Grounds: the chapter holding the middle of the screen sets the page colour (ink, white or blue) */
+  {
+    const chaps = [...document.querySelectorAll('body [data-ground]')];
+    if (chaps.length) {
+      let cur = '';
+      const pick = () => {
+        const mid = innerHeight / 2;
+        const c = chaps.find(s => { const r = s.getBoundingClientRect(); return r.top <= mid && r.bottom > mid; });
+        const g = c ? c.dataset.ground : 'ink';
+        if (g !== cur) { cur = g; root.dataset.ground = g; }
+      };
+      addEventListener('scroll', pick, { passive: true });
+      addEventListener('resize', pick);
+      pick();
+    }
+  }
+
+  /* Reveals: fade up into place when they come on screen */
+  {
+    const els = document.querySelectorAll('[data-reveal]');
+    if (els.length) {
+      if (reduce || !('IntersectionObserver' in window)) els.forEach(el => el.classList.add('in'));
+      else {
+        const io = new IntersectionObserver(es => es.forEach(e => {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        }), { rootMargin: '0px 0px -12% 0px' });
+        els.forEach(el => io.observe(el));
+      }
+    }
+  }
+
+  /* Opening scene (About): pinned while you scroll. 0 to 35%: the greeting holds. 30 to 50%: it fades and shrinks away.
+     50 to 92%: the one-line bio appears word by word. */
+  {
+    const scene = document.querySelector('[data-hello]');
+    if (scene) {
+      const greet = scene.querySelector('.hello-greet');
+      const say = scene.querySelector('.hello-say');
+      /* split the line into words, keeping any highlight spans whole */
+      const words = [];
+      [...say.childNodes].forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          n.textContent.split(/(\s+)/).forEach(t => {
+            if (!t) return;
+            if (/^\s+$/.test(t)) { frag.appendChild(document.createTextNode(t)); return; }
+            const s = document.createElement('span'); s.className = 'w'; s.textContent = t; frag.appendChild(s); words.push(s);
+          });
+          n.replaceWith(frag);
+        } else { n.classList.add('w'); words.push(n); }
+      });
+      const ease = (a, b, p) => Math.max(0, Math.min(1, (p - a) / (b - a)));
+      const step = () => {
+        const r = scene.getBoundingClientRect();
+        const p = Math.max(0, Math.min(1, -r.top / (r.height - innerHeight)));
+        greet.style.setProperty('--g', ease(.3, .5, p).toFixed(3));
+        const n = Math.round(ease(.5, .92, p) * words.length);
+        words.forEach((w, i) => w.classList.toggle('on', i < n));
+        scene.classList.toggle('past', p > .05);
+      };
+      if (reduce) words.forEach(w => w.classList.add('on'));
+      else { addEventListener('scroll', () => requestAnimationFrame(step), { passive: true }); addEventListener('resize', step); step(); }
     }
   }
 
