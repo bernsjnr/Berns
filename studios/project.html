@@ -49,7 +49,7 @@
   document.getElementById('p-meta').innerHTML = [['Client', p.client], ['Discipline', p.discipline], ['Year', p.year]]
     .map(([k, v]) => `<div><span class="label">${k}</span><span>${v || '–'}</span></div>`).join('');
   document.getElementById('p-media').innerHTML = U.media(p);
-  document.getElementById('p-about').innerHTML = p.about ? p.about.split('\n\n').map(t => `<p>${t}</p>`).join('') : '<p>Write-up to come.</p>';
+  document.getElementById('p-about').innerHTML = p.about ? p.about.split('\n\n').map(t => t.split('\n').map(l => l.startsWith('## ') ? `<h3>${l.slice(3)}</h3>` : `<p>${l}</p>`).join('')).join('') : '<p>Write-up to come.</p>';
   const next = D.projects[(i + 1) % D.projects.length];
   document.getElementById('p-next').href = 'project.html?p=' + next.id;
   document.getElementById('p-next-name').textContent = next.name;
