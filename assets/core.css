@@ -33,19 +33,20 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .bar{position:relative;z-index:60;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding:calc(56 * var(--u)) var(--hx) 0}
 .bar-name{font-size:calc(84 * var(--u));line-height:.86}
 .bar-name a{display:block}
-.bar-right{display:flex;align-items:center;gap:calc(30 * var(--u));padding-top:calc(4 * var(--u))}
+.bar-right{display:flex;align-items:center;gap:calc(26 * var(--u));padding-top:calc(6 * var(--u))}
 .bar-clock{font-size:calc(21 * var(--u));line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
-.bar-batt{display:block;width:calc(40 * var(--u));height:calc(20 * var(--u))}
+.bar-batt{display:block;width:calc(34 * var(--u));height:calc(17 * var(--u))}
 .bar-batt[hidden]{display:none}
 .bar-batt svg{display:block;width:100%;height:100%;overflow:visible}
 .bar-batt .bolt{display:none}
 .bar-batt.charging .bolt{display:block}
-.bar-menu{display:flex;align-items:center;gap:.32em;font-size:calc(40 * var(--u));line-height:.8;padding:calc(6 * var(--u)) 0}
+/* MENU sits one step up from the clock: same cap line, a touch bigger, Scale against mono */
+.bar-menu{display:flex;align-items:center;gap:.4em;font-size:calc(27 * var(--u));line-height:.8;padding:calc(4 * var(--u)) 0}
 /* Plus that turns into a minus when the menu opens: two bars, the upright one turns flat */
-.pm{position:relative;display:block;width:.62em;height:.62em;flex:none}
-.pm::before,.pm::after{content:'';position:absolute;left:0;top:50%;width:100%;height:.17em;margin-top:-.085em;background:currentColor}
-.pm::after{transform:rotate(90deg);transition:transform .2s var(--out)}
-html.menu-open .pm::after{transform:rotate(0deg)}
+.pm{position:relative;display:block;width:.66em;height:.66em;flex:none}
+.pm::before,.pm::after{content:'';position:absolute;left:0;top:50%;width:100%;height:max(2px,.18em);transform:translateY(-50%);background:currentColor}
+.pm::after{transform:translateY(-50%) rotate(90deg);transition:transform .2s var(--out)}
+html.menu-open .pm::after{transform:translateY(-50%) rotate(0deg)}
 
 /* ---------- Full-screen menu ---------- */
 .menu{position:fixed;inset:0;z-index:50;background:var(--blue);color:var(--white);display:flex;align-items:flex-end;
@@ -94,8 +95,8 @@ body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:aut
   .bar{flex-direction:column-reverse;gap:22px;padding-top:18px}
   .bar-right{width:100%;justify-content:space-between;gap:14px;padding:0}
   .bar-clock{font-size:13px;margin-right:auto}
-  .bar-batt{width:26px;height:13px}
-  .bar-menu{font-size:22px}
+  .bar-batt{width:24px;height:12px}
+  .bar-menu{font-size:16px}
   .bar-name{font-size:calc(72 * var(--u))}
   .clock-date{display:none}
   .photo{width:min(56vw,34svh)}
