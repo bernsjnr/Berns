@@ -247,6 +247,25 @@ a.tile:hover .tile-name,a.tile:focus-visible .tile-name{text-decoration-color:cu
 .chap .photo--btr{width:calc(520 * var(--u));aspect-ratio:1400/1120}
 .chap .photo--tp{width:calc(554 * var(--u));aspect-ratio:1400/1050}
 .chap .photo img{object-position:50% 40%}
+
+/* Desktop: picture on the left, the whole chapter's text on the right. The picture stretches to the height
+   of the text so the two columns line up top and bottom. */
+@media (min-width:761px){
+  .chap:has(> .prints){display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:calc(96 * var(--u));align-content:start}
+  .chap > .prints{grid-column:1;grid-row:1 / span 30;display:block;margin:0;align-self:stretch}
+  .chap:has(> .prints) > :not(.prints){grid-column:2}
+  /* the picture pins beside the text while you read it, always fully in view */
+  .chap > .prints .photo{position:sticky;top:calc(112 * var(--u));width:100%;height:calc(100vh - 112 * var(--u) - 56 * var(--u));aspect-ratio:auto}
+  .chap > .prints .photo--host img{object-position:22% 60%}
+  .chap:has(> .prints) .chap-title{font-size:calc(88 * var(--u))}
+  .chap:has(> .prints) .chap-lede{max-width:none}
+  .chap:has(> .prints) .marks{max-width:none;gap:calc(32 * var(--u))}
+  .chap:has(> .prints) .hosted{gap:calc(28 * var(--u)) calc(44 * var(--u))}
+  .chap:has(> .prints) .tiles{flex-wrap:nowrap;gap:calc(40 * var(--u))}
+  .chap:has(> .prints) .tile{flex:1 1 0;max-width:none}
+  .chap:has(> .prints) .tile-logo{height:calc(110 * var(--u))}
+  .chap:has(> .prints) .tile-logo--rot svg{height:calc(30 * var(--u))}
+}
 .photo .ph{display:grid;place-items:center;width:100%;height:100%;background:#F1F2F3;color:var(--ink);font-size:calc(13 * var(--u));text-align:center;padding:12px}
 html[data-ground="white"] .photo{outline:1px solid var(--ink)}
 
@@ -294,7 +313,8 @@ html[data-ground="white"] .photo{outline:1px solid var(--ink)}
   .btn{font-size:12px;padding:14px 20px}
   .prints{flex-direction:column;align-items:center;gap:16px;margin-bottom:48px}
   .chap .photo--portrait{width:min(66vw,260px)}
-  .chap .photo--host,.chap .photo--btr,.chap .photo--tp{width:100%}
+  .chap .photo--host,.chap .photo--btr{width:100%}
+  .chap .photo{transform:none;touch-action:auto}
   .photo .ph{font-size:11px}
   .close{align-items:center}
   .close-title{font-size:11vw;margin:0 auto}

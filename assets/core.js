@@ -147,6 +147,12 @@
      It stays where you leave it; arrow keys nudge it when focused; double-click puts it back.
      On long pages a print stays inside its [data-bounds] chapter, otherwise on screen. */
   document.querySelectorAll('[data-rotate]').forEach(ph => {
+    /* About on phones: prints stay put (dragging them while scrolling was confusing) */
+    if (ph.closest('.chap') && matchMedia('(max-width: 760px)').matches) {
+      ph.removeAttribute('data-rotate'); ph.removeAttribute('tabindex'); ph.removeAttribute('role');
+      ph.setAttribute('aria-label', ph.getAttribute('aria-label').replace(' Drag to move it around.', ''));
+      return;
+    }
     let x = 0, y = 0, drag = null;
     const box = ph.closest('[data-bounds]');
     const apply = () => { ph.style.setProperty('--x', x.toFixed(1) + 'px'); ph.style.setProperty('--y', y.toFixed(1) + 'px'); };
