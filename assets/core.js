@@ -101,80 +101,44 @@
     }
   }
 
-  /* Photo: pick it up and move it anywhere on screen (mouse or finger). Like a real print, grabbing it
-     off-centre makes it turn as you drag, but never past 20deg either way. Stays where you leave it.
-     Arrow keys turn it when focused; double-click puts it back, straight.
-     Works for every [data-rotate] print. On long pages a print stays inside its [data-bounds] chapter. */
+  /* Photos: straight portrait prints. Pick one up and move it anywhere (mouse or finger); no turning.
+     It stays where you leave it; arrow keys nudge it when focused; double-click puts it back.
+     On long pages a print stays inside its [data-bounds] chapter, otherwise on screen. */
   document.querySelectorAll('[data-rotate]').forEach(ph => {
-    {
-      const MAX = 20;
-      let a = parseFloat(getComputedStyle(ph).getPropertyValue('--a')) || 0;
-      let x = 0, y = 0, drag = null;
-      const clamp = v => Math.max(-MAX, Math.min(MAX, v));
-      const apply = () => {
-        ph.style.setProperty('--x', x.toFixed(1) + 'px');
-        ph.style.setProperty('--y', y.toFixed(1) + 'px');
-        ph.style.setProperty('--a', a.toFixed(2) + 'deg');
-        ph.setAttribute('aria-valuenow', Math.round(a));
-      };
-      const box = ph.closest('[data-bounds]');
-      /* Keep at least the middle of the photo on screen (or inside its chapter) */
-      const keepIn = (x0 = x, y0 = y) => {
-        /* the rect still shows the last applied position (x0, y0), so shift it by what's changed since */
-        const r = ph.getBoundingClientRect();
-        const b = box ? box.getBoundingClientRect() : { left: 0, top: 0, right: innerWidth, bottom: innerHeight };
-        const cx = r.left + r.width / 2 + (x - x0), cy = r.top + r.height / 2 + (y - y0);
-        const nx = Math.max(b.left + 16, Math.min(b.right - 16, cx)), ny = Math.max(b.top + 16, Math.min(b.bottom - 16, cy));
-        x += nx - cx; y += ny - cy;
-      };
-      ph.addEventListener('pointerdown', e => {
-        ph.setPointerCapture(e.pointerId);
-        ph.classList.remove('settle');
-        const r = ph.getBoundingClientRect();
-        drag = { px: e.clientX, py: e.clientY, ox: e.clientX - (r.left + r.width / 2), oy: e.clientY - (r.top + r.height / 2), size: Math.max(r.width, r.height) };
-      });
-      ph.addEventListener('pointermove', e => {
-        if (!drag) return;
-        const dx = e.clientX - drag.px, dy = e.clientY - drag.py;
-        drag.px = e.clientX; drag.py = e.clientY;
-        const x0 = x, y0 = y;
-        x += dx; y += dy;
-        if (!reduce) {
-          /* turn = grab offset x movement (a little torque); grabbing near the middle just moves it */
-          const t = (drag.ox * dy - drag.oy * dx) / (drag.size * drag.size) * 57.3 * 0.9;
-          const before = a;
-          a = clamp(a + t);
-          /* the grab point turns with the photo */
-          const rad = (a - before) * Math.PI / 180, c = Math.cos(rad), s = Math.sin(rad);
-          [drag.ox, drag.oy] = [drag.ox * c - drag.oy * s, drag.ox * s + drag.oy * c];
-        }
-        keepIn(x0, y0);
-        apply();
-      });
-      const drop = () => { drag = null; };
-      ph.addEventListener('pointerup', drop);
-      ph.addEventListener('pointercancel', drop);
-      ph.addEventListener('dblclick', () => { ph.classList.add('settle'); a = 0; x = 0; y = 0; apply(); });
-      ph.addEventListener('keydown', e => {
-        const step = e.shiftKey ? 5 : 1;
-        if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') a = clamp(a - step);
-        else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') a = clamp(a + step);
-        else if (e.key === 'Home' || e.key === '0') { a = 0; x = 0; y = 0; }
-        else return;
-        e.preventDefault();
-        ph.classList.add('settle');
-        apply();
-      });
-      addEventListener('resize', () => { keepIn(); apply(); });
-      apply();
-    }
+    let x = 0, y = 0, drag = null;
+    const box = ph.closest('[data-bounds]');
+    const apply = () => { ph.style.setProperty('--x', x.toFixed(1) + 'px'); ph.style.setProperty('--y', y.toFixed(1) + 'px'); };
+    /* the rect still shows the last applied position (x0, y0), so shift it by what's changed since */
+    const keepIn = (x0 = x, y0 = y) => {
+      const r = ph.getBoundingClientRect();
+      const b = box ? box.getBoundingClientRect() : { left: 0, top: 0, right: innerWidth, bottom: innerHeight };
+      const cx = r.left + r.width / 2 + (x - x0), cy = r.top + r.height / 2 + (y - y0);
+      x += Math.max(b.left + 16, Math.min(b.right - 16, cx)) - cx;
+      y += Math.max(b.top + 16, Math.min(b.bottom - 16, cy)) - cy;
+    };
+    ph.addEventListener('pointerdown', e => { ph.setPointerCapture(e.pointerId); ph.classList.remove('settle'); drag = { px: e.clientX, py: e.clientY }; });
+    ph.addEventListener('pointermove', e => {
+      if (!drag) return;
+      const x0 = x, y0 = y;
+      x += e.clientX - drag.px; y += e.clientY - drag.py;
+      drag.px = e.clientX; drag.py = e.clientY;
+      keepIn(x0, y0); apply();
+    });
+    const drop = () => { drag = null; };
+    ph.addEventListener('pointerup', drop);
+    ph.addEventListener('pointercancel', drop);
+    ph.addEventListener('dblclick', () => { ph.classList.add('settle'); x = 0; y = 0; apply(); });
+    ph.addEventListener('keydown', e => {
+      const s = e.shiftKey ? 40 : 10, x0 = x, y0 = y;
+      if (e.key === 'ArrowLeft') x -= s; else if (e.key === 'ArrowRight') x += s;
+      else if (e.key === 'ArrowUp') y -= s; else if (e.key === 'ArrowDown') y += s;
+      else if (e.key === 'Home' || e.key === '0') { x = 0; y = 0; }
+      else return;
+      e.preventDefault(); ph.classList.add('settle'); keepIn(x0, y0); apply();
+    });
+    addEventListener('resize', () => { keepIn(); apply(); });
+    apply();
   });
-
-  /* Scrolled: lets the fixed bar put a solid band behind itself once you've left the top */
-  {
-    const s = () => root.classList.toggle('scrolled', scrollY > 40);
-    addEventListener('scroll', s, { passive: true }); s();
-  }
 
   /* Grounds: the chapter holding the middle of the screen sets the page colour (ink, white or blue) */
   {
@@ -251,7 +215,7 @@
     body.insertAdjacentHTML('beforeend', `<div class="cur" aria-hidden="true" data-k="wait">${Object.entries(SET).map(([k, [f, hx, hy, w, h]]) =>
       `<img class="cur-${k}" src="${base}assets/cursor/${f}.png" width="${w * K}" height="${h * K}" alt="" style="left:${-hx * K}px;top:${-hy * K}px">`).join('')}</div>`);
     const cur = body.querySelector('.cur');
-    const LINK = 'a,button,[role="button"],[role="slider"],label,select,summary';
+    const LINK = 'a,button,[role="button"],[data-rotate],label,select,summary';
     let mx = -100, my = -100;
     let loading = document.readyState !== 'complete';
     const kind = el => {

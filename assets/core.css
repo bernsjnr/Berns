@@ -85,7 +85,7 @@ html.cur-hide-native,html.cur-hide-native *{cursor:none!important}
    ========================================================= */
 body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:auto 1fr auto}
 .home-photo{display:grid;place-items:center;padding:calc(24 * var(--u)) 0}
-.photo{--a:3deg;--x:0px;--y:0px;position:relative;z-index:10;width:calc(272 * var(--u));aspect-ratio:272/316;background:var(--white);padding:calc(7 * var(--u));
+.photo{--a:0deg;--x:0px;--y:0px;position:relative;z-index:10;width:calc(272 * var(--u));aspect-ratio:272/316;background:var(--white);padding:calc(7 * var(--u));
   transform:translate(var(--x),var(--y)) rotate(var(--a));touch-action:none;user-select:none;-webkit-user-select:none}
 .photo.settle{transition:transform .25s var(--out)}
 .photo img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;pointer-events:none;-webkit-user-drag:none}
@@ -227,12 +227,8 @@ a.tile:hover .tile-name,a.tile:focus-visible .tile-name{text-decoration-color:cu
 
 /* Photo placeholders: same draggable prints as Home, scattered through the chapters */
 .chap .photo{position:absolute;width:calc(250 * var(--u))}
-/* Landscape print for wide shots (e.g. on stage) */
-.chap .photo--wide{width:calc(470 * var(--u));aspect-ratio:3/2}
-.photo--wide img{object-position:50% 50%}
-.photo--smile img{object-position:50% 40%}
-.chap .photo--btr{width:calc(300 * var(--u));aspect-ratio:5/4}
-.chap .photo--tp{width:calc(310 * var(--u));aspect-ratio:4/3}
+/* Every print is the same straight portrait (272:316), images are cropped to fit */
+.chap .photo img{object-position:50% 40%}
 .photo .ph{display:grid;place-items:center;width:100%;height:100%;background:#F1F2F3;color:var(--ink);font-size:calc(13 * var(--u));text-align:center;padding:12px}
 html[data-ground="white"] .photo{outline:1px solid var(--ink)}
 
@@ -244,45 +240,48 @@ html[data-ground="white"] .photo{outline:1px solid var(--ink)}
 .close-mail:hover,.close-mail:focus-visible{background:var(--blue)}
 .foot{display:flex;justify-content:space-between;gap:16px;padding:0 var(--hx) calc(40 * var(--u));font-size:calc(14 * var(--u))}
 
+/* Phones: one clear type scale, everything centred.
+   Label 12 mono / title (Scale) / lede 24 / body 16 / item name 22 / meta 11 mono */
 @media (max-width:760px){
   body.scroll .bar{padding-top:58px}
   body.scroll .bar-right{width:auto;padding:18px 20px 12px;justify-content:space-between}
-  .hello-greet .g1{font-size:30px}
+  .hello-greet .g1{font-size:24px}
   .hello-greet .g2{font-size:15vw}
-  .hello-say{font-size:8.6vw}
+  .hello-say{font-size:24px;line-height:1.12;max-width:16ch}
   .hello-cue{font-size:11px;bottom:28px}
-  .chap{padding:110px 20px 120px}
-  .chap-n{font-size:12px;margin-bottom:16px}
-  .chap-title{font-size:9.3vw}
-  .chap-lede{font-size:7.4vw;margin-top:28px}
-  .chap-body{font-size:16px}
-  .marks{grid-template-columns:minmax(0,1fr);gap:44px;margin-top:48px}
-  .tiles{flex-direction:column;gap:44px;margin-top:48px}
-  .tile{max-width:none}
-  .mark-logo{height:48px;margin-bottom:12px}
-  .mark-logo--bs svg{height:20px}
-  .mark-role{font-size:26px}
-  .mark-meta,.tile-role,.tile .go{font-size:12px}
-  .tile-logo{height:96px;margin-bottom:16px}
-  .tile-logo--rot svg{height:26px}
-  .tile .tile-name{font-size:26px}
-  .tile p{font-size:15px}
-  .hosted-n{margin-top:48px;font-size:12px}
-  .hosted{gap:28px 32px;margin-top:16px;padding-top:24px}
-  .hosted li .mono{font-size:10px}
-  .hosted-logo{height:44px}
-  .hosted-logo--sq svg{height:50px}
+  .chap{padding:96px 20px 104px;text-align:center}
+  .chap-n{font-size:12px;margin-bottom:14px}
+  .chap-title{font-size:9.3vw;transform-origin:50% 100%}
+  .chap-lede{font-size:24px;line-height:1.12;margin:24px auto 0;max-width:17ch}
+  .chap-body{font-size:16px;line-height:1.5;margin:16px auto 0;max-width:32ch}
+  .marks{grid-template-columns:minmax(0,1fr);gap:48px;margin-top:56px;max-width:none}
+  .mark{align-items:center;gap:6px}
+  .mark-logo{height:44px;margin-bottom:14px;justify-content:center}
+  .mark-logo--bs svg{height:18px}
+  .mark-role,.tile .tile-name{font-size:22px}
+  .mark-meta,.tile-role,.tile .go,.hosted li .mono,.hosted-n{font-size:11px}
+  .tiles{flex-direction:column;align-items:center;gap:48px;margin-top:56px}
+  .tile{max-width:none;align-items:center;gap:6px}
+  .tile-logo{height:88px;margin-bottom:14px;justify-content:center}
+  .tile-logo--rot svg{height:24px}
+  .tile p{font-size:16px}
+  .hosted-n{margin-top:56px}
+  .hosted{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));justify-items:center;gap:32px 16px;margin-top:16px;padding-top:28px}
+  .hosted li{align-items:center;gap:12px;text-align:center}
+  .hosted li:last-child{grid-column:1/-1}
+  .hosted-logo{height:40px;justify-content:center}
+  .hosted-logo--sq svg{height:46px}
   .hosted-logo--wide svg{height:18px}
-  .btns{gap:10px;margin-top:32px}
+  .btns{justify-content:center;gap:10px;margin-top:36px}
   .btn{font-size:12px;padding:14px 20px}
-  .chap .photo{position:relative;width:min(60vw,240px);margin:56px auto 0;left:auto!important;top:auto!important;right:auto!important}
-  .chap .photo--wide,.chap .photo--tp{width:min(86vw,340px)}
-  .chap .photo--btr{width:min(74vw,290px)}
-  .chap .photo--tp{margin-top:28px}
+  .chap .photo{position:relative;width:min(62vw,250px);margin:56px auto 0;left:auto!important;top:auto!important;right:auto!important}
+  .chap .photo + .photo{margin-top:24px}
   .photo .ph{font-size:11px}
-  .close-title{font-size:12vw}
-  .close-mail{font-size:7vw;margin-top:32px}
+  .close{align-items:center}
+  .close-title{font-size:11vw;margin:0 auto}
+  .close-mail{font-size:22px;margin-top:32px;align-self:center}
   .foot{font-size:11px;padding-bottom:24px}
+}
 }
 
 @media (prefers-reduced-motion:reduce){
