@@ -83,46 +83,69 @@
     }
   }
 
-  /* Photo: drag (mouse or finger) to turn it, up to 20deg either way. Stays where you leave it.
-     Arrow keys turn it when focused; double-click straightens it. */
+  /* Photo: pick it up and move it anywhere on screen (mouse or finger). Like a real print, grabbing it
+     off-centre makes it turn as you drag, but never past 20deg either way. Stays where you leave it.
+     Arrow keys turn it when focused; double-click puts it back, straight. */
   {
     const ph = document.querySelector('[data-rotate]');
     if (ph) {
       const MAX = 20;
       let a = parseFloat(getComputedStyle(ph).getPropertyValue('--a')) || 0;
-      let drag = null;
+      let x = 0, y = 0, drag = null;
       const clamp = v => Math.max(-MAX, Math.min(MAX, v));
-      const apply = () => { ph.style.setProperty('--a', a.toFixed(2) + 'deg'); ph.setAttribute('aria-valuenow', Math.round(a)); };
-      const angle = e => {
+      const apply = () => {
+        ph.style.setProperty('--x', x.toFixed(1) + 'px');
+        ph.style.setProperty('--y', y.toFixed(1) + 'px');
+        ph.style.setProperty('--a', a.toFixed(2) + 'deg');
+        ph.setAttribute('aria-valuenow', Math.round(a));
+      };
+      /* Keep at least the middle of the photo on screen */
+      const keepIn = (x0 = x, y0 = y) => {
+        /* the rect still shows the last applied position (x0, y0), so shift it by what's changed since */
         const r = ph.getBoundingClientRect();
-        return Math.atan2(e.clientY - (r.top + r.height / 2), e.clientX - (r.left + r.width / 2)) * 180 / Math.PI;
+        const cx = r.left + r.width / 2 + (x - x0), cy = r.top + r.height / 2 + (y - y0);
+        const nx = Math.max(16, Math.min(innerWidth - 16, cx)), ny = Math.max(16, Math.min(innerHeight - 16, cy));
+        x += nx - cx; y += ny - cy;
       };
       ph.addEventListener('pointerdown', e => {
         ph.setPointerCapture(e.pointerId);
         ph.classList.remove('settle');
-        drag = { from: angle(e), start: a };
+        const r = ph.getBoundingClientRect();
+        drag = { px: e.clientX, py: e.clientY, ox: e.clientX - (r.left + r.width / 2), oy: e.clientY - (r.top + r.height / 2), size: Math.max(r.width, r.height) };
       });
       ph.addEventListener('pointermove', e => {
         if (!drag) return;
-        let d = angle(e) - drag.from;
-        if (d > 180) d -= 360; else if (d < -180) d += 360;
-        a = clamp(drag.start + d);
+        const dx = e.clientX - drag.px, dy = e.clientY - drag.py;
+        drag.px = e.clientX; drag.py = e.clientY;
+        const x0 = x, y0 = y;
+        x += dx; y += dy;
+        if (!reduce) {
+          /* turn = grab offset x movement (a little torque); grabbing near the middle just moves it */
+          const t = (drag.ox * dy - drag.oy * dx) / (drag.size * drag.size) * 57.3 * 0.9;
+          const before = a;
+          a = clamp(a + t);
+          /* the grab point turns with the photo */
+          const rad = (a - before) * Math.PI / 180, c = Math.cos(rad), s = Math.sin(rad);
+          [drag.ox, drag.oy] = [drag.ox * c - drag.oy * s, drag.ox * s + drag.oy * c];
+        }
+        keepIn(x0, y0);
         apply();
       });
       const drop = () => { drag = null; };
       ph.addEventListener('pointerup', drop);
       ph.addEventListener('pointercancel', drop);
-      ph.addEventListener('dblclick', () => { ph.classList.add('settle'); a = 0; apply(); });
+      ph.addEventListener('dblclick', () => { ph.classList.add('settle'); a = 0; x = 0; y = 0; apply(); });
       ph.addEventListener('keydown', e => {
         const step = e.shiftKey ? 5 : 1;
         if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') a = clamp(a - step);
         else if (e.key === 'ArrowRight' || e.key === 'ArrowUp') a = clamp(a + step);
-        else if (e.key === 'Home' || e.key === '0') a = 0;
+        else if (e.key === 'Home' || e.key === '0') { a = 0; x = 0; y = 0; }
         else return;
         e.preventDefault();
         ph.classList.add('settle');
         apply();
       });
+      addEventListener('resize', () => { keepIn(); apply(); });
       apply();
     }
   }

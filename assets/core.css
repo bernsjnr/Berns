@@ -32,7 +32,13 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* ---------- Top bar ---------- */
 .bar{position:relative;z-index:60;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding:calc(56 * var(--u)) var(--hx) 0}
 .bar-name{font-size:calc(84 * var(--u));line-height:.86}
-.bar-name a{display:block}
+.bar-name a{position:relative;display:block}
+.bar-name .scale{display:block}
+/* (ALSO KNOWN AS 'BERNS') slides in under the name on hover; always shown where there's no hover (phones) */
+.aka{position:absolute;left:0;top:100%;margin-top:calc(22 * var(--u));font-size:calc(21 * var(--u));line-height:1;white-space:nowrap;
+  opacity:0;transform:translateY(calc(-6 * var(--u)));transition:opacity .2s var(--out),transform .2s var(--out)}
+.bar-name a:hover .aka,.bar-name a:focus-visible .aka{opacity:1;transform:none}
+@media (hover:none){.aka{opacity:1;transform:none}}
 .bar-right{display:flex;align-items:center;gap:calc(26 * var(--u));padding-top:calc(6 * var(--u))}
 .bar-clock{font-size:calc(21 * var(--u));line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
 .bar-batt{display:block;width:calc(34 * var(--u));height:calc(17 * var(--u))}
@@ -78,8 +84,8 @@ html.cur-hide-native,html.cur-hide-native *{cursor:none!important}
    ========================================================= */
 body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:auto 1fr auto}
 .home-photo{display:grid;place-items:center;padding:calc(24 * var(--u)) 0}
-.photo{--a:3deg;width:calc(272 * var(--u));aspect-ratio:272/316;background:var(--white);padding:calc(7 * var(--u));
-  transform:rotate(var(--a));touch-action:none;user-select:none;-webkit-user-select:none}
+.photo{--a:3deg;--x:0px;--y:0px;position:relative;z-index:10;width:calc(272 * var(--u));aspect-ratio:272/316;background:var(--white);padding:calc(7 * var(--u));
+  transform:translate(var(--x),var(--y)) rotate(var(--a));touch-action:none;user-select:none;-webkit-user-select:none}
 .photo.settle{transition:transform .25s var(--out)}
 .photo img{width:100%;height:100%;object-fit:cover;object-position:50% 30%;pointer-events:none;-webkit-user-drag:none}
 .home-foot{padding:0 var(--hx) calc(48 * var(--u))}
@@ -98,6 +104,7 @@ body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:aut
   .bar-batt{width:24px;height:12px}
   .bar-menu{font-size:16px}
   .bar-name{font-size:calc(72 * var(--u))}
+  .aka{font-size:12px;margin-top:12px}
   .clock-date{display:none}
   .photo{width:min(56vw,34svh)}
   .home-line{font-size:calc(52 * var(--u));line-height:1.02}
