@@ -10,6 +10,24 @@
   const base = body.dataset.base || '';
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* Name: on touch screens (no hover) the first tap shows (ALSO KNOWN AS 'BERNS') for a few seconds;
+     a second tap follows the link. On the page it links to, taps just toggle it. */
+  {
+    const a = document.querySelector('.bar-name a');
+    if (a && matchMedia('(hover: none)').matches) {
+      let t;
+      const here = new URL(a.href, location.href).pathname === location.pathname;
+      a.addEventListener('click', e => {
+        if (!a.classList.contains('show')) {
+          e.preventDefault();
+          a.classList.add('show');
+          clearTimeout(t); t = setTimeout(() => a.classList.remove('show'), 3500);
+        } else if (here) { e.preventDefault(); a.classList.remove('show'); clearTimeout(t); }
+      });
+      document.addEventListener('pointerdown', e => { if (!a.contains(e.target)) a.classList.remove('show'); }, { passive: true });
+    }
+  }
+
   /* Date and time, in the visitor's own time zone, like a device status bar */
   {
     const el = document.querySelector('[data-clock]');

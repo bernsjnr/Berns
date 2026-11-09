@@ -35,11 +35,11 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .bar-name{font-size:calc(84 * var(--u));line-height:.86}
 .bar-name a{position:relative;display:block}
 .bar-name .scale{display:block}
-/* (ALSO KNOWN AS 'BERNS') slides in under the name on hover; always shown where there's no hover (phones) */
+/* (ALSO KNOWN AS 'BERNS') slides in under the name on hover; on touch screens a first tap shows it (see core.js) */
 .aka{position:absolute;left:0;top:100%;margin-top:calc(22 * var(--u));font-size:calc(21 * var(--u));line-height:1;white-space:nowrap;
   opacity:0;transform:translateY(calc(-6 * var(--u)));transition:opacity .2s var(--out),transform .2s var(--out)}
-.bar-name a:hover .aka,.bar-name a:focus-visible .aka{opacity:1;transform:none}
-@media (hover:none){.aka{opacity:1;transform:none}}
+.bar-name a:hover .aka,.bar-name a:focus-visible .aka,.bar-name a.show .aka{opacity:1;transform:none}
+@media (hover:none){.bar-name a:hover .aka,.bar-name a:focus-visible .aka{opacity:0}.bar-name a.show .aka{opacity:1;transform:none}}
 .bar-right{display:flex;align-items:center;gap:calc(26 * var(--u));padding-top:calc(6 * var(--u))}
 .bar-clock{font-size:calc(21 * var(--u));line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
 .bar-batt{display:block;width:calc(34 * var(--u));height:calc(17 * var(--u))}
@@ -212,14 +212,15 @@ a:hover .go::after,a.go:hover::after{transform:translateX(4px)}
 html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visible{background:var(--ink);color:var(--white);border-color:var(--ink)}
 
 /* Community: the three logos Berns designed, no boxes */
-.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(48 * var(--u));margin-top:calc(96 * var(--u))}
-.tile{display:flex;flex-direction:column;gap:calc(10 * var(--u))}
+/* Columns size to their content with one even gap, so no logo drifts off on its own */
+.tiles{display:flex;flex-wrap:wrap;align-items:flex-start;gap:calc(48 * var(--u)) calc(96 * var(--u));margin-top:calc(96 * var(--u))}
+.tile{display:flex;flex-direction:column;gap:calc(10 * var(--u));flex:0 1 auto;max-width:calc(340 * var(--u))}
 .tile-logo{height:calc(140 * var(--u));display:flex;align-items:flex-end;margin-bottom:calc(32 * var(--u))}
 .tile-logo svg{display:block;height:100%;width:auto;max-width:100%}
 .tile-logo--rot svg{height:calc(40 * var(--u))}
 .tile .tile-name{font-family:var(--f-head);font-weight:700;font-size:calc(34 * var(--u));line-height:1;letter-spacing:-.02em}
 .tile-role{font-size:calc(15 * var(--u));line-height:1.2}
-.tile p{font-size:calc(18 * var(--u));line-height:1.45;max-width:30ch}
+.tile p{font-size:calc(18 * var(--u));line-height:1.45}
 .tile .go{padding-top:calc(10 * var(--u));font-size:calc(15 * var(--u))}
 a.tile .tile-name{text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:.06em;text-underline-offset:.14em;transition:text-decoration-color .2s var(--out)}
 a.tile:hover .tile-name,a.tile:focus-visible .tile-name{text-decoration-color:currentColor}
@@ -249,7 +250,9 @@ html[data-ground="white"] .photo{outline:1px solid var(--ink)}
   .chap-title{font-size:9.3vw}
   .chap-lede{font-size:7.4vw;margin-top:28px}
   .chap-body{font-size:16px}
-  .marks,.tiles{grid-template-columns:minmax(0,1fr);gap:44px;margin-top:48px}
+  .marks{grid-template-columns:minmax(0,1fr);gap:44px;margin-top:48px}
+  .tiles{flex-direction:column;gap:44px;margin-top:48px}
+  .tile{max-width:none}
   .mark-logo{height:48px;margin-bottom:12px}
   .mark-logo--bs svg{height:20px}
   .mark-role{font-size:26px}
