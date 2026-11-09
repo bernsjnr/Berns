@@ -100,13 +100,14 @@ body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:aut
 /* Phones and narrow screens: name gets its own row, sizes follow the width */
 @media (max-width:760px){
   :root{--u:calc(100vw / 600);--hx:20px}
-  .bar{flex-direction:column-reverse;gap:22px;padding-top:18px}
-  .bar-right{width:100%;justify-content:space-between;gap:14px;padding:0}
-  .bar-clock{font-size:13px;margin-right:auto}
-  .bar-batt{width:24px;height:12px}
-  .bar-menu{font-size:16px}
-  .bar-name{font-size:calc(72 * var(--u))}
-  .aka{font-size:12px;margin-top:12px}
+  /* One row: name on the left, time, battery and MENU on the right */
+  .bar{align-items:center;gap:10px;padding-top:18px}
+  .bar-right{gap:10px;padding:0}
+  .bar-clock{font-size:11px}
+  .bar-batt{width:20px;height:10px}
+  .bar-menu{font-size:14px;gap:.35em}
+  .bar-name{font-size:min(5.2vw,24px)}
+  .aka{font-size:10px;margin-top:8px}
   .clock-date{display:none}
   .photo{width:min(56vw,34svh)}
   /* "A designer and presenter" fills the first line on its own, so the two highlights never stack */
@@ -248,8 +249,7 @@ html[data-ground="white"] .photo{outline:1px solid var(--ink)}
 /* Phones: one clear type scale, everything centred.
    Label 12 mono / title (Scale) / lede 24 / body 16 / item name 22 / meta 11 mono */
 @media (max-width:760px){
-  body.scroll .bar{padding-top:58px}
-  body.scroll .bar-right{width:auto;padding:18px 20px 12px;justify-content:space-between}
+  body.scroll .bar-right{width:auto;padding:0 20px;height:calc(18px * 2 + min(5.2vw,24px) * 1.72);justify-content:flex-end;align-items:center}
   .hello-greet .g1{font-size:24px}
   .hello-greet .g2{font-size:15vw}
   .hello-say{font-size:24px;line-height:1.12;max-width:16ch}
