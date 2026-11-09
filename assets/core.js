@@ -22,7 +22,7 @@
       let last = '';
       const tick = () => {
         const d = new Date();
-        const t = `${p(d.getHours())}:${p(d.getMinutes())}`;
+        const t = `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;
         if (t !== last) {
           last = t;
           date.textContent = `${D[d.getDay()]}, ${d.getDate()} ${M[d.getMonth()]} ${d.getFullYear()} · `;
@@ -31,14 +31,15 @@
         }
       };
       tick();
-      setInterval(tick, 1000);
+      setInterval(tick, 250);
     }
   }
 
-  /* Battery: the visitor's real level. Only Chrome, Edge and Android expose it;
-     everywhere else the icon stays hidden rather than showing a made-up number. */
+  /* Battery: the visitor's real level where the browser exposes it (Chrome, Edge, Android).
+     Everywhere else (Safari, iPhone, Firefox) it shows a full battery. */
   {
     const el = document.querySelector('[data-battery]');
+    if (el) el.hidden = false;
     if (el && navigator.getBattery) {
       navigator.getBattery().then(b => {
         const fill = el.querySelector('.fill');
@@ -50,23 +51,23 @@
           el.title = `${Math.round(b.level * 100)}%`;
         };
         draw();
-        el.hidden = false;
         b.addEventListener('levelchange', draw);
         b.addEventListener('chargingchange', draw);
       }).catch(() => {});
     }
   }
 
-  /* Menu: MENU opens a full-screen Berns Blue takeover, becomes CLOSE. Esc closes. */
+  /* Menu: MENU + opens a full-screen Berns Blue takeover and becomes CLOSE −. Esc closes. */
   {
     const btn = document.querySelector('[data-menu-btn]');
     const menu = document.getElementById('menu');
+    const lbl = btn && btn.querySelector('.lbl');
     if (btn && menu) {
       const links = [...menu.querySelectorAll('a')];
       const set = open => {
         root.classList.toggle('menu-open', open);
         btn.setAttribute('aria-expanded', open);
-        btn.textContent = open ? 'Close' : 'Menu';
+        lbl.textContent = open ? 'Close' : 'Menu';
         menu.inert = !open;
         if (open) setTimeout(() => links[0] && links[0].focus({ preventScroll: true }), reduce ? 0 : 120);
       };
