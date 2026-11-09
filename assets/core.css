@@ -92,6 +92,12 @@ body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:aut
 .home-foot{padding:0 var(--hx) calc(48 * var(--u))}
 .home-line{font-family:var(--f-head);font-weight:700;font-size:calc(76 * var(--u));line-height:.88;letter-spacing:-.022em}
 .home-line .br-m{display:none}
+/* Typewriter role: the box keeps the tallest the line ever gets, text sits at its foot so nothing jumps */
+.home-say{display:flex;align-items:flex-end}
+.hl-type{white-space:nowrap}
+.caret{display:inline-block;width:.06em;height:.78em;margin-left:.05em;vertical-align:-.04em;background:currentColor;animation:caret 1s steps(1) infinite}
+.hl-type.typing .caret{animation:none}
+@keyframes caret{50%{opacity:0}}
 .hl{background:var(--blue);padding:0 .06em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .home-more{display:inline-block;margin-top:calc(34 * var(--u));font-size:calc(28 * var(--u));line-height:1;
   text-decoration:underline;text-decoration-thickness:.09em;text-underline-offset:.16em;transition:background-color .15s var(--out)}
@@ -101,17 +107,19 @@ body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:aut
 @media (max-width:760px){
   :root{--u:calc(100vw / 600);--hx:20px}
   /* One row: name on the left, time, battery and MENU on the right */
-  .bar{align-items:center;gap:10px;padding-top:18px}
-  .bar-right{gap:10px;padding:0}
-  .bar-clock{font-size:11px}
-  .bar-batt{width:20px;height:10px}
-  .bar-menu{font-size:14px;gap:.35em}
-  .bar-name{font-size:min(5.2vw,24px)}
+  /* Phones, every page: name on one line at MENU's size, both on the same top line */
+  .bar,body.scroll .bar{align-items:flex-start;gap:10px;padding:18px 20px 14px}
+  .bar-right{gap:9px;padding:0}
+  .bar-clock{font-size:min(2.7vw,12px);line-height:1}
+  .bar-batt{width:19px;height:10px}
+  .bar-menu,body.scroll .bar-menu{font-size:min(3.2vw,15px);line-height:1;padding:0;gap:.35em}
+  .bar-name,body.scroll .bar-name{font-size:min(3.2vw,15px);line-height:1;white-space:nowrap}
+  .bar-name br{display:none}
   .aka{font-size:10px;margin-top:8px}
   .clock-date{display:none}
   .photo{width:min(56vw,34svh)}
   /* "A designer and presenter" fills the first line on its own, so the two highlights never stack */
-  .home-line{font-size:calc((100vw - 40px) / 12.9);line-height:1.04}
+  .home-line{font-size:calc((100vw - 40px) / 12.9);line-height:1.14}
   .home-line .br-d{display:none}
   .home-line .br-m{display:inline}
   .home-foot{padding-bottom:28px}
@@ -123,6 +131,7 @@ body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:aut
 
 @media (prefers-reduced-motion:reduce){
   .menu,html.menu-open .menu,.menu li,.photo.settle,.pm::after{transition:none}
+  .caret{display:none}
   .menu li{transform:none}
 }
 
@@ -139,12 +148,15 @@ html[data-ground="blue"] body{background:var(--blue);color:var(--white)}
 html.menu-open .bar,html.menu-open .bar-right{color:var(--white)}
 html[data-ground="white"] .hl{color:var(--white)}
 
-/* MENU, clock and battery stay with you on long pages */
-/* Once you scroll, it sits on a solid band in the page colour so chapter titles slide under it cleanly */
-body.scroll .bar-right{position:fixed;top:0;left:0;right:0;z-index:60;justify-content:flex-end;padding:calc(62 * var(--u)) var(--hx) calc(22 * var(--u));
-  background:transparent;transition:background-color .6s var(--out)}
-html.scrolled body.scroll .bar-right{background:var(--ground)}
-html.menu-open body.scroll .bar-right{background:transparent}
+/* Long pages: the whole bar stays with you (name, clock, battery, MENU). The name drops to one line at
+   MENU's size and both sit on the same top line. Once you scroll it gets a solid band in the page colour. */
+body.scroll .bar{position:fixed;top:0;left:0;right:0;padding:calc(48 * var(--u)) var(--hx) calc(22 * var(--u));background:transparent;transition:background-color .6s var(--out)}
+html.scrolled body.scroll .bar{background:var(--ground)}
+html.menu-open body.scroll .bar{background:transparent}
+body.scroll .bar-name{font-size:calc(27 * var(--u));line-height:1;white-space:nowrap}
+body.scroll .bar-name br{display:none}
+body.scroll .bar-right{padding-top:0}
+body.scroll .bar-menu{line-height:1;padding:0}
 
 /* Fade up into place as it comes on screen */
 [data-reveal]{opacity:0;transform:translateY(28px);transition:opacity .9s var(--out),transform .9s var(--out)}
@@ -249,7 +261,8 @@ html[data-ground="white"] .photo{outline:1px solid var(--ink)}
 /* Phones: one clear type scale, everything centred.
    Label 12 mono / title (Scale) / lede 24 / body 16 / item name 22 / meta 11 mono */
 @media (max-width:760px){
-  body.scroll .bar-right{width:auto;padding:0 20px;height:calc(18px * 2 + min(5.2vw,24px) * 1.72);justify-content:flex-end;align-items:center}
+  body.scroll .bar{padding:18px 20px 14px}
+  body.scroll .bar-name,body.scroll .bar-menu{font-size:min(3.2vw,15px)}
   .hello-greet .g1{font-size:24px}
   .hello-greet .g2{font-size:15vw}
   .hello-say{font-size:24px;line-height:1.12;max-width:16ch}

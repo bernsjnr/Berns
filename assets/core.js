@@ -53,6 +53,48 @@
     }
   }
 
+  /* Typewriter (Home): the first role types out, holds, backspaces and moves to the next, like someone typing a message.
+     "A" becomes "An" before a vowel. The line's box is held at its tallest version so the layout never jumps.
+     Reduced motion: stays on "designer". */
+  {
+    const hl = document.querySelector('[data-roles]');
+    if (hl && !reduce) {
+      const roles = hl.dataset.roles.split('|');
+      const out = hl.querySelector('.type');
+      const art = document.querySelector('.home-line .art');
+      const box = document.querySelector('.home-say');
+      const article = r => /^[aeiou]/i.test(r) ? 'An' : 'A';
+      /* hold the box at the tallest the line gets with any role */
+      const size = () => {
+        const keep = [out.textContent, art.textContent];
+        box.style.minHeight = '';
+        let max = 0;
+        roles.forEach(r => { out.textContent = r; art.textContent = article(r); max = Math.max(max, box.offsetHeight); });
+        [out.textContent, art.textContent] = keep;
+        box.style.minHeight = max + 'px';
+      };
+      (document.fonts ? document.fonts.ready : Promise.resolve()).then(size);
+      addEventListener('resize', size);
+      const wait = ms => new Promise(r => setTimeout(r, ms));
+      (async () => {
+        let i = 0;
+        await wait(2600);
+        for (;;) {
+          const cur = roles[i];
+          hl.classList.add('typing');
+          for (let n = cur.length; n > 0; n--) { out.textContent = cur.slice(0, n - 1); await wait(38 + Math.random() * 20); }
+          i = (i + 1) % roles.length;
+          const next = roles[i];
+          art.textContent = article(next);
+          await wait(260);
+          for (let n = 1; n <= next.length; n++) { out.textContent = next.slice(0, n); await wait(70 + Math.random() * 60); }
+          hl.classList.remove('typing');
+          await wait(next === 'designer' ? 2600 : 1900);
+        }
+      })();
+    }
+  }
+
   /* Battery: the visitor's real level where the browser exposes it (Chrome, Edge, Android).
      Everywhere else (Safari, iPhone, Firefox) it shows a full battery. */
   {

@@ -12,12 +12,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
-<link rel="stylesheet" href="assets/core.css?v=22">
+<link rel="stylesheet" href="assets/core.css?v=26">
 </head>
 <body data-base="" data-page="home" class="home">
 
 <header class="bar">
-  <h1 class="bar-name"><a href="index.html"><span class="scale">Bernard<br>Bannor</span><span class="aka mono">(Also known as ‘Berns’)</span></a></h1>
+  <h1 class="bar-name"><a href="index.html"><span class="scale">Bernard <br>Bannor</span><span class="aka mono">(Also known as ‘Berns’)</span></a></h1>
   <div class="bar-right">
     <time class="bar-clock mono" data-clock><span class="clock-date"></span><span class="clock-time"></span></time>
     <span class="bar-batt" data-battery role="img" aria-label="Battery">
@@ -49,10 +49,14 @@
 </main>
 
 <footer class="home-foot">
-  <p class="home-line">A <span class="hl">designer</span> and <span class="hl">presenter</span><br class="br-m"> working <br class="br-d">between culture, sport and community.</p>
+  <p class="sr">A designer and presenter working between culture, sport and community.</p>
+  <!-- The first role types itself out and backspaces through what Berns does (core.js: data-roles) -->
+  <div class="home-say" aria-hidden="true">
+    <p class="home-line"><span class="art">A</span> <span class="hl hl-type" data-roles="designer|motion designer|art director|video editor|creative director|product designer|artist"><span class="type">designer</span><span class="caret"></span></span> and <span class="hl">presenter</span><br class="br-m"> working <br class="br-d">between culture, sport and community.</p>
+  </div>
   <a class="home-more mono" href="about/index.html">Read more</a>
 </footer>
 
-<script src="assets/core.js?v=22"></script>
+<script src="assets/core.js?v=26"></script>
 </body>
 </html>
