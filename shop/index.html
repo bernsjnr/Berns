@@ -1,55 +1,70 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" data-ground="ink">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1A1A1A">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
-<title>Shop. Berns</title>
-<meta name="description" content="Prints by Berns, checked, signed and posted by hand.">
-<!-- Adobe Fonts kit (Scale variable + Neue Haas Grotesk). Loads anywhere, no domain setup. -->
+<title>Shop. Bernard Bannor</title>
+<meta name="description" content="Prints by Bernard Bannor, checked, signed and posted by hand.">
 <link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
-<link rel="stylesheet" href="../assets/site.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
+<link rel="stylesheet" href="../assets/core.css?v=49">
 </head>
-<body data-base="../" data-page="shop">
-<main>
-<section class="split">
-  <div class="split-panel">
-    <h1 class="split-title">Shop</h1>
-    <p class="split-say">My prints. Each one checked, signed and posted by me.</p>
-    <div class="split-foot"><span class="corner">A3, A2 or 50 × 70 cm<br>Framed or unframed</span><span class="corner">Signed and numbered<br>by hand</span></div>
+<body data-base="../" data-page="shop" class="scroll shop">
+
+<header class="bar">
+  <p class="bar-name"><a href="../index.html"><span class="scale">Bernard <br>Bannor</span><span class="aka mono">(Also known as &lsquo;Berns&rsquo;)</span></a></p>
+  <div class="bar-right">
+    <time class="bar-clock mono" data-clock><span class="clock-date"></span><span class="clock-time"></span></time>
+    <span class="bar-batt" data-battery role="img" aria-label="Battery">
+      <svg viewBox="0 0 40 20" aria-hidden="true">
+        <rect x="1" y="1" width="34" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+        <rect x="36.5" y="6.5" width="3" height="7" rx="1.2" fill="currentColor"/>
+        <rect class="fill" x="4" y="4" width="28" height="12" rx="2.5" fill="currentColor"/>
+        <path class="bolt" d="M19.5 3.5 13 11h5l-1.5 5.5L23 9h-5z" fill="#1A1A1A" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <button class="bar-menu scale" type="button" data-menu-btn aria-expanded="false" aria-controls="menu"><span class="lbl">Menu</span><span class="pm" aria-hidden="true"></span></button>
   </div>
-  <div class="split-list">
-    <div class="float tall" aria-hidden="true"><div class="float-in"></div></div>
-    <div class="names" data-names="posters"></div>
+</header>
+
+<nav class="menu" id="menu" aria-label="Main">
+  <ol>
+    <li><a class="scale" href="../index.html"><span class="n mono">01</span><span class="t">Home</span></a></li>
+    <li><a class="scale" href="../about/index.html"><span class="n mono">02</span><span class="t">About</span></a></li>
+    <li><a class="scale" href="../studios/index.html"><span class="n mono">03</span><span class="t">Work</span></a></li>
+    <li><a class="scale" href="index.html" aria-current="page"><span class="n mono">04</span><span class="t">Shop</span></a></li>
+    <li><a class="scale" href="../contact/index.html"><span class="n mono">05</span><span class="t">Contact</span></a></li>
+  </ol>
+</nav>
+
+
+<main class="shop-main">
+  <h1 class="sr">Shop</h1>
+  <div class="shop-top">
+    <p class="shop-title">Shop</p>
+    <p class="shop-count mono" data-count></p>
   </div>
-</section>
-<div class="head" style="padding-top:clamp(72px,9vw,140px)"><p class="label rv">All prints</p></div>
-<div class="grid three" data-render="posters"></div>
-<div class="head">
-  <p class="label rv">How it works</p>
-  <p class="say rv">Pick a print, a size and a frame, then check out securely with Stripe.</p>
-</div>
-<ul class="rows rv">
-  <li><span>Sizes</span><span>A3, A2 or 50 × 70 cm</span></li>
-  <li><span>Frames</span><span>Unframed, black, white or natural oak</span></li>
-  <li><span>Edition</span><span>Signed and numbered by hand</span></li>
-  <li><span>Quality</span><span>I print, check and pack every one myself</span></li>
-</ul>
-<section class="contact">
-  <p class="label rv">Contact</p>
-  <h2 class="big rv">Let's make something you're proud of.</h2>
-  <a class="mail rv" href="mailto:info@bernsds.com">info@bernsds.com</a>
-  <div class="actions rv">
-    <a class="btn" href="mailto:info@bernsds.com?subject=Studio%20enquiry">Studio enquiry</a>
-    <a class="btn line" href="mailto:info@bernsds.com?subject=Presenting%20booking">Presenting booking</a>
+
+  <!-- The prints stand on the shelves; hover or focus one to turn it face on -->
+  <section class="shelves" data-shelves aria-label="Prints"></section>
+
+  <div class="shop-cap" aria-live="polite">
+    <div class="cap-text">
+      <p class="cap-name" data-cap-name></p>
+      <p class="cap-meta mono" data-cap-meta></p>
+    </div>
+    <a class="cap-link mono" data-cap-link href="#"><span class="go">View print</span></a>
   </div>
-  <div class="mark rv" data-logo></div>
-</section>
 </main>
+
 <script src="../assets/data.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="../assets/site.js"></script>
+<script src="../assets/core.js?v=47"></script>
+<script src="../assets/shop.js?v=47"></script>
 </body>
 </html>
