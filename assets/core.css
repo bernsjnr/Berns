@@ -307,9 +307,11 @@ body.work{height:100vh;height:100svh;overflow:hidden}
 .deck .card{position:absolute;inset:0;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:var(--bg);color:var(--white);
   will-change:transform;-webkit-user-drag:none}
 .deck .card::after{content:'';position:absolute;inset:0;background:var(--ink);opacity:var(--dim,0);pointer-events:none}
+.deck .card{color:var(--white)}
+.card-n,.card-name,.card-tag{z-index:2}
 .deck .card--ink{color:var(--ink)}
 .card-n{position:absolute;top:calc(20 * var(--u));left:calc(22 * var(--u));font-size:calc(13 * var(--u));line-height:1;z-index:1}
-.card-media{position:relative;display:block;margin:auto 0;aspect-ratio:16/9}
+.card-media{position:absolute;inset:0;display:block}
 .card-media img,.card-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
 .card-media video{opacity:0;transition:opacity .25s var(--out)}
 .card-media video.on{opacity:1}
