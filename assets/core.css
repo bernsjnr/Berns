@@ -308,7 +308,7 @@ body.work{height:100vh;height:100svh;overflow:hidden}
   will-change:transform;-webkit-user-drag:none}
 .deck .card::after{content:'';position:absolute;inset:0;background:var(--ink);opacity:var(--dim,0);pointer-events:none}
 .deck .card{color:var(--white)}
-.card-n,.card-name,.card-tag{z-index:2}
+.card-n,.card-name,.card-tag{z-index:2;opacity:calc(1 - var(--dim,0) * 2.4)}
 .deck .card--ink{color:var(--ink)}
 .card-n{position:absolute;top:calc(20 * var(--u));left:calc(22 * var(--u));font-size:calc(13 * var(--u));line-height:1;z-index:1}
 .card-media{position:absolute;inset:0;display:block}

@@ -274,7 +274,8 @@ a.corner:hover{text-decoration:underline;text-underline-offset:.2em}
 .p-info .prose{font-size:16px}
 .p-detail .media{border-radius:0}
 .p-next{display:grid;justify-items:center;gap:14px;text-align:center;padding:clamp(80px,12vw,200px) var(--hx)}
-.p-next .split-title{color:var(--ink);font-size:clamp(40px,8vw,170px);transition:color .5s var(--ease)}
+.p-next{min-width:0}
+.p-next .split-title{color:var(--ink);font-size:clamp(34px,6.2vw,140px);white-space:normal;overflow-wrap:anywhere;text-wrap:balance;line-height:.9;max-width:100%;transition:color .5s var(--ease)}
 .p-next:hover .split-title{color:var(--blue)}
 
 /* Contact band: the opening page's blue, Scale headline */

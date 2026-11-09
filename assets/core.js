@@ -197,6 +197,29 @@
     apply();
   });
 
+
+  /* Haptics: a light tick as things step past. Android vibrates (navigator.vibrate); iPhone has no vibrate API,
+     so a hidden iOS switch is clicked instead, which plays the system tick (best effort, iOS 18+, needs a touch).
+     Off for reduced motion. Anything can call window.BERNS_HAPTIC(ms). */
+  {
+    let last = 0, sw = null;
+    const canVibrate = 'vibrate' in navigator;
+    const mk = () => {
+      if (sw || !document.body) return sw;
+      const l = document.createElement('label');
+      l.setAttribute('aria-hidden', 'true');
+      l.style.cssText = 'position:fixed;left:-99px;top:0;width:1px;height:1px;opacity:0;pointer-events:none';
+      const i = document.createElement('input'); i.type = 'checkbox'; i.setAttribute('switch', ''); i.tabIndex = -1;
+      l.appendChild(i); document.body.appendChild(l); return (sw = l);
+    };
+    window.BERNS_HAPTIC = ms => {
+      if (reduce) return;
+      const now = performance.now(); if (now - last < 35) return; last = now;
+      if (canVibrate) navigator.vibrate(ms || 8);
+      else if (matchMedia('(pointer: coarse)').matches) { const l = mk(); if (l) l.click(); }
+    };
+  }
+
   /* Scrolled: once you leave the top, the fixed bar sits on a solid band in the page colour,
      so titles slide under it instead of through the clock */
   {
@@ -219,6 +242,17 @@
       addEventListener('resize', pick);
       pick();
     }
+  }
+
+
+  /* About: a tick every so often as you scroll, a firmer one when a new chapter takes over */
+  if (document.querySelector('[data-hello]')) {
+    let lastY = scrollY, acc = 0, lastG = root.dataset.ground;
+    addEventListener('scroll', () => {
+      acc += Math.abs(scrollY - lastY); lastY = scrollY;
+      if (root.dataset.ground !== lastG) { lastG = root.dataset.ground; acc = 0; window.BERNS_HAPTIC(16); }
+      else if (acc > 160) { acc = 0; window.BERNS_HAPTIC(6); }
+    }, { passive: true });
   }
 
   /* Reveals: fade up into place when they come on screen */
@@ -255,12 +289,14 @@
           n.replaceWith(frag);
         } else { n.classList.add('w'); words.push(n); }
       });
+      let shown = 0;
       const ease = (a, b, p) => Math.max(0, Math.min(1, (p - a) / (b - a)));
       const step = () => {
         const r = scene.getBoundingClientRect();
         const p = Math.max(0, Math.min(1, -r.top / (r.height - innerHeight)));
         greet.style.setProperty('--g', ease(.3, .5, p).toFixed(3));
         const n = Math.round(ease(.5, .92, p) * words.length);
+        if (n !== shown) { shown = n; window.BERNS_HAPTIC(5); }
         words.forEach((w, i) => w.classList.toggle('on', i < n));
         scene.classList.toggle('past', p > .05);
       };

@@ -25,6 +25,7 @@
 
   const TAGS = ['All', 'Animation', 'Design', 'Art direction'];
   const FOLDERS = [...new Set(D.projects.map(p => p.folder))];
+  const tickHaptic = () => { if (window.BERNS_HAPTIC) window.BERNS_HAPTIC(10); };
   const pad = n => String(n).padStart(2, '0');
   const url = p => `project.html?p=${encodeURIComponent(p.id)}`;
 
@@ -82,12 +83,12 @@
     const w = deck.clientWidth, m = n();
     cards.forEach((c, i) => {
       const d = wrap(i - pos), a = Math.abs(d), s = Math.sign(d), near = Math.min(a, 1), far = Math.max(a - 1, 0);
-      const x = s * (near * 0.64 + far * 0.24) * w;
-      const z = -(near * 0.42 + far * 0.14) * w;
-      const ry = -s * near * 40;
+      const x = s * (near * 0.74 + far * 0.27) * w;
+      const z = -(near * 0.5 + far * 0.08) * w;
+      const ry = -s * near * 64;
       c.style.transform = `translate3d(${x.toFixed(1)}px,0,${z.toFixed(1)}px) rotateY(${ry.toFixed(2)}deg)`;
       c.style.zIndex = 100 - Math.round(a * 10);
-      c.style.setProperty('--dim', (near * 0.5 + far * 0.1).toFixed(3));
+      c.style.setProperty('--dim', (near * 0.42 + far * 0.1).toFixed(3));
       /* fade out at the far edge, where a card crosses from one side of the ring to the other */
       const op = Math.max(0, Math.min(1, (m / 2 - a) / 0.6, (4.6 - a) / 0.6));
       c.style.opacity = m < 3 ? (a < 1.2 ? 1 : 0) : op;
@@ -100,7 +101,7 @@
     pos = reduce || Math.abs(d) < 0.001 ? target : pos + d * 0.16;
     layout();
     const i = idx();
-    if (i !== active) { active = i; caption(); }
+    if (i !== active) { active = i; caption(); tickHaptic(); }
     if (pos !== target) raf = requestAnimationFrame(tick); else { raf = 0; playActive(); }
   }
   function go(i) {
@@ -141,10 +142,10 @@
     if (!drag.moved) return;
     const now = performance.now();
     drag.v = (e.clientX - drag.last) / Math.max(1, now - drag.t); drag.last = e.clientX; drag.t = now;
-    const step = deck.clientWidth * 0.64;
+    const step = deck.clientWidth * 0.5;
     pos = target = list.length < 2 ? 0 : drag.start - dx / step;
     layout();
-    const i = idx(); if (i !== active) { active = i; caption(); }
+    const i = idx(); if (i !== active) { active = i; caption(); tickHaptic(); }
   });
   const end = () => {
     if (!drag) return;
