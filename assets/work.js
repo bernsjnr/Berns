@@ -51,9 +51,9 @@
 
   /* ---------- Cards ---------- */
   function media(p, eager) {
-    const src = base + (p.poster || p.img);
+    const src = base + (p.cover || p.poster || p.img);
     return `<img src="${src}" alt="" ${eager ? '' : 'loading="lazy"'} draggable="false">` +
-      (p.video ? `<video muted loop playsinline preload="none" poster="${src}" data-src="${base + p.video}"></video>` : '');
+      (p.video && !p.cover ? `<video muted loop playsinline preload="none" poster="${src}" data-src="${base + p.video}"></video>` : '');
   }
   function build() {
     list = D.projects.filter(p => (tag === 'All' || p.tags.includes(tag)) && (!folder || p.folder === folder));
@@ -193,7 +193,7 @@
       return `<button type="button" class="folder" data-folder="${f}">
         <span class="folder-stack" aria-hidden="true">
           ${ps.slice(1, 3).reverse().map((p, k) => `<span class="sheet sheet--${k}" style="--bg:${p.bg}"></span>`).join('')}
-          <span class="sheet-top" style="--bg:${top.bg}"><img src="${base + (top.poster || top.img)}" alt="" loading="lazy"></span>
+          <span class="sheet-top" style="--bg:${top.bg}"><img src="${base + (top.cover || top.poster || top.img)}" alt="" loading="lazy"></span>
         </span>
         <span class="folder-name">${f}</span>
         <span class="folder-count mono">${pad(ps.length)} ${ps.length === 1 ? 'project' : 'projects'}</span>
