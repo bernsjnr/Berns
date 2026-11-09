@@ -74,48 +74,55 @@
   }
 
   /* place every card around the current position: centre flat, neighbours turned away into depth */
+  /* the cards loop: every card is placed by its shortest distance round the ring from the current position */
+  const n = () => cards.length;
+  const idx = () => n() ? ((Math.round(pos) % n()) + n()) % n() : 0;
+  const wrap = d => { const m = n(); d = ((d % m) + m) % m; return d >= m / 2 ? d - m : d; };
   function layout() {
-    const w = deck.clientWidth;
+    const w = deck.clientWidth, m = n();
     cards.forEach((c, i) => {
-      const d = i - pos, a = Math.abs(d), s = Math.sign(d), near = Math.min(a, 1), far = Math.max(a - 1, 0);
+      const d = wrap(i - pos), a = Math.abs(d), s = Math.sign(d), near = Math.min(a, 1), far = Math.max(a - 1, 0);
       const x = s * (near * 0.64 + far * 0.24) * w;
       const z = -(near * 0.42 + far * 0.14) * w;
       const ry = -s * near * 40;
       c.style.transform = `translate3d(${x.toFixed(1)}px,0,${z.toFixed(1)}px) rotateY(${ry.toFixed(2)}deg)`;
       c.style.zIndex = 100 - Math.round(a * 10);
       c.style.setProperty('--dim', (near * 0.5 + far * 0.1).toFixed(3));
-      c.style.opacity = a > 4.2 ? 0 : 1;
-      c.style.pointerEvents = a > 4.2 ? 'none' : '';
-      c.tabIndex = Math.round(pos) === i ? 0 : -1;
+      /* fade out at the far edge, where a card crosses from one side of the ring to the other */
+      const op = Math.max(0, Math.min(1, (m / 2 - a) / 0.6, (4.6 - a) / 0.6));
+      c.style.opacity = m < 3 ? (a < 1.2 ? 1 : 0) : op;
+      c.style.pointerEvents = op < 0.5 ? 'none' : '';
+      c.tabIndex = idx() === i ? 0 : -1;
     });
   }
   function tick() {
     const d = target - pos;
     pos = reduce || Math.abs(d) < 0.001 ? target : pos + d * 0.16;
     layout();
-    const i = Math.round(pos);
+    const i = idx();
     if (i !== active) { active = i; caption(); }
     if (pos !== target) raf = requestAnimationFrame(tick); else { raf = 0; playActive(); }
   }
   function go(i) {
-    target = Math.max(0, Math.min(list.length - 1, i));
+    if (!list.length) return;
+    target = list.length < 2 ? 0 : i;
     pauseAll();
     if (!raf) raf = requestAnimationFrame(tick);
   }
   function caption() {
-    const p = list[Math.round(pos)];
+    const p = list[idx()];
     if (!p) { cap.name.textContent = ''; cap.meta.textContent = ''; cap.count.textContent = '00 / 00'; cap.link.hidden = true; return; }
     cap.name.textContent = p.name;
     cap.meta.textContent = [p.client, p.discipline, p.year].filter(Boolean).join(' · ');
     cap.link.href = url(p); cap.link.hidden = false;
-    cap.count.textContent = `${pad(Math.round(pos) + 1)} / ${pad(list.length)}`;
+    cap.count.textContent = `${pad(idx() + 1)} / ${pad(list.length)}`;
   }
 
   /* only the card in the middle plays its loop */
   function pauseAll() { deck.querySelectorAll('video').forEach(v => { v.pause(); v.classList.remove('on'); }); }
   function playActive() {
     if (reduce || view !== 'cards') return;
-    const v = cards[Math.round(pos)] && cards[Math.round(pos)].querySelector('video');
+    const v = cards[idx()] && cards[idx()].querySelector('video');
     if (!v) return;
     if (!v.src) v.src = v.dataset.src;
     v.play().then(() => v.classList.add('on')).catch(() => {});
@@ -135,9 +142,9 @@
     const now = performance.now();
     drag.v = (e.clientX - drag.last) / Math.max(1, now - drag.t); drag.last = e.clientX; drag.t = now;
     const step = deck.clientWidth * 0.64;
-    pos = target = Math.max(-0.4, Math.min(list.length - 0.6, drag.start - dx / step));
+    pos = target = list.length < 2 ? 0 : drag.start - dx / step;
     layout();
-    const i = Math.round(pos); if (i !== active) { active = i; caption(); }
+    const i = idx(); if (i !== active) { active = i; caption(); }
   });
   const end = () => {
     if (!drag) return;
@@ -154,7 +161,7 @@
     const c = e.target.closest('.card'); if (!c) return;
     if (drag && drag.moved) { e.preventDefault(); return; }
     const i = +c.dataset.i;
-    if (i !== Math.round(pos)) { e.preventDefault(); go(i); }
+    if (i !== idx()) { e.preventDefault(); go(Math.round(pos) + Math.round(wrap(i - Math.round(pos)))); }
   });
   deck.addEventListener('dragstart', e => e.preventDefault());
 

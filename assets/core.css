@@ -300,6 +300,7 @@ body.work{height:100vh;height:100svh;overflow:hidden}
 .views{display:flex;align-items:center;gap:calc(22 * var(--u));font-size:calc(15 * var(--u));line-height:1}
 .views button{padding:4px 0;border-bottom:1px solid transparent}
 .views button[aria-pressed="true"]{border-bottom-color:currentColor}
+.views .chip{padding:.7em 1.1em;border:1px solid currentColor}
 
 .stage{position:relative;min-height:0;perspective:calc(1800 * var(--u));touch-action:pan-y;user-select:none;-webkit-user-select:none}
 .deck{position:absolute;left:50%;top:50%;width:min(calc(420 * var(--u)),58vw);aspect-ratio:4/5;max-height:94%;transform:translate(-50%,-50%);transform-style:preserve-3d}
