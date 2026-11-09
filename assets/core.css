@@ -282,6 +282,89 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
 .close-mail:hover,.close-mail:focus-visible{background:var(--blue)}
 .foot{display:flex;justify-content:space-between;gap:16px;padding:0 var(--hx) calc(40 * var(--u));font-size:calc(14 * var(--u))}
 
+/* =========================================================
+   Work: one screen. Filters on top, a swipeable stack of cards in the
+   middle (centre card flat, neighbours turned away), caption underneath.
+   ========================================================= */
+body.work{height:100vh;height:100svh;overflow:hidden}
+.work-main{height:100%;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;padding:calc(132 * var(--u)) var(--hx) calc(40 * var(--u))}
+.work-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
+.work-filters{min-width:0;display:flex;align-items:baseline;flex-wrap:wrap;gap:12px 20px}
+.filters{font-family:var(--f-head);font-weight:700;font-size:calc(44 * var(--u));line-height:1;letter-spacing:-.02em}
+.filters .f{font:inherit;letter-spacing:inherit;padding:0 .06em;transition:background-color .2s var(--out)}
+.filters .f[aria-pressed="true"]{background:var(--blue)}
+.filters .f:hover{text-decoration:underline;text-decoration-thickness:.06em;text-underline-offset:.14em}
+.chip{display:inline-flex;align-items:center;gap:.6em;font-size:calc(14 * var(--u));line-height:1;padding:.7em 1.1em;border:1px solid currentColor;border-radius:999px}
+.chip:hover{background:var(--white);color:var(--ink)}
+.chip[hidden]{display:none}
+.views{display:flex;align-items:center;gap:calc(22 * var(--u));font-size:calc(15 * var(--u));line-height:1}
+.views button{padding:4px 0;border-bottom:1px solid transparent}
+.views button[aria-pressed="true"]{border-bottom-color:currentColor}
+
+.stage{position:relative;min-height:0;perspective:calc(1800 * var(--u));touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.deck{position:absolute;left:50%;top:50%;width:min(calc(420 * var(--u)),58vw);aspect-ratio:4/5;max-height:94%;transform:translate(-50%,-50%);transform-style:preserve-3d}
+.deck .card{position:absolute;inset:0;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:var(--bg);color:var(--white);
+  will-change:transform;-webkit-user-drag:none}
+.deck .card::after{content:'';position:absolute;inset:0;background:var(--ink);opacity:var(--dim,0);pointer-events:none}
+.deck .card--ink{color:var(--ink)}
+.card-n{position:absolute;top:calc(20 * var(--u));left:calc(22 * var(--u));font-size:calc(13 * var(--u));line-height:1;z-index:1}
+.card-media{position:relative;display:block;margin:auto 0;aspect-ratio:16/9}
+.card-media img,.card-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.card-media video{opacity:0;transition:opacity .25s var(--out)}
+.card-media video.on{opacity:1}
+.card-name{position:absolute;left:calc(22 * var(--u));right:calc(22 * var(--u));bottom:calc(46 * var(--u));font-family:var(--f-head);font-weight:700;font-size:calc(30 * var(--u));line-height:1;letter-spacing:-.02em}
+.card-tag{position:absolute;left:calc(22 * var(--u));bottom:calc(22 * var(--u));font-size:calc(12 * var(--u));line-height:1}
+.stage.dragging .card{cursor:grabbing}
+.empty{position:absolute;inset:0;display:grid;place-items:center;font-size:14px}
+
+.work-cap{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:calc(32 * var(--u));padding-top:calc(24 * var(--u))}
+.cap-name{font-family:var(--f-head);font-weight:700;font-size:calc(36 * var(--u));line-height:1;letter-spacing:-.02em}
+.cap-meta{margin-top:calc(10 * var(--u));font-size:calc(14 * var(--u));line-height:1.2}
+.cap-side{display:flex;flex-direction:column;align-items:flex-end;gap:calc(10 * var(--u));font-size:calc(14 * var(--u));line-height:1}
+.cap-link:hover{text-decoration:underline}
+.nav-arrow{width:calc(56 * var(--u));height:calc(56 * var(--u));border:1px solid currentColor;border-radius:50%;font-size:calc(18 * var(--u));line-height:1;
+  transition:background-color .2s var(--out),color .2s var(--out)}
+.nav-arrow:hover{background:var(--white);color:var(--ink)}
+.work-cap .nav-arrow:first-child{order:0}
+.work-cap .nav-arrow:last-child{order:4}
+
+/* Folders view: a sleeve per folder, the next projects peeking out above it */
+.folders{position:absolute;inset:0;display:none;grid-template-columns:repeat(4,minmax(0,1fr));align-content:center;gap:calc(40 * var(--u));padding:0 calc(40 * var(--u))}
+body[data-work-view="folders"] .folders{display:grid}
+body[data-work-view="folders"] .deck,body[data-work-view="folders"] .work-cap{visibility:hidden}
+.folder{display:flex;flex-direction:column;align-items:flex-start;gap:calc(8 * var(--u));text-align:left}
+.folder-stack{position:relative;display:block;width:100%;aspect-ratio:1;margin-bottom:calc(10 * var(--u))}
+.sheet{position:absolute;left:calc(var(--i,1) * 7%);right:calc(var(--i,1) * 7%);top:0;height:20%;border-radius:12px 12px 0 0;background:var(--bg)}
+.sheet--0{--i:2;top:0}
+.sheet--1{--i:1;top:5%}
+.sheet-top{position:absolute;left:0;right:0;bottom:0;top:10%;display:block;border-radius:16px;overflow:hidden;background:var(--bg);transition:transform .25s var(--out)}
+.sheet-top img{width:100%;height:100%;object-fit:cover}
+.folder:hover .sheet-top,.folder:focus-visible .sheet-top{transform:translateY(-4%)}
+.folder-name{font-family:var(--f-head);font-weight:700;font-size:calc(26 * var(--u));line-height:1;letter-spacing:-.02em}
+.folder-count{font-size:calc(12 * var(--u));line-height:1}
+
+@media (max-width:760px){
+  .work-main{padding:64px 20px 22px}
+  .work-top{flex-direction:column;align-items:stretch;gap:14px}
+  .work-filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px}
+  .work-filters::-webkit-scrollbar{display:none}
+  .filters{font-size:24px;white-space:nowrap}
+  .chip{font-size:11px;flex:none}
+  .views{font-size:11px;gap:16px}
+  .deck{width:72vw}
+  .card-n{font-size:10px;top:14px;left:14px}
+  .card-name{font-size:19px;left:14px;right:14px;bottom:32px}
+  .card-tag{font-size:10px;left:14px;bottom:14px}
+  .work-cap{grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;padding-top:14px}
+  .work-cap .nav-arrow{display:none}
+  .cap-name{font-size:22px}
+  .cap-meta{font-size:11px;margin-top:8px}
+  .cap-side{font-size:11px;gap:8px}
+  .folders{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 16px;padding:0}
+  .folder-name{font-size:17px}
+  .folder-count{font-size:10px}
+}
+
 /* Phones: one clear type scale, everything centred.
    Label 12 mono / title (Scale) / lede 24 / body 16 / item name 22 / meta 11 mono */
 @media (max-width:760px){

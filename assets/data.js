@@ -4,22 +4,39 @@
    ========================================================= */
 window.BERNS = {
 
-  /* ---------- Studios: work ----------
-     Order follows the live bernsds.com grid.
+  /* ---------- Work ----------
      `video` = short muted loop (assets/video), `img` = still.
      `about` = write-up for the project page. Empty = "Write-up to come". */
+  /* Work page cards. `tags` drive the filters (Animation, Design, Art direction),
+     `folder` groups them in Folders view. `bg` is the card colour around the work, `ink` = dark text on it.
+     Order follows the live bernsds.com grid. */
   projects: [
     { id: 'this-bed-i-made', name: 'This Bed I Made', client: 'Savvy Studios', discipline: 'Title design', year: '2026',
+      tags: ['Animation', 'Design'], folder: 'Studio clients', bg: '#121A19',
       video: 'assets/video/this-bed-i-made.mp4', poster: 'assets/video/this-bed-i-made.jpg', about: '' },
     { id: 'holibobs', name: 'Holibobs', client: 'The Guardian Labs', discipline: 'Campaign', year: '2026',
+      tags: ['Art direction', 'Animation'], folder: 'The Guardian', bg: '#E3B04B', ink: true,
       video: 'assets/video/holibobs.mp4', poster: 'assets/video/holibobs.jpg', about: '' },
     { id: 'together', name: 'TOGETHER', client: 'Guardian Advertising', discipline: 'Identity and motion', year: '',
+      tags: ['Design', 'Animation'], folder: 'The Guardian', bg: '#D02E2E',
       img: 'assets/work/together.webp', about: '' },
     { id: 'track-and-play', name: 'Track + Play', client: 'Track + Play', discipline: 'Logo animation', year: '',
-      video: 'assets/video/track-and-play.mp4', poster: 'assets/video/track-and-play.jpg', about: '' },
+      tags: ['Animation', 'Design'], folder: 'Community', bg: '#0B0B0B',
+      video: 'assets/video/track-and-play.mp4', poster: 'assets/work/track-and-play.webp', about: '' },
+    { id: 'bully-the-roads', name: 'BULLY THE ROADS', client: 'BULLY THE ROADS', discipline: 'Identity', year: '',
+      tags: ['Design', 'Art direction'], folder: 'Community', bg: '#C4573A',
+      img: 'assets/work/bully-the-roads.webp', about: '' },
     { id: 'everyone-wants-posters', name: 'Everyone Wants Posters', client: '', discipline: 'Poster design', year: '',
+      tags: ['Design'], folder: 'Personal', bg: '#F2C230', ink: true,
       img: 'assets/work/everyone-wants-posters.webp', about: '' },
+    { id: 'monzo', name: 'Monzo', client: 'The Guardian Labs', discipline: 'Display campaign', year: '',
+      tags: ['Design', 'Animation'], folder: 'The Guardian', bg: '#14233C',
+      img: 'assets/work/monzo-guardian-labs.webp', about: '' },
+    { id: 'va', name: 'V&A Youth Collective', client: 'V&A', discipline: 'Event design', year: '',
+      tags: ['Design', 'Art direction'], folder: 'Studio clients', bg: '#E8E9EA', ink: true,
+      img: 'assets/work/va.webp', about: '' },
     { id: 'nteriors', name: 'NTERIORS', client: 'NTERIORS', discipline: 'Identity', year: '',
+      tags: ['Design'], folder: 'Studio clients', bg: '#F5F2EA', ink: true,
       img: 'assets/work/nteriors.webp', about: '' }
   ],
 

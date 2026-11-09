@@ -1,64 +1,86 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" data-ground="ink">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1A1A1A">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
-<title>Berns Studios. Design and motion</title>
-<meta name="description" content="Berns Studios is an independent studio for design and motion.">
-<!-- Adobe Fonts kit (Scale variable + Neue Haas Grotesk). Loads anywhere, no domain setup. -->
+<title>Work. Bernard Bannor</title>
+<meta name="description" content="Design, animation and art direction by Bernard Bannor and Berns Studios.">
 <link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
-<link rel="stylesheet" href="../assets/site.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
+<link rel="stylesheet" href="../assets/core.css?v=38">
 </head>
-<body data-base="../" data-page="studios">
-<main>
-<section class="split">
-  <div class="split-panel">
-    <h1 class="split-title">Work</h1>
-    <p class="split-say">My independent studio for design and motion.</p>
-    <div class="split-foot"><span class="corner">Berns Studios<br>Design and motion</span><a class="corner" href="../contact/index.html">Start a project<br>info@bernsds.com</a></div>
+<body data-base="../" data-page="work" class="scroll work" data-work-view="cards">
+
+<header class="bar">
+  <p class="bar-name"><a href="../index.html"><span class="scale">Bernard <br>Bannor</span><span class="aka mono">(Also known as &lsquo;Berns&rsquo;)</span></a></p>
+  <div class="bar-right">
+    <time class="bar-clock mono" data-clock><span class="clock-date"></span><span class="clock-time"></span></time>
+    <span class="bar-batt" data-battery role="img" aria-label="Battery">
+      <svg viewBox="0 0 40 20" aria-hidden="true">
+        <rect x="1" y="1" width="34" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+        <rect x="36.5" y="6.5" width="3" height="7" rx="1.2" fill="currentColor"/>
+        <rect class="fill" x="4" y="4" width="28" height="12" rx="2.5" fill="currentColor"/>
+        <path class="bolt" d="M19.5 3.5 13 11h5l-1.5 5.5L23 9h-5z" fill="#1A1A1A" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <button class="bar-menu scale" type="button" data-menu-btn aria-expanded="false" aria-controls="menu"><span class="lbl">Menu</span><span class="pm" aria-hidden="true"></span></button>
   </div>
-  <div class="split-list">
-    <div class="float" aria-hidden="true"><div class="float-in"></div></div>
-    <div class="stack" data-stack="projects"></div>
+</header>
+
+<nav class="menu" id="menu" aria-label="Main">
+  <ol>
+    <li><a class="scale" href="../index.html"><span class="n mono">01</span><span class="t">Home</span></a></li>
+    <li><a class="scale" href="index.html" aria-current="page"><span class="n mono">02</span><span class="t">Work</span></a></li>
+    <li><a class="scale" href="../about/index.html"><span class="n mono">03</span><span class="t">About</span></a></li>
+    <li><a class="scale" href="../shop/index.html"><span class="n mono">04</span><span class="t">Shop</span></a></li>
+    <li><a class="scale" href="../contact/index.html"><span class="n mono">05</span><span class="t">Contact</span></a></li>
+  </ol>
+</nav>
+
+
+<main class="work-main">
+  <h1 class="sr">Work</h1>
+
+  <!-- Filters (built in work.js) and the Cards / Folders switch -->
+  <div class="work-top">
+    <div class="work-filters">
+      <div class="filters" data-filters role="group" aria-label="Filter by discipline"></div>
+    </div>
+    <div class="views mono" role="group" aria-label="View">
+        <button type="button" class="chip mono" data-folder-chip hidden><span></span> &times;<span class="sr"> Clear folder</span></button>
+      <button type="button" data-view="cards" aria-pressed="true">Cards</button>
+      <button type="button" data-view="folders" aria-pressed="false">Folders</button>
+    </div>
   </div>
-</section>
-<div class="head">
-  <p class="label rv">What I do</p>
-  <p class="say rv">Two disciplines, one point of contact from the first call to the final files.</p>
-</div>
-<div class="trio">
-  <article class="box rv"><h3>Design</h3><p>Identity, art direction, campaigns, print, and the websites that carry them.</p><span class="label">Brand and web</span></article>
-  <article class="box rv"><h3>Motion</h3><p>Logo animation, title sequences, social content and motion systems that bring a brand to life on screen.</p><span class="label">Screen</span></article>
-  <article class="box rv"><h3>Working together</h3><p>Fixed fees agreed upfront, three rounds of refinement included, and you own the final work on full payment.</p><span class="label">How I work</span></article>
-</div>
-<div class="head">
-  <p class="label rv">How a project runs</p>
-  <p class="say rv">Six steps, no surprises.</p>
-</div>
-<ul class="rows rv">
-  <li><span><b>01</b>&nbsp;&nbsp;Conversation</span><span style="max-width:40ch">We talk through what you need, why now, and what success looks like.</span></li>
-  <li><span><b>02</b>&nbsp;&nbsp;Proposal</span><span style="max-width:40ch">Scope, deliverables, timeline and a fixed fee, then a simple Design Agreement.</span></li>
-  <li><span><b>03</b>&nbsp;&nbsp;Kick-off</span><span style="max-width:40ch">Work starts once the agreement is signed and the deposit is paid.</span></li>
-  <li><span><b>04</b>&nbsp;&nbsp;Explore</span><span style="max-width:40ch">A moodboard to agree the tone, then distinct directions shown on real applications.</span></li>
-  <li><span><b>05</b>&nbsp;&nbsp;Refine</span><span style="max-width:40ch">We develop your chosen direction. Three rounds of refinement are included.</span></li>
-  <li><span><b>06</b>&nbsp;&nbsp;Handover</span><span style="max-width:40ch">Organised, ready-to-use files and guidelines, plus a walkthrough for your team.</span></li>
-</ul>
-<section class="contact">
-  <p class="label rv">Contact</p>
-  <h2 class="big rv">Let's make something you're proud of.</h2>
-  <a class="mail rv" href="mailto:info@bernsds.com">info@bernsds.com</a>
-  <div class="actions rv">
-    <a class="btn" href="mailto:info@bernsds.com?subject=Studio%20enquiry">Studio enquiry</a>
-    <a class="btn line" href="mailto:info@bernsds.com?subject=Presenting%20booking">Presenting booking</a>
+
+  <!-- Swipe through the cards; the one in the middle plays and opens -->
+  <section class="stage" data-stage aria-roledescription="carousel" aria-label="Projects">
+    <div class="deck" data-deck></div>
+    <div class="folders" data-folders></div>
+  </section>
+
+  <div class="work-cap" aria-live="polite">
+    <button type="button" class="nav-arrow mono" data-prev aria-label="Previous project">&larr;</button>
+    <div class="cap-text">
+      <p class="cap-name" data-cap-name></p>
+      <p class="cap-meta mono"><span data-cap-meta></span></p>
+    </div>
+    <div class="cap-side">
+      <span class="cap-count mono" data-cap-count></span>
+      <a class="cap-link mono" data-cap-link href="#"><span class="go">View project</span></a>
+    </div>
+    <button type="button" class="nav-arrow mono" data-next aria-label="Next project">&rarr;</button>
   </div>
-  <div class="mark rv" data-logo></div>
-</section>
 </main>
+
 <script src="../assets/data.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="../assets/site.js"></script>
+<script src="../assets/core.js?v=38"></script>
+<script src="../assets/work.js?v=38"></script>
 </body>
 </html>
