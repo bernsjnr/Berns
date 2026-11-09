@@ -227,6 +227,9 @@ a.tile:hover .tile-name,a.tile:focus-visible .tile-name{text-decoration-color:cu
 
 /* Photo placeholders: same draggable prints as Home, scattered through the chapters */
 .chap .photo{position:absolute;width:calc(250 * var(--u))}
+/* Landscape print for wide shots (e.g. on stage) */
+.chap .photo--wide{width:calc(470 * var(--u));aspect-ratio:3/2}
+.photo--wide img{object-position:50% 50%}
 .photo .ph{display:grid;place-items:center;width:100%;height:100%;background:#F1F2F3;color:var(--ink);font-size:calc(13 * var(--u));text-align:center;padding:12px}
 html[data-ground="white"] .photo{outline:1px solid var(--ink)}
 
@@ -270,6 +273,7 @@ html[data-ground="white"] .photo{outline:1px solid var(--ink)}
   .btns{gap:10px;margin-top:32px}
   .btn{font-size:12px;padding:14px 20px}
   .chap .photo{position:relative;width:min(60vw,240px);margin:56px auto 0;left:auto!important;top:auto!important;right:auto!important}
+  .chap .photo--wide{width:min(86vw,340px)}
   .photo .ph{font-size:11px}
   .close-title{font-size:12vw}
   .close-mail{font-size:7vw;margin-top:32px}
