@@ -132,6 +132,8 @@ body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:aut
 @media (prefers-reduced-motion:reduce){
   .menu,html.menu-open .menu,.menu li,.photo.settle,.pm::after{transition:none}
   .caret{display:none}
+  .hosted{animation:none;flex-wrap:wrap;width:auto;row-gap:24px}
+  .hosted [aria-hidden="true"]{display:none}
   .menu li{transform:none}
 }
 
@@ -206,8 +208,12 @@ a:hover .go::after,a.go:hover::after{transform:translateX(4px)}
 
 /* Presenting: a strip of the logos he has hosted for, as proof without a list */
 .hosted-n{margin-top:calc(96 * var(--u));font-size:calc(16 * var(--u));line-height:1}
-.hosted{list-style:none;display:flex;flex-wrap:wrap;align-items:center;gap:calc(28 * var(--u)) calc(64 * var(--u));margin-top:calc(32 * var(--u));padding-top:calc(32 * var(--u));border-top:1px solid currentColor;max-width:calc(1200 * var(--u))}
-.hosted li{display:flex;flex-direction:column;gap:calc(16 * var(--u))}
+/* Logos run past in a slow, endless line (the set is doubled in core.js and slides by half). Hover pauses it. */
+.hosted-wrap{margin-top:calc(32 * var(--u));padding-top:calc(32 * var(--u));border-top:1px solid currentColor;overflow:hidden}
+.hosted{list-style:none;display:flex;flex-wrap:nowrap;align-items:center;width:max-content;animation:marquee var(--dur,28s) linear infinite}
+.hosted-wrap:hover .hosted{animation-play-state:paused}
+.hosted li{display:flex;flex:none;padding-right:calc(96 * var(--u))}
+@keyframes marquee{to{transform:translateX(-50%)}}
 .hosted li .mono{font-size:calc(13 * var(--u));line-height:1}
 .hosted-logo{display:flex;align-items:flex-end;height:calc(64 * var(--u))}
 .hosted-logo svg{display:block;height:100%;width:auto}
@@ -261,7 +267,6 @@ a.tile:hover .tile-name,a.tile:focus-visible .tile-name{text-decoration-color:cu
   .chap:has(> .prints) .chap-title{font-size:calc(88 * var(--u))}
   .chap:has(> .prints) .chap-lede{max-width:none}
   .chap:has(> .prints) .marks{max-width:none;gap:calc(32 * var(--u))}
-  .chap:has(> .prints) .hosted{gap:calc(28 * var(--u)) calc(44 * var(--u))}
   .chap:has(> .prints) .tiles{flex-wrap:nowrap;gap:calc(40 * var(--u))}
   .chap:has(> .prints) .tile{flex:1 1 0;max-width:none}
   .chap:has(> .prints) .tile-logo{height:calc(110 * var(--u))}
@@ -305,9 +310,9 @@ a.tile:hover .tile-name,a.tile:focus-visible .tile-name{text-decoration-color:cu
   .tile-logo--rot svg{height:24px}
   .tile p{font-size:16px}
   .hosted-n{margin-top:56px}
-  .hosted{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));justify-items:center;align-items:center;gap:32px 16px;margin-top:16px;padding-top:28px}
-  .hosted li{align-items:center;gap:12px;text-align:center}
-  .hosted-logo{height:40px;justify-content:center}
+  .hosted-wrap{margin-top:16px;padding-top:28px}
+  .hosted li{padding-right:56px}
+  .hosted-logo{height:40px}
   .hosted-logo--sq svg{height:46px}
   .hosted-logo--wide svg{height:18px}
   .hosted-logo--va svg{height:62px;margin:-10px 0}

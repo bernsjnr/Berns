@@ -95,6 +95,15 @@
     }
   }
 
+  /* Marquee: double the logo set so the line can slide by half and loop without a seam.
+     Speed is set from the width so it always drifts at the same calm pace. */
+  document.querySelectorAll('[data-marquee]').forEach(ul => {
+    [...ul.children].forEach(li => { const c = li.cloneNode(true); c.setAttribute('aria-hidden', 'true'); c.removeAttribute('aria-label'); ul.appendChild(c); });
+    const pace = () => ul.style.setProperty('--dur', Math.max(14, ul.scrollWidth / 2 / 60).toFixed(1) + 's');
+    (document.fonts ? document.fonts.ready : Promise.resolve()).then(pace);
+    addEventListener('resize', pace);
+  });
+
   /* Battery: the visitor's real level where the browser exposes it (Chrome, Edge, Android).
      Everywhere else (Safari, iPhone, Firefox) it shows a full battery. */
   {
