@@ -177,47 +177,52 @@ html.menu-open body.scroll .bar-right{background:transparent}
 .chap-lede{max-width:24ch;margin-top:calc(56 * var(--u));font-family:var(--f-head);font-weight:700;font-size:calc(52 * var(--u));line-height:1.02;letter-spacing:-.02em}
 .chap-body{max-width:46ch;margin-top:calc(32 * var(--u));font-size:calc(21 * var(--u));line-height:1.5}
 
-/* Design: two cards, The Guardian and Berns Studios */
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(24 * var(--u));max-width:calc(1060 * var(--u));margin-top:calc(80 * var(--u))}
-.card{display:flex;flex-direction:column;gap:calc(14 * var(--u));min-height:calc(300 * var(--u));padding:calc(36 * var(--u));border:1px solid currentColor;border-radius:24px;
-  transition:background-color .2s var(--out),color .2s var(--out)}
-.card .logo{height:calc(44 * var(--u));margin-bottom:auto}
-.card .logo svg{display:block;height:100%;width:auto;max-width:100%}
-.card-role{font-family:var(--f-head);font-weight:700;font-size:calc(40 * var(--u));line-height:1;letter-spacing:-.02em;margin-top:calc(60 * var(--u))}
-.card-meta{font-size:calc(16 * var(--u));line-height:1.3}
-a.card:hover,a.card:focus-visible{background:var(--ink);color:var(--white)}
-html[data-ground="ink"] a.card:hover,html[data-ground="ink"] a.card:focus-visible{background:var(--blue)}
+/* Design: The Guardian and Berns Studios, logos only, no boxes */
+.marks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(48 * var(--u));max-width:calc(900 * var(--u));margin-top:calc(96 * var(--u))}
+.mark{display:flex;flex-direction:column;gap:calc(10 * var(--u))}
+.mark-logo{height:calc(64 * var(--u));display:flex;align-items:flex-end;margin-bottom:calc(22 * var(--u))}
+.mark-logo svg{display:block;height:100%;width:auto;max-width:100%}
+.mark-logo--bs svg{height:calc(26 * var(--u))}
+.mark-role{font-family:var(--f-head);font-weight:700;font-size:calc(34 * var(--u));line-height:1;letter-spacing:-.02em}
+.mark-meta{font-size:calc(16 * var(--u));line-height:1.3}
+a.mark .mark-role{text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:.06em;text-underline-offset:.14em;transition:text-decoration-color .2s var(--out)}
+a.mark:hover .mark-role,a.mark:focus-visible .mark-role{text-decoration-color:currentColor}
 .go{display:inline-flex;align-items:center;gap:.5em}
 .go::after{content:'\2192';font-family:var(--f-body);font-weight:700;transition:transform .2s var(--out)}
 a:hover .go::after,a.go:hover::after{transform:translateX(4px)}
+
+/* Presenting: a strip of the logos he has hosted for, as proof without a list */
+.hosted-n{margin-top:calc(96 * var(--u));font-size:calc(16 * var(--u));line-height:1}
+.hosted{list-style:none;display:flex;flex-wrap:wrap;align-items:flex-end;gap:calc(28 * var(--u)) calc(64 * var(--u));margin-top:calc(32 * var(--u));padding-top:calc(32 * var(--u));border-top:1px solid currentColor;max-width:calc(1200 * var(--u))}
+.hosted li{display:flex;flex-direction:column;gap:calc(16 * var(--u))}
+.hosted li .mono{font-size:calc(13 * var(--u));line-height:1}
+.hosted-logo{display:flex;align-items:flex-end;height:calc(64 * var(--u))}
+.hosted-logo svg{display:block;height:100%;width:auto}
+.hosted-logo--sq svg{height:calc(72 * var(--u))}
+.hosted-logo--wide svg{height:calc(28 * var(--u))}
 
 /* Logo slots: dashed box with the name until the real artwork lands. Swap the inner text for an inline SVG. */
 .slot{display:inline-flex;align-items:center;justify-content:center;height:100%;min-width:calc(170 * var(--u));padding:0 calc(16 * var(--u));
   border:1px dashed currentColor;border-radius:8px;font-size:calc(13 * var(--u));line-height:1.2;text-align:center}
 
-/* Presenting: credits as ruled rows */
-.credits{list-style:none;max-width:calc(1000 * var(--u));margin-top:calc(80 * var(--u));border-top:1px solid currentColor}
-.credits li{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) auto;align-items:baseline;gap:calc(24 * var(--u));
-  padding:calc(26 * var(--u)) 0;border-bottom:1px solid currentColor}
-.credits .who{font-family:var(--f-head);font-weight:700;font-size:calc(44 * var(--u));line-height:1;letter-spacing:-.02em}
-.credits .what{font-size:calc(19 * var(--u));line-height:1.3}
-.credits .role{font-size:calc(16 * var(--u));line-height:1}
 .btns{display:flex;flex-wrap:wrap;gap:calc(14 * var(--u));margin-top:calc(56 * var(--u))}
 .btn{display:inline-flex;align-items:center;gap:.5em;padding:calc(18 * var(--u)) calc(28 * var(--u));border:1px solid currentColor;border-radius:999px;
   font-size:calc(17 * var(--u));line-height:1;transition:background-color .2s var(--out),color .2s var(--out),border-color .2s var(--out)}
 .btn:hover,.btn:focus-visible{background:var(--white);color:var(--ink);border-color:var(--white)}
 html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visible{background:var(--ink);color:var(--white);border-color:var(--ink)}
 
-/* Community: three tiles with the logos Berns designed */
-.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(24 * var(--u));margin-top:calc(80 * var(--u))}
-.tile{display:flex;flex-direction:column;gap:calc(12 * var(--u));padding:calc(32 * var(--u));border:1px solid currentColor;border-radius:24px;transition:background-color .2s var(--out),color .2s var(--out)}
-.tile .logo{height:calc(150 * var(--u));margin-bottom:calc(36 * var(--u))}
-.tile .slot{width:100%}
+/* Community: the three logos Berns designed, no boxes */
+.tiles{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:calc(48 * var(--u));margin-top:calc(96 * var(--u))}
+.tile{display:flex;flex-direction:column;gap:calc(10 * var(--u))}
+.tile-logo{height:calc(140 * var(--u));display:flex;align-items:flex-end;margin-bottom:calc(32 * var(--u))}
+.tile-logo svg{display:block;height:100%;width:auto;max-width:100%}
+.tile-logo--rot svg{height:calc(40 * var(--u))}
 .tile .tile-name{font-family:var(--f-head);font-weight:700;font-size:calc(34 * var(--u));line-height:1;letter-spacing:-.02em}
 .tile-role{font-size:calc(15 * var(--u));line-height:1.2}
-.tile p{font-size:calc(18 * var(--u));line-height:1.45}
-.tile .go{margin-top:auto;padding-top:calc(16 * var(--u));font-size:calc(15 * var(--u))}
-a.tile:hover,a.tile:focus-visible{background:var(--white);color:var(--blue)}
+.tile p{font-size:calc(18 * var(--u));line-height:1.45;max-width:30ch}
+.tile .go{padding-top:calc(10 * var(--u));font-size:calc(15 * var(--u))}
+a.tile .tile-name{text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:.06em;text-underline-offset:.14em;transition:text-decoration-color .2s var(--out)}
+a.tile:hover .tile-name,a.tile:focus-visible .tile-name{text-decoration-color:currentColor}
 
 /* Photo placeholders: same draggable prints as Home, scattered through the chapters */
 .chap .photo{position:absolute;width:calc(250 * var(--u))}
@@ -244,21 +249,21 @@ html[data-ground="white"] .photo{outline:1px solid var(--ink)}
   .chap-title{font-size:9.3vw}
   .chap-lede{font-size:7.4vw;margin-top:28px}
   .chap-body{font-size:16px}
-  .cards,.tiles{grid-template-columns:minmax(0,1fr);gap:14px;margin-top:40px}
-  .card,.tile{padding:22px;min-height:0;gap:10px}
-  .card .logo{height:auto;max-height:34px}
-  .card .logo svg{height:auto;width:100%}
-  .card-role{font-size:26px;margin-top:28px}
-  .card-meta,.tile-role,.tile .go{font-size:12px}
-  .slot{font-size:11px;min-width:150px}
-  .tile .logo{height:110px;margin-bottom:16px}
+  .marks,.tiles{grid-template-columns:minmax(0,1fr);gap:44px;margin-top:48px}
+  .mark-logo{height:48px;margin-bottom:12px}
+  .mark-logo--bs svg{height:20px}
+  .mark-role{font-size:26px}
+  .mark-meta,.tile-role,.tile .go{font-size:12px}
+  .tile-logo{height:96px;margin-bottom:16px}
+  .tile-logo--rot svg{height:26px}
   .tile .tile-name{font-size:26px}
   .tile p{font-size:15px}
-  .credits{margin-top:40px}
-  .credits li{grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;padding:16px 0}
-  .credits .who{font-size:24px}
-  .credits .what{grid-column:1;font-size:14px}
-  .credits .role{grid-row:1;grid-column:2;font-size:11px}
+  .hosted-n{margin-top:48px;font-size:12px}
+  .hosted{gap:28px 32px;margin-top:16px;padding-top:24px}
+  .hosted li .mono{font-size:10px}
+  .hosted-logo{height:44px}
+  .hosted-logo--sq svg{height:50px}
+  .hosted-logo--wide svg{height:18px}
   .btns{gap:10px;margin-top:32px}
   .btn{font-size:12px;padding:14px 20px}
   .chap .photo{position:relative;width:min(60vw,240px);margin:56px auto 0;left:auto!important;top:auto!important;right:auto!important}
