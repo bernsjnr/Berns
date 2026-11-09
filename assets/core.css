@@ -433,34 +433,39 @@ body.shop{height:100vh;height:100svh;overflow:hidden}
 .shop-main{height:100%;overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:calc(132 * var(--u)) var(--hx) calc(40 * var(--u))}
 .shop-top{display:flex;justify-content:space-between;align-items:flex-end}
 .shop-title{font-family:var(--f-head);font-weight:700;font-size:calc(44 * var(--u));line-height:1;letter-spacing:-.02em}
-.shop-count{font-size:calc(15 * var(--u));line-height:1}
 .shelves{min-height:0;display:flex;flex-direction:column;justify-content:center;gap:calc(30 * var(--u));padding-top:calc(24 * var(--u))}
 .shelf{position:relative;display:block}
 .shelf-row{display:flex;justify-content:center;align-items:flex-end;height:calc(246 * var(--u));perspective:calc(1500 * var(--u));perspective-origin:50% 40%;transform-style:preserve-3d}
 .shelf-board{height:calc(9 * var(--u));margin:0 auto;width:min(100%,calc(1180 * var(--u)));background:var(--white);border-radius:2px;position:relative;z-index:2}
-.book{position:relative;display:block;flex:none;width:calc(174 * var(--u));margin:0 calc(-12 * var(--u));transform-style:preserve-3d;transform-origin:50% 100%;
-  transform:translate3d(calc(var(--o,0) * 96 * var(--u)),0,0) rotateY(-54deg);
+.book{--w:calc(174 * var(--u));position:relative;display:block;flex:none;width:var(--w);margin:0 calc(-12 * var(--u));transform-style:preserve-3d;transform-origin:50% 100%;
+  transform:translate3d(calc(var(--o,0) * 96 * var(--u) + var(--dx,0px)),var(--dy,0px),0) rotateY(-54deg);
   transition:transform .45s var(--out),opacity .3s var(--out)}
 .slab{--t:calc(18 * var(--u));position:relative;display:block;aspect-ratio:1/1.414;transform-style:preserve-3d}
-.slab .f{position:absolute;display:block;backface-visibility:hidden;background:#ECECEA}
+/* every side carries the print's own artwork: the edges are the strip of the poster nearest that edge, a touch darker, so the slab reads as one solid piece */
+.slab .f{position:absolute;display:block;backface-visibility:hidden;background-color:var(--ink);background-repeat:no-repeat}
+.slab .f::after{content:'';position:absolute;inset:0;background:var(--ink);opacity:var(--sh,0)}
 .f-front{inset:0;border-radius:2px;overflow:hidden;transform:translateZ(calc(var(--t) / 2))}
 .f-front img{width:100%;height:100%;object-fit:cover;pointer-events:none}
-.f-back{inset:0;transform:rotateY(180deg) translateZ(calc(var(--t) / 2))}
-.f-l{top:0;bottom:0;left:calc(var(--t) / -2);width:var(--t);transform:rotateY(-90deg);background:#D9D9D6}
-.f-r{top:0;bottom:0;right:calc(var(--t) / -2);width:var(--t);transform:rotateY(90deg)}
-.f-t{left:0;right:0;top:calc(var(--t) / -2);height:var(--t);transform:rotateX(90deg);background:#F6F6F4}
+.f-back{inset:0;background-size:100% 100%;--sh:.45;transform:rotateY(180deg) translateZ(calc(var(--t) / 2))}
+.f-l{top:0;bottom:0;left:calc(var(--t) / -2);width:var(--t);background-size:var(--w) 100%;background-position:left center;--sh:.34;transform:rotateY(-90deg)}
+.f-r{top:0;bottom:0;right:calc(var(--t) / -2);width:var(--t);background-size:var(--w) 100%;background-position:right center;--sh:.22;transform:rotateY(90deg)}
+.f-t{left:0;right:0;top:calc(var(--t) / -2);height:var(--t);background-size:100% calc(var(--w) * 1.414);background-position:center top;--sh:.1;transform:rotateX(90deg)}
 .shelf-row.has-active .book{opacity:.6}
-.shelf-row .book.on{opacity:1;z-index:5;transform:translate3d(0,calc(-16 * var(--u)),calc(70 * var(--u))) rotateY(-9deg)}
+.shelf-row .book.on{opacity:1;z-index:5;transform:translate3d(var(--dx,0px),calc(var(--dy,0px) - 16 * var(--u)),calc(70 * var(--u))) rotateY(-9deg)}
+.book.dragging{transition:none;cursor:grabbing}
+.shop-side{display:flex;align-items:center;gap:calc(22 * var(--u));font-size:calc(15 * var(--u));line-height:1}
+.shop-reset{font:inherit;text-transform:uppercase;text-decoration:underline;text-underline-offset:.3em}
+.shop-reset[hidden]{display:none}
 .shop-cap{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:calc(32 * var(--u));padding-top:calc(24 * var(--u));min-height:calc(86 * var(--u))}
 .shop-cap .cap-link{font-size:calc(14 * var(--u))}
 @media (prefers-reduced-motion:reduce){.book{transition:none}}
 @media (max-width:760px){
   body.shop{height:auto;overflow:auto}
   .shop-main{height:auto;min-height:100svh;padding:72px 20px 28px;grid-template-rows:auto auto auto}
-  .shop-title{font-size:28px}.shop-count{font-size:11px}
+  .shop-title{font-size:28px}.shop-side{font-size:11px}
   .shelves{gap:34px;padding:34px 0}
   .shelf-row{height:min(58vw,260px)}
-  .book{width:min(30vw,150px);margin:0 -1vw;transform:rotateY(-48deg)}
+  .book{--w:min(30vw,150px);margin:0 -1vw;transform:rotateY(-48deg)}
   .shelf-board{height:8px}
   .shop-cap{grid-template-columns:1fr;gap:10px;padding-top:6px}
   .shop-cap .cap-name{font-size:20px}.shop-cap .cap-meta{font-size:11px}

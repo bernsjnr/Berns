@@ -29,7 +29,7 @@
           <a class="book" href="print.html?p=${encodeURIComponent(p.id)}" data-id="${p.id}" aria-label="${p.name}, from £${from}">
             <span class="slab">
               <span class="f f-front"><img src="${base + p.img}" alt="" ${ri ? 'loading="lazy"' : ''} draggable="false"></span>
-              <span class="f f-back"></span><span class="f f-l"></span><span class="f f-r"></span><span class="f f-t"></span>
+              ${['back', 'l', 'r', 't'].map(k => `<span class="f f-${k}" style="background-image:url('${base + p.img}')"></span>`).join('')}
             </span>
           </a>`).join('')}
         </div>
@@ -58,11 +58,45 @@
   }
 
   if (!phone.matches || true) {
-    root.addEventListener('pointerover', e => { if (e.pointerType === 'touch') return; const b = e.target.closest('.book'); if (b) focusBook(b); });
-    root.addEventListener('pointerleave', () => focusBook(null));
+    root.addEventListener('pointerover', e => { if (e.pointerType === 'touch' || drag) return; const b = e.target.closest('.book'); if (b) focusBook(b); else if (root.querySelector('.book.on')) focusBook(null); });
+    root.addEventListener('pointerleave', () => { if (!drag) focusBook(null); });
     root.addEventListener('focusin', e => { const b = e.target.closest('.book'); if (b) focusBook(b); });
     root.addEventListener('focusout', () => focusBook(null));
   }
-  phone.addEventListener('change', build);
+  /* Movable: drag a print anywhere with a mouse or pen (not touch, so phones can still scroll). It stays where you drop it;
+     Reset puts them all back on the shelves. A drag never opens the print. */
+  const resetBtn = document.querySelector('[data-reset]');
+  let drag = null, suppress = false, zi = 10;
+  root.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'touch' || e.button > 0) return;
+    const b = e.target.closest('.book'); if (!b) return;
+    drag = { b, x: e.clientX, y: e.clientY, dx: parseFloat(b.dataset.dx) || 0, dy: parseFloat(b.dataset.dy) || 0, moved: false, id: e.pointerId };
+  });
+  addEventListener('pointermove', e => {
+    if (!drag) return;
+    const mx = e.clientX - drag.x, my = e.clientY - drag.y;
+    if (!drag.moved && Math.hypot(mx, my) > 6) {
+      drag.moved = true; drag.b.classList.add('dragging'); drag.b.closest('.shelf').style.zIndex = ++zi;
+      try { drag.b.setPointerCapture(drag.id); } catch (_) {}
+      focusBook(drag.b);
+    }
+    if (!drag.moved) return;
+    const b = drag.b; b.dataset.dx = drag.dx + mx; b.dataset.dy = drag.dy + my;
+    b.style.setProperty('--dx', b.dataset.dx + 'px'); b.style.setProperty('--dy', b.dataset.dy + 'px');
+  });
+  const drop = () => {
+    if (!drag) return;
+    if (drag.moved) { drag.b.classList.remove('dragging'); drag.b.classList.add('moved'); suppress = true; resetBtn.hidden = false; setTimeout(() => { suppress = false; }, 50); }
+    drag = null;
+  };
+  addEventListener('pointerup', drop); addEventListener('pointercancel', drop);
+  root.addEventListener('click', e => { if (suppress) { e.preventDefault(); suppress = false; } }, true);
+  root.addEventListener('dragstart', e => e.preventDefault());
+  resetBtn.addEventListener('click', () => {
+    root.querySelectorAll('.book').forEach(b => { delete b.dataset.dx; delete b.dataset.dy; b.style.removeProperty('--dx'); b.style.removeProperty('--dy'); b.classList.remove('moved'); });
+    root.querySelectorAll('.shelf').forEach(s => { s.style.zIndex = ''; });
+    resetBtn.hidden = true;
+  });
+  phone.addEventListener('change', () => { build(); resetBtn.hidden = true; });
   build();
 })();
