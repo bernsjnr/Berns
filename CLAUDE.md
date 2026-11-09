@@ -5,7 +5,7 @@ Personal site for Berns (Bernard Bannor). "Berns" is the main name; Berns Studio
 ## Decisions so far
 - Domain stays **bernsds.com**. Email on Zoho must keep working (don't touch MX records).
 - Hand-built static HTML/CSS/JS, hosted on **Hostinger**. Moving off Cargo.
-- Nav (v9, Nov 2026): HOME / WORK / ABOUT / SHOP / CONTACT, in a full-screen menu behind MENU. Presenting and Community to be folded in later.
+- Nav (v9, Nov 2026; About and Work swapped, About 02, Work 03): HOME / ABOUT / WORK / SHOP / CONTACT, in a full-screen menu behind MENU. Presenting and Community to be folded in later.
 - Shop sells Berns's posters. He prints, checks and posts them himself (quality control). Checkout via **Stripe Payment Links** (no cart backend).
 - Shop: 12 prints in `assets/posters/` (listed in `assets/data.js`): Mistakes are the portals of discovery, Love God love people, Home is where the heart is, Don't get tired of doing good, Day by day, In God's time, plus the gradient series (Breathe, Pause, Warmth, Rest is productive, Breath in breath out, No. 5). The six typographic posters are only 620px wide for now; swap in high-res files when Berns sends them.
 - Community section: BULLY THE ROADS (co-founder, London running club), Track + Play (co-founder, annual community sports day), Rule of Thirds (one third, creative collective and podcast, ruleofthirds.co.uk).
