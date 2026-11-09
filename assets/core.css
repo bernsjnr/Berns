@@ -268,7 +268,8 @@ a.tile:hover .tile-name,a.tile:focus-visible .tile-name{text-decoration-color:cu
   .chap:has(> .prints) .tile-logo--rot svg{height:calc(30 * var(--u))}
 }
 .photo .ph{display:grid;place-items:center;width:100%;height:100%;background:#F1F2F3;color:var(--ink);font-size:calc(13 * var(--u));text-align:center;padding:12px}
-html[data-ground="white"] .photo{outline:1px solid var(--ink)}
+/* Print frame follows its chapter: black on white pages, white on ink and blue */
+.chap[data-ground="white"] .photo{background:var(--ink)}
 
 /* Close */
 .close{display:flex;flex-direction:column;justify-content:center}
