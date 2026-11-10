@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
-<link rel="stylesheet" href="../assets/core.css?v=54">
+<link rel="stylesheet" href="../assets/core.css?v=59">
 </head>
 <body data-base="../" data-page="shop" class="scroll shop">
 
@@ -48,11 +48,14 @@
   <h1 class="sr">Shop</h1>
   <div class="shop-top">
     <p class="shop-title">Shop</p>
-    <p class="shop-side mono"><button type="button" class="shop-reset" data-reset hidden>Reset</button><span data-count></span></p>
+    <p class="shop-side mono">Scroll or swipe to flip through</p>
   </div>
 
-  <!-- The prints stand on the shelves; hover or focus one to turn it face on -->
-  <section class="shelves" data-shelves aria-label="Prints"></section>
+  <!-- A crate of prints, stacked like records. Scroll, swipe or use the arrow keys: the one you land on lifts out of the box -->
+  <section class="stage crate-stage" data-stage aria-roledescription="carousel" aria-label="Prints">
+    <div class="crate" data-crate></div>
+    <div class="crate-front mono" aria-hidden="true"><span>Prints</span><span data-box-count></span></div>
+  </section>
 
   <div class="shop-cap" aria-live="polite">
     <div class="cap-text">
@@ -64,7 +67,7 @@
 </main>
 
 <script src="../assets/data.js"></script>
-<script src="../assets/core.js?v=52"></script>
-<script src="../assets/shop.js?v=53"></script>
+<script src="../assets/core.js?v=58"></script>
+<script src="../assets/shop.js?v=59"></script>
 </body>
 </html>

@@ -1,102 +1,128 @@
 /* =========================================================
    BERNS: Shop (v9, Nov 2026)
-   The prints stand on shelves like books, turned away. Hover, focus or tap one
-   to turn it face on; its neighbours make room. Content from assets/data.js (posters, sizes).
+   A crate of prints, stacked front to back like records in a box.
+   Scroll, swipe, arrow keys or tap one further back: the print you land on lifts out of the crate
+   so you can see more of it; the ones you have passed drop down in front. Tap the lifted print to open it.
+   Content from assets/data.js (posters, sizes).
    ========================================================= */
 (() => {
   const D = window.BERNS;
   const base = document.body.dataset.base || '';
-  const root = document.querySelector('[data-shelves]');
-  const cap = { name: document.querySelector('[data-cap-name]'), meta: document.querySelector('[data-cap-meta]'), link: document.querySelector('[data-cap-link]') };
-  const phone = matchMedia('(max-width: 760px)');
+  const $ = s => document.querySelector(s);
+  const stage = $('[data-stage]'), crate = $('[data-crate]');
+  const cap = { name: $('[data-cap-name]'), meta: $('[data-cap-meta]'), link: $('[data-cap-link]'), box: $('[data-box-count]') };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const root = document.documentElement;
   const from = Math.min(...D.sizes.map(s => s.price));
-  document.querySelector('[data-count]').textContent = `${String(D.posters.length).padStart(2, '0')} prints`;
+  const pad = n => String(n).padStart(2, '0');
+  const list = D.posters, last = list.length - 1;
 
-  const idle = () => {
-    cap.name.textContent = 'Prints, checked, signed and posted by me.';
-    cap.meta.textContent = D.sizes.map(s => s.label).join(', ') + ' · framed or unframed';
-    cap.link.hidden = true;
-  };
+  crate.innerHTML = list.map((p, i) => `
+    <a class="book" href="print.html?p=${encodeURIComponent(p.id)}" data-i="${i}" aria-label="${p.name}, from £${from}" draggable="false">
+      <span class="slab">
+        <span class="f f-front"><img src="${base + p.img}" alt="" ${i > 3 ? 'loading="lazy"' : ''} draggable="false"></span>
+        <span class="f f-t" style="background-image:url('${base + p.img}')"></span>
+      </span>
+    </a>`).join('');
+  const books = [...crate.children];
 
-  function build() {
-    const per = phone.matches ? 3 : 6;
-    const rows = [];
-    for (let i = 0; i < D.posters.length; i += per) rows.push(D.posters.slice(i, i + per));
-    root.innerHTML = rows.map((r, ri) => `
-      <div class="shelf">
-        <div class="shelf-row">${r.map((p, i) => `
-          <a class="book" href="print.html?p=${encodeURIComponent(p.id)}" data-id="${p.id}" aria-label="${p.name}, from £${from}">
-            <span class="slab">
-              <span class="f f-front"><img src="${base + p.img}" alt="" ${ri ? 'loading="lazy"' : ''} draggable="false"></span>
-              ${['back', 'l', 'r', 't'].map(k => `<span class="f f-${k}" style="background-image:url('${base + p.img}')"></span>`).join('')}
-            </span>
-          </a>`).join('')}
-        </div>
-        <div class="shelf-board" aria-hidden="true"></div>
-      </div>`).join('');
-    idle();
-  }
+  let pos = 0, target = 0, raf = 0, active = -1;
+  const idx = () => Math.max(0, Math.min(last, Math.round(pos)));
+  const LIFT = 0.16; /* how far the print in hand lifts out, as a share of its height */
+  const smooth = t => t * t * (3 - 2 * t);
 
-  /* turn one face on; the books either side shuffle away to make room */
-  function focusBook(el) {
-    document.querySelectorAll('.shelf-row').forEach(row => {
-      const books = [...row.children];
-      const h = books.indexOf(el);
-      row.classList.toggle('has-active', h > -1);
-      books.forEach((b, i) => {
-        b.classList.toggle('on', i === h);
-        b.style.setProperty('--o', h < 0 ? 0 : Math.sign(i - h));
-      });
+  /* d = how far a print is from the one in hand. Behind (d > 0): standing, stepping back into the box.
+     In hand (d = 0): lifted out. Passed (d < 0): dropped down and leaning forward, tucked behind the front of the crate. */
+  function layout() {
+    const H = crate.clientHeight;
+    books.forEach((b, i) => {
+      const d = i - pos;
+      let ty, tz, rx, op = 1;
+      if (d >= 0) {
+        const lift = smooth(Math.max(0, 1 - d));
+        ty = -lift * LIFT * H - d * 0.06 * H - Math.min(d, 1) * 0.14 * H; tz = -d * 0.09 * H; rx = 0;
+        op = Math.max(0, Math.min(1, (3.6 - d) / 0.8));
+      } else {
+        const p = smooth(Math.min(1, -d));
+        ty = (1 - p) * -LIFT * H + p * 0.6 * H; tz = -d * 0.03 * H; rx = -10 * p;
+        op = Math.max(0, Math.min(1, (1 + d) / 0.35));
+      }
+      b.style.transform = `translate3d(0,${ty.toFixed(1)}px,${tz.toFixed(1)}px) rotateX(${rx.toFixed(2)}deg)`;
+      b.style.zIndex = 200 - i;
+      b.style.opacity = op.toFixed(3);
+      b.style.pointerEvents = op < 0.5 || d < -0.5 ? 'none' : '';
+      b.style.setProperty('--dim', Math.max(0, Math.min(0.6, d * 0.1)).toFixed(3));
+      b.tabIndex = idx() === i ? 0 : -1;
     });
-    if (!el) { idle(); return; }
-    const p = D.posters.find(x => x.id === el.dataset.id);
+  }
+  function caption() {
+    const i = idx(), p = list[i];
     cap.name.textContent = p.name;
     cap.meta.textContent = `Edition of ${p.edition || 50} · from £${from}`;
-    cap.link.href = el.href; cap.link.hidden = false;
-    if (window.BERNS_HAPTIC) window.BERNS_HAPTIC(8);
+    cap.link.href = books[i].href;
+    cap.box.textContent = `${pad(i + 1)} / ${pad(list.length)}`;
   }
+  function changed() { const i = idx(); if (i !== active) { const first = active < 0; active = i; caption(); if (!first && window.BERNS_HAPTIC) window.BERNS_HAPTIC(10); } }
+  function tick() {
+    const d = target - pos;
+    pos = reduce || Math.abs(d) < 0.001 ? target : pos + d * 0.14;
+    layout(); changed();
+    raf = pos !== target ? requestAnimationFrame(tick) : 0;
+  }
+  function go(i) { target = Math.max(0, Math.min(last, i)); if (!raf) raf = requestAnimationFrame(tick); }
 
-  if (!phone.matches || true) {
-    root.addEventListener('pointerover', e => { if (e.pointerType === 'touch' || drag) return; const b = e.target.closest('.book'); if (b) focusBook(b); else if (root.querySelector('.book.on')) focusBook(null); });
-    root.addEventListener('pointerleave', () => { if (!drag) focusBook(null); });
-    root.addEventListener('focusin', e => { const b = e.target.closest('.book'); if (b) focusBook(b); });
-    root.addEventListener('focusout', () => focusBook(null));
-  }
-  /* Movable: drag a print anywhere with a mouse or pen (not touch, so phones can still scroll). It stays where you drop it;
-     Reset puts them all back on the shelves. A drag never opens the print. */
-  const resetBtn = document.querySelector('[data-reset]');
-  let drag = null, suppress = false, zi = 10;
-  root.addEventListener('pointerdown', e => {
-    if (e.pointerType === 'touch' || e.button > 0) return;
-    const b = e.target.closest('.book'); if (!b) return;
-    drag = { b, x: e.clientX, y: e.clientY, dx: parseFloat(b.dataset.dx) || 0, dy: parseFloat(b.dataset.dy) || 0, moved: false, id: e.pointerId };
+  /* wheel / trackpad: one print per nudge */
+  let acc = 0, accT = 0;
+  stage.addEventListener('wheel', e => {
+    e.preventDefault();
+    const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    const now = performance.now(); if (now - accT > 220) acc = 0; accT = now;
+    acc += d;
+    if (Math.abs(acc) > 60) { go(Math.round(target) + Math.sign(acc)); acc = 0; }
+  }, { passive: false });
+
+  /* drag / swipe: pull up (or left) to go deeper into the crate, down (or right) to come back */
+  let drag = null;
+  stage.addEventListener('pointerdown', e => {
+    if (e.button > 0) return;
+    drag = { x: e.clientX, y: e.clientY, start: pos, moved: false, id: e.pointerId, last: e.clientY, t: performance.now(), v: 0 };
   });
   addEventListener('pointermove', e => {
     if (!drag) return;
-    const mx = e.clientX - drag.x, my = e.clientY - drag.y;
-    if (!drag.moved && Math.hypot(mx, my) > 6) {
-      drag.moved = true; drag.b.classList.add('dragging'); drag.b.closest('.shelf').style.zIndex = ++zi;
-      try { drag.b.setPointerCapture(drag.id); } catch (_) {}
-      focusBook(drag.b);
-    }
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (!drag.moved && Math.hypot(dx, dy) > 6) { drag.moved = true; try { stage.setPointerCapture(drag.id); } catch (_) {} stage.classList.add('dragging'); }
     if (!drag.moved) return;
-    const b = drag.b; b.dataset.dx = drag.dx + mx; b.dataset.dy = drag.dy + my;
-    b.style.setProperty('--dx', b.dataset.dx + 'px'); b.style.setProperty('--dy', b.dataset.dy + 'px');
+    const m = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+    const now = performance.now(); drag.v = (m - drag.last) / Math.max(1, now - drag.t); drag.last = m; drag.t = now;
+    pos = target = Math.max(-0.3, Math.min(last + 0.3, drag.start - m / (crate.clientHeight * 0.3)));
+    layout(); changed();
   });
-  const drop = () => {
+  const end = () => {
     if (!drag) return;
-    if (drag.moved) { drag.b.classList.remove('dragging'); drag.b.classList.add('moved'); suppress = true; resetBtn.hidden = false; setTimeout(() => { suppress = false; }, 50); }
-    drag = null;
+    stage.classList.remove('dragging');
+    if (drag.moved) go(Math.round(pos) - Math.max(-1, Math.min(1, Math.round(drag.v * 1.2))));
+    setTimeout(() => { drag = null; }, 0);
   };
-  addEventListener('pointerup', drop); addEventListener('pointercancel', drop);
-  root.addEventListener('click', e => { if (suppress) { e.preventDefault(); suppress = false; } }, true);
-  root.addEventListener('dragstart', e => e.preventDefault());
-  resetBtn.addEventListener('click', () => {
-    root.querySelectorAll('.book').forEach(b => { delete b.dataset.dx; delete b.dataset.dy; b.style.removeProperty('--dx'); b.style.removeProperty('--dy'); b.classList.remove('moved'); });
-    root.querySelectorAll('.shelf').forEach(s => { s.style.zIndex = ''; });
-    resetBtn.hidden = true;
+  addEventListener('pointerup', end); addEventListener('pointercancel', end);
+
+  /* a drag never opens a print; tapping one further back brings it up; tapping the lifted one opens it */
+  crate.addEventListener('click', e => {
+    const b = e.target.closest('.book'); if (!b) return;
+    if (drag && drag.moved) { e.preventDefault(); return; }
+    const i = +b.dataset.i;
+    if (i !== idx()) { e.preventDefault(); go(i); }
   });
-  phone.addEventListener('change', () => { build(); resetBtn.hidden = true; });
-  build();
+  crate.addEventListener('dragstart', e => e.preventDefault());
+  crate.addEventListener('focusin', e => { const b = e.target.closest('.book'); if (b && +b.dataset.i !== idx()) go(+b.dataset.i); });
+
+  addEventListener('keydown', e => {
+    if (root.classList.contains('menu-open')) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); go(Math.round(target) + 1); }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); go(Math.round(target) - 1); }
+  });
+  addEventListener('resize', layout);
+
+  layout(); changed();
+  /* the first print lifts out on arrival */
+  if (!reduce) { pos = 0.999; layout(); requestAnimationFrame(() => go(0)); }
 })();
