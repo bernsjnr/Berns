@@ -10,7 +10,7 @@
   const base = document.body.dataset.base || '';
   const $ = s => document.querySelector(s);
   const stage = $('[data-stage]'), crate = $('[data-crate]');
-  const cap = { name: $('[data-cap-name]'), meta: $('[data-cap-meta]'), link: $('[data-cap-link]'), box: $('[data-box-count]') };
+  const cap = { name: $('[data-cap-name]'), meta: $('[data-cap-meta]'), link: $('[data-cap-link]') };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const root = document.documentElement;
   const from = Math.min(...D.sizes.map(s => s.price));
@@ -69,7 +69,6 @@
     cap.name.textContent = p.name;
     cap.meta.textContent = `Edition of ${p.edition || 50} · from £${from}`;
     cap.link.href = books[i].href;
-    cap.box.textContent = `${pad(i + 1)} / ${pad(list.length)}`;
   }
   function changed() { const i = idx(); if (i !== active) { const first = active < 0; active = i; caption(); if (!first && window.BERNS_HAPTIC) window.BERNS_HAPTIC(10); } }
   function tick() {
