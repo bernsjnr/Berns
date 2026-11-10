@@ -434,7 +434,7 @@ body.shop{height:100vh;height:100svh;overflow:hidden}
 .shop-top{display:flex;justify-content:space-between;align-items:flex-end}
 .shop-title{font-family:var(--f-head);font-weight:700;font-size:calc(44 * var(--u));line-height:1;letter-spacing:-.02em}
 .shop-side{font-size:calc(15 * var(--u));line-height:1}
-.crate-stage{--w:calc(280 * var(--u));--h:calc(var(--w) * 1.414);perspective:none;touch-action:none;clip-path:inset(-100vh -100vw 0 -100vw)}
+.crate-stage{--w:calc(240 * var(--u));--h:calc(var(--w) * 1.414);perspective:none;touch-action:none;clip-path:inset(-100vh -100vw 0 -100vw)}
 .crate{position:absolute;left:50%;bottom:calc(18 * var(--u));width:var(--w);height:var(--h);margin-left:calc(var(--w) / -2);perspective:calc(1100 * var(--u));perspective-origin:50% 100%}
 .crate .book{position:absolute;inset:0;display:block;transform-origin:50% 100%;transform-style:preserve-3d;will-change:transform}
 .slab{--t:max(2px,calc(3 * var(--u)));position:relative;display:block;height:100%;transform-style:preserve-3d}
@@ -442,6 +442,8 @@ body.shop{height:100vh;height:100svh;overflow:hidden}
 .slab .f::after{content:'';position:absolute;inset:0;background:var(--ink);opacity:var(--dim,0);pointer-events:none}
 .f-front{inset:0;border-radius:2px;overflow:hidden}
 .f-front img{width:100%;height:100%;object-fit:cover;pointer-events:none}
+/* the title strip along the top edge shows on the prints behind, like the labels on a stack of records; it clears as a print is lifted */
+.book-label{position:absolute;left:0;right:0;top:0;padding:calc(7 * var(--u)) calc(10 * var(--u));background:rgba(26,26,26,.82);color:var(--white);font-size:calc(11 * var(--u));line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;opacity:calc(1 - var(--lift,0) * 1.4);z-index:1}
 .f-t{left:0;right:0;top:calc(var(--t) * -1);height:var(--t);background-size:100% var(--h);background-position:center top;transform-origin:50% 100%;transform:rotateX(90deg)}
 /* the front of the crate: hides the lower half of the stack, like the wall of a record box */
 .crate-front{position:absolute;left:50%;bottom:0;width:calc(var(--w) * 1.5);height:calc(var(--h) * .3 + 18 * var(--u));margin-left:calc(var(--w) * -.75);z-index:300;
@@ -453,7 +455,7 @@ body.shop{height:100vh;height:100svh;overflow:hidden}
 @media (max-width:760px){
   .shop-main{padding:64px 20px 22px}
   .shop-title{font-size:28px}.shop-side{font-size:10px}
-  .crate-stage{--w:min(58vw,31svh)}
+  .crate-stage{--w:min(52vw,27svh)}
   .crate{bottom:14px;perspective:900px}
   .crate-front{height:calc(var(--h) * .3 + 14px);padding:12px;font-size:10px}
   .shop-cap{grid-template-columns:minmax(0,1fr) auto;gap:10px;padding-top:14px;min-height:0}

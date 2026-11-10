@@ -15,19 +15,23 @@
   const root = document.documentElement;
   const from = Math.min(...D.sizes.map(s => s.price));
   const pad = n => String(n).padStart(2, '0');
-  const list = D.posters, last = list.length - 1;
+  const list = D.posters;
 
   crate.innerHTML = list.map((p, i) => `
     <a class="book" href="print.html?p=${encodeURIComponent(p.id)}" data-i="${i}" aria-label="${p.name}, from £${from}" draggable="false">
       <span class="slab">
-        <span class="f f-front"><img src="${base + p.img}" alt="" ${i > 3 ? 'loading="lazy"' : ''} draggable="false"></span>
+        <span class="f f-front"><img src="${base + p.img}" alt="" ${i > 3 ? 'loading="lazy"' : ''} draggable="false"><span class="book-label mono">${p.name}</span></span>
         <span class="f f-t" style="background-image:url('${base + p.img}')"></span>
       </span>
     </a>`).join('');
   const books = [...crate.children];
 
   let pos = 0, target = 0, raf = 0, active = -1;
-  const idx = () => Math.max(0, Math.min(last, Math.round(pos)));
+  const n = list.length;
+  const mod = v => ((v % n) + n) % n;
+  const idx = () => mod(Math.round(pos));
+  /* the crate loops: every print sits at its shortest distance round the ring from the one in hand */
+  const wrap = d => { d = mod(d); return d >= n / 2 ? d - n : d; };
   const LIFT = 0.16; /* how far the print in hand lifts out, as a share of its height */
   const smooth = t => t * t * (3 - 2 * t);
 
@@ -36,22 +40,27 @@
   function layout() {
     const H = crate.clientHeight;
     books.forEach((b, i) => {
-      const d = i - pos;
-      let ty, tz, rx, op = 1;
+      const d = wrap(i - pos);
+      let ty, tz, rx, op = 1, lift = 0;
       if (d >= 0) {
-        const lift = smooth(Math.max(0, 1 - d));
-        ty = -lift * LIFT * H - d * 0.06 * H - Math.min(d, 1) * 0.14 * H; tz = -d * 0.09 * H; rx = 0;
-        op = Math.max(0, Math.min(1, (3.6 - d) / 0.8));
+        lift = smooth(Math.max(0, 1 - d));
+        /* spaced right out: each print behind steps well clear of the one in front, and fades with distance */
+        ty = -lift * LIFT * H - Math.min(d, 1) * 0.1 * H - d * 0.11 * H; tz = -d * 0.02 * H; rx = 0;
+        op = Math.max(0, Math.min(1, (5.6 - d) / 0.7));
       } else {
         const p = smooth(Math.min(1, -d));
         ty = (1 - p) * -LIFT * H + p * 0.6 * H; tz = -d * 0.03 * H; rx = -10 * p;
         op = Math.max(0, Math.min(1, (1 + d) / 0.35));
+        lift = 1 - p;
       }
       b.style.transform = `translate3d(0,${ty.toFixed(1)}px,${tz.toFixed(1)}px) rotateX(${rx.toFixed(2)}deg)`;
-      b.style.zIndex = 200 - i;
+      b.style.zIndex = 200 - Math.round((d + n) * 10) % 1000 + (d < 0 ? 400 : 0);
+      b.style.zIndex = d >= 0 ? 300 - Math.round(d * 10) : 100 + Math.round(d * 10);
       b.style.opacity = op.toFixed(3);
-      b.style.pointerEvents = op < 0.5 || d < -0.5 ? 'none' : '';
-      b.style.setProperty('--dim', Math.max(0, Math.min(0.6, d * 0.1)).toFixed(3));
+      b.style.pointerEvents = op < 0.3 || d < -0.5 ? 'none' : '';
+      /* fade by darkening toward the ink (not by see-through), so the prints behind stay solid and never show each other through */
+      b.style.setProperty('--dim', (d <= 1 ? 0.5 * smooth(Math.max(0, d)) : Math.min(0.8, 0.5 + (d - 1) * 0.08)).toFixed(3));
+      b.style.setProperty('--lift', lift.toFixed(3));
       b.tabIndex = idx() === i ? 0 : -1;
     });
   }
@@ -69,7 +78,7 @@
     layout(); changed();
     raf = pos !== target ? requestAnimationFrame(tick) : 0;
   }
-  function go(i) { target = Math.max(0, Math.min(last, i)); if (!raf) raf = requestAnimationFrame(tick); }
+  function go(i) { target = i; if (!raf) raf = requestAnimationFrame(tick); }
 
   /* wheel / trackpad: one print per nudge */
   let acc = 0, accT = 0;
@@ -94,7 +103,7 @@
     if (!drag.moved) return;
     const m = Math.abs(dx) > Math.abs(dy) ? dx : dy;
     const now = performance.now(); drag.v = (m - drag.last) / Math.max(1, now - drag.t); drag.last = m; drag.t = now;
-    pos = target = Math.max(-0.3, Math.min(last + 0.3, drag.start - m / (crate.clientHeight * 0.3)));
+    pos = target = drag.start - m / (crate.clientHeight * 0.3);
     layout(); changed();
   });
   const end = () => {
@@ -110,10 +119,10 @@
     const b = e.target.closest('.book'); if (!b) return;
     if (drag && drag.moved) { e.preventDefault(); return; }
     const i = +b.dataset.i;
-    if (i !== idx()) { e.preventDefault(); go(i); }
+    if (i !== idx()) { e.preventDefault(); go(Math.round(pos) + wrap(i - Math.round(pos))); }
   });
   crate.addEventListener('dragstart', e => e.preventDefault());
-  crate.addEventListener('focusin', e => { const b = e.target.closest('.book'); if (b && +b.dataset.i !== idx()) go(+b.dataset.i); });
+  crate.addEventListener('focusin', e => { const b = e.target.closest('.book'); if (b && +b.dataset.i !== idx()) go(Math.round(pos) + wrap(+b.dataset.i - Math.round(pos))); });
 
   addEventListener('keydown', e => {
     if (root.classList.contains('menu-open')) return;
