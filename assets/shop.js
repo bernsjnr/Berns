@@ -1,8 +1,8 @@
 /* =========================================================
    BERNS: Shop (v9, Nov 2026)
-   A crate of prints, stacked front to back like records in a box.
-   Scroll, swipe, arrow keys or tap one further back: the print you land on lifts out of the crate
-   so you can see more of it; the ones you have passed drop down in front. Tap the lifted print to open it.
+   A stack of double-sided prints that turn on the X axis.
+   Scroll, swipe, arrow keys or tap one: the print you land on stands square to you, the ones to come lie back above,
+   the ones passed flip over (showing their info side) and lie below. Tap the print in hand to open it.
    Content from assets/data.js (posters, sizes).
    ========================================================= */
 (() => {
@@ -16,12 +16,26 @@
   const from = Math.min(...D.sizes.map(s => s.price));
   const pad = n => String(n).padStart(2, '0');
   const list = D.posters;
+  const n0 = list.length;
 
+  const sizesTxt = D.sizes.map(z => z.label.replace(/\s/g, '')).join(' · ');
+  /* each print is a thin double-sided slab: the artwork on the front, a plain info sheet on the back */
   crate.innerHTML = list.map((p, i) => `
     <a class="book" href="print.html?p=${encodeURIComponent(p.id)}" data-i="${i}" aria-label="${p.name}, from £${from}" draggable="false">
       <span class="slab">
         <span class="f f-front"><img src="${base + p.img}" alt="" ${i > 3 ? 'loading="lazy"' : ''} draggable="false"></span>
-        <span class="f f-t" style="background-image:url('${base + p.img}')"></span>
+        <span class="f f-back" aria-hidden="true"><span class="bk">
+          <span class="bk-n mono">${pad(i + 1)} / ${pad(n0)}</span>
+          <span class="bk-name">${p.name}</span>
+          <span class="bk-rows">
+            <span class="bk-row"><i class="mono">Edition</i><b>${p.edition || 50}, signed and numbered</b></span>
+            <span class="bk-row"><i class="mono">Sizes</i><b>${sizesTxt}</b></span>
+            <span class="bk-row"><i class="mono">From</i><b>£${from}</b></span>
+            <span class="bk-row"><i class="mono">Made by</i><b>Printed, checked and posted by Berns</b></span>
+          </span>
+          <span class="bk-mark scale">Berns</span>
+        </span></span>
+        <span class="f e e-t"></span><span class="f e e-b"></span><span class="f e e-l"></span><span class="f e e-r"></span>
       </span>
     </a>`).join('');
   const books = [...crate.children];
@@ -35,32 +49,25 @@
   const LIFT = 0.16; /* how far the print in hand lifts out, as a share of its height */
   const smooth = t => t * t * (3 - 2 * t);
 
-  /* d = how far a print is from the one in hand. Behind (d > 0): standing, stepping back into the box.
-     In hand (d = 0): lifted out. Passed (d < 0): dropped down and leaning forward, tucked behind the front of the crate. */
+  /* d = how far a print is from the one in hand.
+     In hand (d = 0): square on to you. Still to come (d > 0): turned back on the X axis, lying away above, front showing.
+     Passed (d < 0): flipped over past the vertical so the back shows, lying forward below. */
+  const TILT = 72, FLIP = 108;
   function layout() {
     const H = crate.clientHeight;
     books.forEach((b, i) => {
-      const d = wrap(i - pos);
-      let ty, tz, rx, op = 1, lift = 0;
-      if (d >= 0) {
-        lift = smooth(Math.max(0, 1 - d));
-        /* spaced right out: each print behind steps well clear of the one in front, and fades with distance */
-        ty = -lift * LIFT * H - Math.min(d, 1) * 0.1 * H - d * 0.075 * H; tz = -d * 0.02 * H; rx = 0;
-        op = Math.max(0, Math.min(1, (5.6 - d) / 0.7));
-      } else {
-        const p = smooth(Math.min(1, -d));
-        ty = (1 - p) * -LIFT * H + p * 0.6 * H; tz = -d * 0.03 * H; rx = -10 * p;
-        op = Math.max(0, Math.min(1, (1 + d) / 0.35));
-        lift = 1 - p;
-      }
+      const d = wrap(i - pos), a = Math.abs(d), sg = Math.sign(d) || 1;
+      const s1 = smooth(Math.min(1, a));
+      const ty = sg * ((d >= 0 ? 0.74 : 0.62) * H * s1 + Math.max(a - 1, 0) * 0.2 * H);
+      const tz = (1 - Math.min(1, a)) * 0.12 * H - a * 0.05 * H;
+      const rx = d >= 0 ? TILT * s1 : -FLIP * s1;
+      const op = Math.max(0, Math.min(1, (3.4 - a) / 0.6));
       b.style.transform = `translate3d(0,${ty.toFixed(1)}px,${tz.toFixed(1)}px) rotateX(${rx.toFixed(2)}deg)`;
-      b.style.zIndex = 200 - Math.round((d + n) * 10) % 1000 + (d < 0 ? 400 : 0);
-      b.style.zIndex = d >= 0 ? 300 - Math.round(d * 10) : 100 + Math.round(d * 10);
+      b.style.zIndex = 300 - Math.round(a * 10);
       b.style.opacity = op.toFixed(3);
-      b.style.pointerEvents = op < 0.3 || d < -0.5 ? 'none' : '';
-      /* fade by darkening toward the ink (not by see-through), so the prints behind stay solid and never show each other through */
-      b.style.setProperty('--dim', (d <= 1 ? 0.5 * smooth(Math.max(0, d)) : Math.min(0.8, 0.5 + (d - 1) * 0.08)).toFixed(3));
-      b.style.setProperty('--lift', lift.toFixed(3));
+      b.style.pointerEvents = op < 0.3 || a > 2.6 ? 'none' : '';
+      /* fade by darkening toward the ink, not see-through, so prints never show each other through */
+      b.style.setProperty('--dim', Math.min(0.85, a <= 1 ? 0.38 * smooth(a) : 0.38 + (a - 1) * 0.22).toFixed(3));
       b.tabIndex = idx() === i ? 0 : -1;
     });
   }
@@ -102,7 +109,7 @@
     if (!drag.moved) return;
     const m = Math.abs(dx) > Math.abs(dy) ? dx : dy;
     const now = performance.now(); drag.v = (m - drag.last) / Math.max(1, now - drag.t); drag.last = m; drag.t = now;
-    pos = target = drag.start - m / (crate.clientHeight * 0.3);
+    pos = target = drag.start - m / (crate.clientHeight * 0.45);
     layout(); changed();
   });
   const end = () => {
