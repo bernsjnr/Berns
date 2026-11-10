@@ -20,7 +20,7 @@
   crate.innerHTML = list.map((p, i) => `
     <a class="book" href="print.html?p=${encodeURIComponent(p.id)}" data-i="${i}" aria-label="${p.name}, from £${from}" draggable="false">
       <span class="slab">
-        <span class="f f-front"><img src="${base + p.img}" alt="" ${i > 3 ? 'loading="lazy"' : ''} draggable="false"><span class="book-label mono">${p.name}</span></span>
+        <span class="f f-front"><img src="${base + p.img}" alt="" ${i > 3 ? 'loading="lazy"' : ''} draggable="false"></span>
         <span class="f f-t" style="background-image:url('${base + p.img}')"></span>
       </span>
     </a>`).join('');
@@ -45,7 +45,7 @@
       if (d >= 0) {
         lift = smooth(Math.max(0, 1 - d));
         /* spaced right out: each print behind steps well clear of the one in front, and fades with distance */
-        ty = -lift * LIFT * H - Math.min(d, 1) * 0.1 * H - d * 0.11 * H; tz = -d * 0.02 * H; rx = 0;
+        ty = -lift * LIFT * H - Math.min(d, 1) * 0.1 * H - d * 0.075 * H; tz = -d * 0.02 * H; rx = 0;
         op = Math.max(0, Math.min(1, (5.6 - d) / 0.7));
       } else {
         const p = smooth(Math.min(1, -d));
