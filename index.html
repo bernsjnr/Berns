@@ -53,11 +53,10 @@ input{font:inherit;-webkit-appearance:none;appearance:none;border-radius:0;curso
 .u{position:absolute;opacity:0;pointer-events:none;height:1px;width:1px}
 
 /* Sign: fills whatever space is left between the bar and the form */
-#stage{position:relative;min-height:0;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
-#stage:active{cursor:grabbing}
-#stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated;image-rendering:crisp-edges;image-rendering:pixelated}
-.fallback{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:24px;font-size:14px;line-height:2}
-.nogl .fallback{display:grid}
+#stage{min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:24px var(--gut);text-align:center;user-select:none;-webkit-user-select:none}
+.dot{width:clamp(72px,7vw,96px);aspect-ratio:1;border-radius:50%;background:var(--blue);color:var(--white);display:grid;place-items:center;flex:none}
+.tool{width:50%;height:50%;shape-rendering:crispEdges;display:block}
+#stage h1{max-width:28ch;line-height:1.6}
 
 /* Mailing list */
 .join{display:grid;justify-items:center;gap:14px;padding:12px var(--gut) max(28px,calc(env(safe-area-inset-bottom) + 12px));position:relative;z-index:2}
@@ -105,9 +104,8 @@ input::placeholder{color:var(--white);opacity:1}
 </header>
 
 <main id="stage">
-  <h1 class="sr">Berns' site is currently under construction</h1>
-  <canvas id="c" aria-hidden="true"></canvas>
-  <div class="fallback mono" aria-hidden="true">Berns' site is<br>currently under<br>construction</div>
+  <div class="dot"><svg class="tool" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M10 0.5h2v1h-2zM14 0.5h2v1h-2zM9 1.5h3v1h-3zM14 1.5h2v1h-2zM9 2.5h3v1h-3zM13 2.5h3v1h-3zM9 3.5h7v1h-7zM8 4.5h7v1h-7zM7 5.5h6v1h-6zM6 6.5h4v1h-4zM5 7.5h4v1h-4zM4 8.5h4v1h-4zM3 9.5h4v1h-4zM2 10.5h4v1h-4zM1 11.5h4v1h-4zM0 12.5h4v1h-4zM0 13.5h3v1h-3zM1 14.5h1v1h-1z"/></svg></div>
+  <h1 class="mono">Berns' site is currently under construction</h1>
 </main>
 
 <section class="join" aria-label="Mailing list">
@@ -121,7 +119,6 @@ input::placeholder{color:var(--white);opacity:1}
   <p class="msg mono" id="msg" role="status" aria-live="polite"></p>
 </section>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script>
 (() => {
   /* ---------- lock + mailing list ---------- */
@@ -153,159 +150,6 @@ input::placeholder{color:var(--white);opacity:1}
     else { lockErr.hidden = false; document.getElementById('pw').select(); }
   });
 
-  /* ---------- the sign ---------- */
-  const stage = document.getElementById('stage');
-  if (!window.THREE) { document.body.classList.add('nogl'); stage.classList.add('nogl'); return; }
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const PAL = [[8,12,223],[255,255,255]]; // Berns Blue, white
-  const snap = (ctx, w, h) => {
-    const d = ctx.getImageData(0, 0, w, h), a = d.data;
-    for (let i = 0; i < a.length; i += 4) {
-      let best = 0, bd = 1e9;
-      for (let p = 0; p < PAL.length; p++) {
-        const dr = a[i] - PAL[p][0], dg = a[i+1] - PAL[p][1], db = a[i+2] - PAL[p][2], dd = dr*dr + dg*dg + db*db;
-        if (dd < bd) { bd = dd; best = p; }
-      }
-      a[i] = PAL[best][0]; a[i+1] = PAL[best][1]; a[i+2] = PAL[best][2]; a[i+3] = 255;
-    }
-    ctx.putImageData(d, 0, 0);
-  };
-
-  /* 5x7 pixel letters (only the ones the sign needs), so the type is crisp and needs no font */
-  const GLYPH = {
-    B:['11110','10001','10001','11110','10001','10001','11110'], E:['11111','10000','10000','11110','10000','10000','11111'],
-    R:['11110','10001','10001','11110','10100','10010','10001'], N:['10001','11001','10101','10101','10011','10001','10001'],
-    S:['01111','10000','10000','01110','00001','00001','11110'], "'":['00100','00100','01000','00000','00000','00000','00000'],
-    I:['11111','00100','00100','00100','00100','00100','11111'], T:['11111','00100','00100','00100','00100','00100','00100'],
-    C:['01111','10000','10000','10000','10000','10000','01111'], U:['10001','10001','10001','10001','10001','10001','01110'],
-    L:['10000','10000','10000','10000','10000','10000','11111'], Y:['10001','10001','01010','00100','00100','00100','00100'],
-    D:['11110','10001','10001','10001','10001','10001','11110'], O:['01110','10001','10001','10001','10001','10001','01110'], ' ':['00000','00000','00000','00000','00000','00000','00000']
-  };
-  /* The face is drawn 1:1 in pixels (96 x 192) so every texel is one chunky screen pixel. */
-  const SCALE_B = ['11111111100.', '111111111110', '111....11111', '111....11111', '11111111110.', '111111111110', '111.....1111', '111.....1111', '111111111111', '11111111111.'];
-  const makeTexture = () => {
-    const W = 96, H = 192, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
-    const g = cv.getContext('2d');
-    const px = (x, y, c, w = 1, h = 1) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
-    px(0, 0, '#080CDF', W, H);
-    // warning triangle
-    const k = 40 / 64;
-    for (let y = 36; y <= 100; y++) for (let x = 0; x < W; x++) {
-      const dx = Math.abs(x - 47.5), outer = dx <= (y - 36) * k, inner = dx <= (y - 36) * k - 5 && y <= 96;
-      if (outer && !inner) px(x, y, '#FFFFFF');
-    }
-    // the B from BERNARD BANNOR: real Scale (wdth 125, wght 900) when the Adobe kit has loaded, a pixel B otherwise
-    const scaleReady = document.fonts && document.fonts.check('900 26px "scale-variable"');
-    if (scaleReady) {
-      g.fillStyle = '#FFFFFF'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
-      g.font = '900 26px "scale-variable"'; if ('fontStretch' in g) g.fontStretch = 'expanded';
-      g.fillText('B', 48, 91);
-    } else {
-      SCALE_B.forEach((row, ry) => [...row].forEach((bit, rx) => { if (bit === '1') px(36 + rx * 2, 70 + ry * 2, '#FFFFFF', 2, 2); }));
-    }
-    // words, 1px per art pixel
-    ["BERNS' SITE", 'IS CURRENTLY', 'UNDER', 'CONSTRUCTION'].forEach((line, li) => {
-      const x0 = Math.round(48 - (line.length * 6 - 1) / 2), y0 = 113 + li * 10;
-      [...line].forEach((ch, ci) => GLYPH[ch].forEach((row, ry) => [...row].forEach((bit, rx) => { if (bit === '1') px(x0 + ci * 6 + rx, y0 + ry, '#FFFFFF'); })));
-    });
-    snap(g, W, H);
-    // one quiet foot line
-    px(6, 174, '#0609A8', W - 12, 1);
-    const t = new THREE.CanvasTexture(cv);
-    t.magFilter = t.minFilter = THREE.NearestFilter; t.generateMipmaps = false;
-    return t;
-  };
-
-  const build = () => {
-    let renderer;
-    try { renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('c'), antialias: false, alpha: true }); }
-    catch (e) { stage.classList.add('nogl'); document.body.classList.add('nogl'); return; }
-    renderer.setPixelRatio(1);
-    const scene = new THREE.Scene();
-    const cam = new THREE.PerspectiveCamera(30, 1, 0.1, 50);
-
-    const ramp = new THREE.DataTexture(Uint8Array.from([130, 195, 255]), 3, 1, THREE.LuminanceFormat);
-    ramp.minFilter = ramp.magFilter = THREE.NearestFilter; ramp.needsUpdate = true;
-    const tex = makeTexture();
-    const bodyMat = new THREE.MeshToonMaterial({ color: 0x080CDF, gradientMap: ramp });
-    const faceMat = new THREE.MeshToonMaterial({ map: tex, gradientMap: ramp });
-
-    const H = 2, BW = 1.0, TW = 0.76;
-    const outline = () => {
-      const s = new THREE.Shape();
-      s.moveTo(-BW / 2, 0); s.lineTo(BW / 2, 0); s.lineTo(TW / 2, H); s.lineTo(-TW / 2, H); s.lineTo(-BW / 2, 0);
-      const hole = new THREE.Path();
-      hole.moveTo(-0.19, 1.70); hole.lineTo(0.19, 1.70); hole.lineTo(0.19, 1.89); hole.lineTo(-0.19, 1.89); hole.lineTo(-0.19, 1.70);
-      s.holes.push(hole);
-      return s;
-    };
-    const shape = outline();
-    const bodyG = new THREE.ExtrudeGeometry(shape, { depth: 0.06, bevelEnabled: false }); bodyG.translate(0, -H, -0.03);
-    const faceG = new THREE.ShapeGeometry(shape); faceG.translate(0, -H, 0);
-    { // UVs from position
-      const p = faceG.attributes.position, uv = faceG.attributes.uv;
-      for (let i = 0; i < p.count; i++) uv.setXY(i, (p.getX(i) + BW / 2) / BW, (p.getY(i) + H) / H);
-    }
-    const panel = () => {
-      const g = new THREE.Group();
-      g.add(new THREE.Mesh(bodyG, bodyMat));
-      const f = new THREE.Mesh(faceG, faceMat); f.position.z = 0.032; g.add(f);
-      const b = new THREE.Mesh(faceG, faceMat); b.position.z = -0.032; b.rotation.y = Math.PI; g.add(b);
-      return g;
-    };
-    const sign = new THREE.Group();
-    const LEAN = 0.26;
-    const a = panel(); a.rotation.x = -LEAN;
-    const bPivot = new THREE.Group(); bPivot.rotation.y = Math.PI; const b = panel(); b.rotation.x = -LEAN; bPivot.add(b);
-    const top = new THREE.Group(); top.position.y = H * Math.cos(LEAN); top.add(a, bPivot); sign.add(top);
-    // hinge knuckle
-    const hinge = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.07, 0.1), new THREE.MeshToonMaterial({ color: 0x0609A8, gradientMap: ramp })); hinge.position.y = H * Math.cos(LEAN); sign.add(hinge);
-    scene.add(sign);
-
-    const shadow = new THREE.Mesh(new THREE.CircleGeometry(1, 24), new THREE.MeshBasicMaterial({ color: 0x0E0E0E }));
-    shadow.rotation.x = -Math.PI / 2; shadow.position.y = 0.002; shadow.scale.set(0.85, 0.5, 1); scene.add(shadow);
-
-    const sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.position.set(-2.5, 4, 3.5); scene.add(sun);
-    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
-
-    // size: small and crisp. The sign is drawn so one texel of its face is one chunky pixel (PX css px).
-    const resize = () => {
-      const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
-      const room = Math.min(360, h * 0.6, w * 0.95);                 // how tall the sign may be on screen
-      const PX = Math.max(1, Math.floor(room / 192 * 2) / 2);        // 1, 1.5 or 2 css px per pixel
-      // render at half an art pixel so turning never drops a stroke; the art itself stays 1 texel = PX css px
-      const R = Math.max(0.75, PX / 2);
-      renderer.setSize(Math.ceil(w / R), Math.ceil(h / R), false);
-      cam.aspect = w / h;
-      const wantH = 2 * h / (192 * PX);                              // world units visible top to bottom
-      const dist = wantH / (2 * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)));
-      cam.position.set(0, 0.97 + dist * 0.16, dist); cam.lookAt(0, 0.97, 0); cam.updateProjectionMatrix();
-    };
-    resize(); (window.ResizeObserver ? new ResizeObserver(resize).observe(stage) : addEventListener('resize', resize));
-
-    // spin: slow auto turn, drag to spin it yourself (no clicking through to anything)
-    let ang = reduce ? -0.55 : 0.4, vel = reduce ? 0 : 0.9, drag = false, lx = 0, lt = 0, dv = 0;
-    const AUTO = reduce ? 0 : 0.9;
-    stage.addEventListener('pointerdown', e => { drag = true; lx = e.clientX; stage.setPointerCapture(e.pointerId); });
-    stage.addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - lx; lx = e.clientX; ang += dx * 0.012; dv = dx * 0.012 * 60; });
-    const end = () => { if (drag) { drag = false; vel = dv; dv = 0; } };
-    stage.addEventListener('pointerup', end); stage.addEventListener('pointercancel', end);
-
-    let last = performance.now(), t = 0;
-    const frame = now => {
-      const dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt;
-      if (!drag) { vel += (AUTO - vel) * Math.min(1, dt * 0.8); ang += vel * dt; }
-      sign.rotation.y = ang;
-      if (!reduce) sign.position.y = Math.sin(t * 1.6) * 0.03;
-      renderer.render(scene, cam);
-      requestAnimationFrame(frame);
-    };
-    requestAnimationFrame(frame);
-  };
-
-  const fontsIn = document.fonts && document.fonts.load ? document.fonts.load('900 26px "scale-variable"') : Promise.resolve();
-  Promise.race([fontsIn, new Promise(r => setTimeout(r, 2500))]).then(build, build);
 })();
 </script>
 </body>
