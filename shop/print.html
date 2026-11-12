@@ -1,78 +1,107 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" data-ground="ink">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1A1A1A">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
-<title>Print. Berns</title>
-<meta name="description" content="A print by Berns.">
-<!-- Adobe Fonts kit (Scale variable + Neue Haas Grotesk). Loads anywhere, no domain setup. -->
+<title>Print. Bernard Bannor</title>
+<meta name="description" content="A print by Bernard Bannor, checked, signed and posted by hand.">
 <link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
-<link rel="stylesheet" href="../assets/site.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
+<link rel="stylesheet" href="../assets/core.css?v=68">
 </head>
-<body data-base="../" data-page="shop">
+<body data-base="../" data-page="shop" class="scroll pdp-page">
+
+<header class="bar">
+  <p class="bar-name"><a href="../index.html"><span class="scale">Bernard <br>Bannor</span><span class="aka mono">(Also known as &lsquo;Berns&rsquo;)</span></a></p>
+  <div class="bar-right">
+    <time class="bar-clock mono" data-clock><span class="clock-date"></span><span class="clock-time"></span></time>
+    <span class="bar-batt" data-battery role="img" aria-label="Battery">
+      <svg viewBox="0 0 40 20" aria-hidden="true">
+        <rect x="1" y="1" width="34" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+        <rect x="36.5" y="6.5" width="3" height="7" rx="1.2" fill="currentColor"/>
+        <rect class="fill" x="4" y="4" width="28" height="12" rx="2.5" fill="currentColor"/>
+        <path class="bolt" d="M19.5 3.5 13 11h5l-1.5 5.5L23 9h-5z" fill="#1A1A1A" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <button class="bar-menu scale" type="button" data-menu-btn aria-expanded="false" aria-controls="menu"><span class="lbl">Menu</span><span class="pm" aria-hidden="true"></span></button>
+  </div>
+</header>
+
+<nav class="menu" id="menu" aria-label="Main">
+  <ol>
+    <li><a class="scale" href="../index.html"><span class="n mono">01</span><span class="t">Home</span></a></li>
+    <li><a class="scale" href="../about/index.html"><span class="n mono">02</span><span class="t">About</span></a></li>
+    <li><a class="scale" href="../studios/index.html"><span class="n mono">03</span><span class="t">Work</span></a></li>
+    <li><a class="scale" href="index.html" aria-current="page"><span class="n mono">04</span><span class="t">Shop</span></a></li>
+    <li><a class="scale" href="../contact/index.html"><span class="n mono">05</span><span class="t">Contact</span></a></li>
+  </ol>
+</nav>
+
 <main>
-<section class="print">
-  <div class="stage rv" id="stage">
-    <div class="stage-ui">
-      <div class="seg" role="group" aria-label="View">
-        <button type="button" data-mode="flat" aria-pressed="true">Print</button>
-        <button type="button" data-mode="room" aria-pressed="false">On the wall</button>
-        <button type="button" data-mode="free" aria-pressed="false">Turn it</button>
+  <section class="pdp" aria-labelledby="p-name">
+    <!-- The print: flat, on the wall, or turning in 3D -->
+    <div class="pdp-view">
+      <div class="stage-3d" id="stage">
+        <div class="flat" id="flat"><img id="flat-img" alt="" draggable="false"></div>
+        <p class="hint mono" id="hint" hidden>Drag to look around</p>
+      </div>
+      <div class="views seg" role="group" aria-label="View">
+        <button type="button" class="mono" data-mode="flat" aria-pressed="true">Print</button>
+        <button type="button" class="mono" data-mode="room" aria-pressed="false">On the wall</button>
+        <button type="button" class="mono" data-mode="free" aria-pressed="false">Turn it</button>
       </div>
     </div>
-    <div class="flat" id="flat"><img id="flat-img" alt=""></div>
-    <p class="label hint" id="hint" hidden>Drag to look around</p>
-  </div>
-  <model-viewer id="mv" ar ar-modes="webxr quick-look scene-viewer" ar-placement="wall" ar-scale="fixed" loading="eager" alt="" aria-hidden="true"
-    style="position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none"></model-viewer>
-  <aside class="panel rv">
-    <div style="display:grid;gap:10px">
-      <a class="label" href="index.html">Shop / <span id="p-ed"></span></a>
-      <h1 class="name" id="p-name"></h1>
-      <p class="price" id="p-price"></p>
+    <model-viewer id="mv" ar ar-modes="webxr quick-look scene-viewer" ar-placement="wall" ar-scale="fixed" loading="eager" alt="" aria-hidden="true"
+      style="position:fixed;left:0;top:0;width:2px;height:2px;opacity:0;pointer-events:none"></model-viewer>
+
+    <!-- The details -->
+    <div class="pdp-info">
+      <p class="pdp-crumb mono"><a href="index.html">Shop</a><span aria-hidden="true"> / </span><span id="p-ed"></span></p>
+      <h1 class="pdp-name" id="p-name"></h1>
+      <p class="pdp-price" id="p-price"></p>
+
+      <div class="opt"><p class="opt-l mono">Size</p><div class="opts" id="o-size"></div></div>
+      <div class="opt"><p class="opt-l mono">Frame</p><div class="opts" id="o-frame"></div></div>
+
+      <div class="buy">
+        <a class="btn btn-solid" id="buy" href="#">Buy now</a>
+        <button type="button" class="btn" id="ar-btn">View in your room</button>
+      </div>
+      <p class="pdp-note mono" id="buy-note" hidden></p>
+      <div class="ar-qr" id="ar-qr" hidden><div id="qr"></div><p class="pdp-note mono">Scan with your phone camera to see this print, at real size, on your own wall.</p></div>
+
+      <ul class="specs">
+        <li><span class="mono">Edition</span><span>Signed and numbered by hand</span></li>
+        <li><span class="mono">Checked</span><span>Printed, checked and posted by me</span></li>
+        <li><span class="mono">Checkout</span><span>Secure payment with Stripe</span></li>
+      </ul>
     </div>
-    <div class="opt"><p class="label">Size</p><div class="opts" id="o-size"></div></div>
-    <div class="opt"><p class="label">Frame</p><div class="opts" id="o-frame"></div></div>
-    <div class="buy">
-      <a class="btn" id="buy" href="#">Buy now</a>
-      <p class="note" id="buy-note" hidden></p>
-      <button type="button" class="btn line" id="ar-btn">View in your room</button>
-      <div class="note ar-qr" id="ar-qr" hidden><div id="qr"></div><p>Scan with your phone camera to see this print, at real size, on your own wall.</p></div>
-    </div>
-    <ul class="specs">
-      <li><span class="label">Edition</span><span>Signed and numbered by hand</span></li>
-      <li><span class="label">Checked</span><span>I print, check and pack every one myself</span></li>
-      <li><span class="label">Checkout</span><span>Secure payment with Stripe</span></li>
-    </ul>
-  </aside>
-</section>
-<div class="head" style="padding-bottom:40px">
-  <p class="label rv">More prints</p>
-  
-</div>
-<div class="grid three" id="more"></div>
-<section class="contact">
-  <p class="label rv">Contact</p>
-  <h2 class="big rv">Let's make something you're proud of.</h2>
-  <a class="mail rv" href="mailto:info@bernsds.com">info@bernsds.com</a>
-  <div class="actions rv">
-    <a class="btn" href="mailto:info@bernsds.com?subject=Studio%20enquiry">Studio enquiry</a>
-    <a class="btn line" href="mailto:info@bernsds.com?subject=Presenting%20booking">Presenting booking</a>
-  </div>
-  <div class="mark rv" data-logo></div>
-</section>
+  </section>
+
+  <section class="more" aria-labelledby="more-t">
+    <p class="more-l mono" id="more-t">More prints</p>
+    <div class="more-grid" id="more"></div>
+  </section>
+
+  <section class="pdp-close">
+    <h2 class="close-title scale">Time to bring your ideas to life.</h2>
+    <a class="close-mail" href="mailto:info@bernsds.com">info@bernsds.com</a>
+  </section>
 </main>
+
 <script src="../assets/data.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="../assets/site.js"></script>
+<script src="../assets/core.js?v=58"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
-<script src="../assets/print.js" defer></script>
+<script src="../assets/print.js?v=68" defer></script>
 </body>
 </html>
