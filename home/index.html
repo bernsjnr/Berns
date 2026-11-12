@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1A1A1A">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<title>Bernard Bannor. Designer and presenter</title>
+<meta name="description" content="Bernard Bannor is a designer and presenter working between culture, sport and community. Berns Studios is his independent studio for design and motion.">
+<!-- Adobe Fonts kit (Scale variable + Neue Haas Grotesk). Loads anywhere, no domain setup. -->
+<link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
+<!-- Mono for the date, time and READ MORE (the Adobe kit has no mono) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
+<link rel="stylesheet" href="../assets/core.css?v=47">
+</head>
+<body data-base="../" data-page="home" class="home">
+
+<header class="bar">
+  <h1 class="bar-name"><a href="index.html"><span class="scale">Bernard <br>Bannor</span><span class="aka mono">(Also known as ‘Berns’)</span></a></h1>
+  <div class="bar-right">
+    <time class="bar-clock mono" data-clock><span class="clock-date"></span><span class="clock-time"></span></time>
+    <span class="bar-batt" data-battery role="img" aria-label="Battery">
+      <svg viewBox="0 0 40 20" aria-hidden="true">
+        <rect x="1" y="1" width="34" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+        <rect x="36.5" y="6.5" width="3" height="7" rx="1.2" fill="currentColor"/>
+        <rect class="fill" x="4" y="4" width="28" height="12" rx="2.5" fill="currentColor"/>
+        <path class="bolt" d="M19.5 3.5 13 11h5l-1.5 5.5L23 9h-5z" fill="#1A1A1A" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <button class="bar-menu scale" type="button" data-menu-btn aria-expanded="false" aria-controls="menu"><span class="lbl">Menu</span><span class="pm" aria-hidden="true"></span></button>
+  </div>
+</header>
+
+<nav class="menu" id="menu" aria-label="Main">
+  <ol>
+    <li><a class="scale" href="index.html" aria-current="page"><span class="n mono">01</span><span class="t">Home</span></a></li>
+    <li><a class="scale" href="../about/index.html"><span class="n mono">02</span><span class="t">About</span></a></li>
+    <li><a class="scale" href="../studios/index.html"><span class="n mono">03</span><span class="t">Work</span></a></li>
+    <li><a class="scale" href="../shop/index.html"><span class="n mono">04</span><span class="t">Shop</span></a></li>
+    <li><a class="scale" href="../contact/index.html"><span class="n mono">05</span><span class="t">Contact</span></a></li>
+    <li><a class="scale" href="../surprise/index.html"><span class="n mono">06</span><span class="t">Surprise</span></a></li>
+  </ol>
+</nav>
+
+<main class="home-photo">
+  <figure class="photo" data-rotate tabindex="0" role="group" aria-label="Portrait of Bernard Bannor. Drag to move it around.">
+    <img src="../assets/img/berns-portrait.webp" alt="Bernard Bannor in front of an orange curtain" width="1000" height="1500" fetchpriority="high" draggable="false">
+  </figure>
+</main>
+
+<footer class="home-foot">
+  <p class="sr">A designer and presenter working between culture, sport and community.</p>
+  <!-- The first role types itself out and backspaces through what Berns does (core.js: data-roles) -->
+  <div class="home-say" aria-hidden="true">
+    <p class="home-line"><span class="art">A</span> <span class="hl hl-type" data-roles="designer|motion designer|art director|video editor|creative director|product designer|artist"><span class="type">designer</span><span class="caret"></span></span> and <span class="hl">presenter</span><br class="br-m"> working <br class="br-d">between culture, sport and community.</p>
+  </div>
+  <a class="home-more mono" href="../about/index.html">Read more</a>
+</footer>
+
+<script src="../assets/core.js?v=47"></script>
+</body>
+</html>
