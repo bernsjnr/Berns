@@ -188,20 +188,19 @@ input::placeholder{color:var(--white);opacity:1}
     const g = cv.getContext('2d');
     const px = (x, y, c, w = 1, h = 1) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
     px(0, 0, '#080CDF', W, H);
-    // white warning triangle (soft-cornered like the emoji)
-    const k = 44 / 74;
-    for (let y = 30; y <= 104; y++) for (let x = 0; x < W; x++) {
-      const dx = Math.abs(x - 47.5), half = (y - 30) * k;
-      const corner = (y < 34 && dx > 1) || (y > 100 && dx > half - (y - 100) * 1.6);   // rounded tip and feet
+    // small white warning triangle near the top (about a third of the face wide, per Berns's sketch)
+    const k = 18 / 30;
+    for (let y = 42; y <= 72; y++) for (let x = 0; x < W; x++) {
+      const dx = Math.abs(x - 47.5), half = (y - 42) * k;
+      const corner = (y < 44 && dx > 1) || (y > 70 && dx > half - (y - 70) * 1.6);   // rounded tip and feet
       if (dx <= half && !corner) px(x, y, '#FFFFFF');
     }
-    // the warning sign: a Berns Blue exclamation mark in the white triangle
-    px(45, 56, '#080CDF', 6, 28);   // bar
-    px(46, 84, '#080CDF', 4, 1);    // bar tapers to a point
-    px(45, 89, '#080CDF', 6, 6);    // dot
+    // Berns Blue exclamation mark
+    px(47, 52, '#080CDF', 2, 11);   // bar
+    px(47, 65, '#080CDF', 2, 2);    // dot
     // words, 1px per art pixel
     ["BERNS' SITE", 'IS CURRENTLY', 'UNDER', 'CONSTRUCTION'].forEach((line, li) => {
-      const x0 = Math.round(48 - (line.length * 6 - 1) / 2), y0 = 113 + li * 10;
+      const x0 = Math.round(48 - (line.length * 6 - 1) / 2), y0 = 88 + li * 12;
       [...line].forEach((ch, ci) => GLYPH[ch].forEach((row, ry) => [...row].forEach((bit, rx) => { if (bit === '1') px(x0 + ci * 6 + rx, y0 + ry, '#FFFFFF'); })));
     });
     snap(g, W, H);
