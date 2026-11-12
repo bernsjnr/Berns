@@ -199,7 +199,7 @@ input::placeholder{color:var(--white);opacity:1}
     px(47, 52, '#080CDF', 2, 11);   // bar
     px(47, 65, '#080CDF', 2, 2);    // dot
     // words, 1px per art pixel
-    ["BERNS' SITE", 'IS CURRENTLY', 'UNDER', 'CONSTRUCTION'].forEach((line, li) => {
+    ['UNDER', 'CONSTRUCTION'].forEach((line, li) => {
       const x0 = Math.round(48 - (line.length * 6 - 1) / 2), y0 = 88 + li * 12;
       [...line].forEach((ch, ci) => GLYPH[ch].forEach((row, ry) => [...row].forEach((bit, rx) => { if (bit === '1') px(x0 + ci * 6 + rx, y0 + ry, '#FFFFFF'); })));
     });
