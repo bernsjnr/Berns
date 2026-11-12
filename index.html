@@ -271,10 +271,9 @@ input::placeholder{color:var(--white);opacity:1}
     // size: small and crisp. The sign is drawn so one texel of its face is one chunky pixel (PX css px).
     const resize = () => {
       const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight);
-      const room = Math.min(360, h * 0.6, w * 0.95);                 // how tall the sign may be on screen
-      const PX = Math.max(1, Math.floor(room / 192 * 2) / 2);        // 1, 1.5 or 2 css px per pixel
+      const PX = h < 300 ? 0.75 : 1;                                 // 1 css px per art pixel: the sign is about 190px tall
       // render at half an art pixel so turning never drops a stroke; the art itself stays 1 texel = PX css px
-      const R = Math.max(0.75, PX / 2);
+      const R = PX / 2;
       renderer.setSize(Math.ceil(w / R), Math.ceil(h / R), false);
       cam.aspect = w / h;
       const wantH = 2 * h / (192 * PX);                              // world units visible top to bottom
