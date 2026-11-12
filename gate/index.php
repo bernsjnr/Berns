@@ -71,8 +71,13 @@ input{font:inherit;-webkit-appearance:none;appearance:none;border-radius:0;curso
 .lock form{display:none;gap:8px}
 .lock.open form{display:flex}
 .lock.open .lock-btn{display:none}
-.lock input[type=password]{font-size:16px;width:220px;min-width:0;color:var(--white);background:transparent;border:1px solid var(--white);border-radius:999px;padding:0 18px;height:40px}
-.lock .btn{height:40px;padding:0 18px}
+.lock form{align-items:center;gap:14px}
+.lock input[type=password]{font-family:var(--mono);font-weight:700;font-size:16px;letter-spacing:.04em;width:180px;min-width:0;color:var(--white);background:transparent;border:0;border-bottom:1px solid var(--white);padding:4px 0;height:auto;line-height:1.2;caret-color:var(--white)}
+.lock input[type=password]::placeholder{text-transform:uppercase;font-size:12px}
+.lock input[type=password]:focus{outline:none;border-bottom-width:2px;padding-bottom:3px}
+.lock .go{padding:6px 0;line-height:1;white-space:nowrap}
+.lock .go .t{background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .25s}
+.lock .go:hover .t,.lock .go:focus-visible .t{background-size:100% 1px}
 .u{position:absolute;opacity:0;pointer-events:none;height:1px;width:1px}
 
 /* Sign: fills whatever space is left between the bar and the form */
@@ -87,7 +92,7 @@ input{font:inherit;-webkit-appearance:none;appearance:none;border-radius:0;curso
 .join form{display:flex;gap:10px;width:100%;max-width:480px}
 .join input[type=email]{flex:1 1 auto;width:100%;min-width:0;font-size:16px;color:var(--white);background:transparent;border:1px solid var(--white);border-radius:999px;padding:0 24px;height:52px}
 input::placeholder{color:var(--white);opacity:1}
-.btn{display:inline-flex;align-items:center;justify-content:center;font-size:14px;line-height:1;color:var(--ink);background:var(--white);border-radius:999px;padding:0 26px;height:52px;white-space:nowrap;transition:background .25s,color .25s}
+.btn{display:inline-flex;align-items:center;justify-content:center;font-size:13px;line-height:1;color:var(--ink);background:var(--white);border-radius:999px;padding:0 26px;height:52px;white-space:nowrap;transition:background .25s,color .25s}
 .btn:hover,.btn:focus-visible{background:var(--blue);color:var(--white)}
 .hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
 .msg{min-height:1.2em;text-align:center}
@@ -121,7 +126,7 @@ input::placeholder{color:var(--white);opacity:1}
       <input class="u" type="text" name="username" value="berns" autocomplete="username" tabindex="-1" aria-hidden="true">
       <label class="sr" for="pw">Password</label>
       <input id="pw" type="password" name="password" placeholder="Password" autocomplete="current-password" required>
-      <button class="btn scale" type="submit">Enter</button>
+      <button class="go mono" type="submit"><span class="t">Enter</span> &rarr;</button>
     </form>
     <?php if ($bad): ?><p class="err mono" role="alert">Wrong password</p><?php endif; ?>
   </div>
@@ -139,7 +144,7 @@ input::placeholder{color:var(--white);opacity:1}
     <label class="sr" for="em">Email address</label>
     <input id="em" type="email" name="email" placeholder="Your email" autocomplete="email" inputmode="email" required>
     <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <button class="btn scale" type="submit">Join the list</button>
+    <button class="btn mono" type="submit">Join the list</button>
   </form>
   <p class="msg mono" id="msg" role="status" aria-live="polite"></p>
 </section>
