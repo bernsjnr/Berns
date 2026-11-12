@@ -43,81 +43,106 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
 <style>
-:root{--blue:#080CDF;--ink:#1A1A1A;--white:#fff;--mono:'Space Mono',ui-monospace,Menlo,monospace}
+:root{--blue:#080CDF;--ink:#1A1A1A;--white:#fff;--mono:'Space Mono',ui-monospace,Menlo,monospace;
+  --scale:'scale-variable','Arial Black','Helvetica Neue',Arial,sans-serif;--gut:max(24px,env(safe-area-inset-left),env(safe-area-inset-right))}
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;overflow:hidden}
+html,body{height:100%;overflow:hidden;overscroll-behavior:none}
 body{background:var(--ink);color:var(--white);font-family:'neue-haas-grotesk-text','Helvetica Neue',Arial,sans-serif;font-size:17px;-webkit-font-smoothing:antialiased;
+  display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;height:100vh;height:100dvh;
   cursor:url(/assets/cursor/arrow.png) 0 0,default;cursor:-webkit-image-set(url(/assets/cursor/arrow.png) 1.3333x) 0 0,default}
-button,input[type=submit]{cursor:url(/assets/cursor/hand.png) 8 0,pointer;cursor:-webkit-image-set(url(/assets/cursor/hand.png) 1.3333x) 8 0,pointer}
-input{cursor:text}
+button{font:inherit;color:inherit;background:none;border:0;border-radius:0;-webkit-appearance:none;appearance:none;
+  cursor:url(/assets/cursor/hand.png) 8 0,pointer;cursor:-webkit-image-set(url(/assets/cursor/hand.png) 1.3333x) 8 0,pointer}
+input{font:inherit;-webkit-appearance:none;appearance:none;border-radius:0;cursor:text}
 ::selection{background:var(--blue);color:var(--white)}
-:focus-visible{outline:2px solid #fff;outline-offset:4px}
+:focus-visible{outline:2px solid var(--white);outline-offset:4px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.scale{font-family:var(--scale);font-variation-settings:'wdth' 125,'wght' 900;font-weight:900;text-transform:uppercase;letter-spacing:0}
+.mono{font-family:var(--mono);font-weight:700;font-size:12px;line-height:1.2;letter-spacing:.04em;text-transform:uppercase}
 
-.name{position:fixed;z-index:3;top:max(22px,env(safe-area-inset-top));left:max(24px,env(safe-area-inset-left));
-  font-family:'scale-variable','Arial Black',sans-serif;font-variation-settings:'wdth' 125,'wght' 900;text-transform:uppercase;font-size:clamp(14px,1.6vw,24px);line-height:1;font-weight:900;user-select:none}
-
-#stage{position:fixed;inset:0;z-index:1;touch-action:pan-y;user-select:none;-webkit-user-select:none}
-#stage canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges;image-rendering:pixelated}
-.fallback{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:24px;font-family:var(--mono);font-weight:700;font-size:14px;line-height:2}
-.nogl .fallback{display:grid}
-
-.join{position:fixed;z-index:3;left:0;right:0;bottom:max(34px,env(safe-area-inset-bottom));display:grid;justify-items:center;gap:14px;padding:0 24px}
-.join .cap{font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:uppercase}
-.join form{display:flex;gap:10px;width:100%;max-width:460px}
-.join input[type=email]{flex:1;min-width:0;font:inherit;font-size:16px;color:var(--white);background:transparent;border:1px solid var(--white);border-radius:999px;padding:16px 24px}
-.join input[type=email]::placeholder{color:var(--white);opacity:1}
-.btn{font-family:'neue-haas-grotesk-text',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.16em;font-size:12px;color:var(--ink);background:var(--white);border:0;border-radius:999px;padding:0 24px;transition:background .25s,color .25s;white-space:nowrap}
-.btn:hover,.btn:focus-visible{background:var(--blue);color:var(--white)}
-.hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
-.msg{min-height:1.4em;font-family:var(--mono);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
-
-.lock{position:fixed;z-index:3;right:max(24px,env(safe-area-inset-right));top:max(20px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px}
-.lock>button{font-family:var(--mono);font-weight:700;font-size:12px;letter-spacing:.04em;text-transform:uppercase;display:flex;gap:8px;align-items:center;padding:6px 0}
-.lock svg{width:14px;height:14px;shape-rendering:crispEdges}
+/* Bar: name left, private lock right. Wraps instead of overlapping. */
+.bar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px 24px;
+  padding:max(22px,env(safe-area-inset-top)) var(--gut) 0;position:relative;z-index:2}
+.name{font-size:clamp(14px,1.6vw,24px);line-height:1;user-select:none;-webkit-user-select:none;white-space:nowrap}
+.lock{display:flex;flex-direction:column;align-items:flex-end;gap:8px;margin-left:auto}
+.lock-btn{display:flex;gap:8px;align-items:center;padding:6px 0;line-height:1}
+.lock-btn svg{width:12px;height:12px;shape-rendering:crispEdges;flex:none}
+.lock-btn .t{background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .25s}
+.lock-btn:hover .t,.lock-btn:focus-visible .t{background-size:100% 1px}
 .lock form{display:none;gap:8px}
 .lock.open form{display:flex}
-.lock.open>button{display:none}
-.lock input[type=password]{font:inherit;font-size:16px;width:min(46vw,200px);color:var(--white);background:transparent;border:1px solid var(--white);border-radius:999px;padding:9px 16px}
-.lock input[type=password]::placeholder{color:var(--white);opacity:1}
-.lock .btn{padding:9px 18px}
+.lock.open .lock-btn{display:none}
+.lock input[type=password]{font-size:16px;width:220px;min-width:0;color:var(--white);background:transparent;border:1px solid var(--white);border-radius:999px;padding:0 18px;height:40px}
+.lock .btn{height:40px;padding:0 18px}
 .u{position:absolute;opacity:0;pointer-events:none;height:1px;width:1px}
-.lock .err{position:absolute;top:100%;right:0;margin-top:8px;font-family:var(--mono);font-weight:700;font-size:12px;text-transform:uppercase;white-space:nowrap}
+
+/* Sign: fills whatever space is left between the bar and the form */
+#stage{position:relative;min-height:0;touch-action:pan-y;user-select:none;-webkit-user-select:none;cursor:grab}
+#stage:active{cursor:grabbing}
+#stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated;image-rendering:crisp-edges;image-rendering:pixelated}
+.fallback{position:absolute;inset:0;display:none;place-items:center;text-align:center;padding:24px;font-size:14px;line-height:2}
+.nogl .fallback{display:grid}
+
+/* Mailing list */
+.join{display:grid;justify-items:center;gap:14px;padding:12px var(--gut) max(28px,calc(env(safe-area-inset-bottom) + 12px));position:relative;z-index:2}
+.join form{display:flex;gap:10px;width:100%;max-width:480px}
+.join input[type=email]{flex:1 1 auto;width:100%;min-width:0;font-size:16px;color:var(--white);background:transparent;border:1px solid var(--white);border-radius:999px;padding:0 24px;height:52px}
+input::placeholder{color:var(--white);opacity:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;font-size:14px;line-height:1;color:var(--ink);background:var(--white);border-radius:999px;padding:0 26px;height:52px;white-space:nowrap;transition:background .25s,color .25s}
+.btn:hover,.btn:focus-visible{background:var(--blue);color:var(--white)}
+.hp{position:absolute;left:-9999px;opacity:0;height:0;width:0}
+.msg{min-height:1.2em;text-align:center}
+
 @media (max-width:560px){
   .join form{flex-direction:column}
-  .join .btn{padding:16px 24px}
+  .join input[type=email]{flex:none}
+  .join .btn{width:100%}
+  .lock.open{flex-basis:100%;align-items:stretch}
+  .lock.open form{width:100%}
+  .lock.open{min-width:0}
+  .lock.open input[type=password]{flex:1 1 0;width:0}
+  .lock .err{align-self:flex-end}
 }
+@media (max-height:520px){
+  .join{gap:8px;padding-top:8px;padding-bottom:max(14px,env(safe-area-inset-bottom))}
+  .join input[type=email],.join .btn{height:44px}
+  .bar{padding-top:max(14px,env(safe-area-inset-top))}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<p class="name">Bernard Bannor</p>
-<h1 class="sr">Berns' site is currently under construction</h1>
+<header class="bar">
+  <p class="name scale">Bernard Bannor</p>
+  <div class="lock<?= $bad ? ' open' : '' ?>" id="lock">
+    <button class="lock-btn mono" type="button" id="lockBtn" aria-expanded="<?= $bad ? 'true' : 'false' ?>" aria-controls="lockForm">
+      <svg viewBox="0 0 7 7" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" d="M2 0h3v1h1v2h1v4H0V3h1V1h1zm0 1v2h3V1z"/></svg><span class="t">Private</span>
+    </button>
+    <form id="lockForm" method="post" autocomplete="on">
+      <input class="u" type="text" name="username" value="berns" autocomplete="username" tabindex="-1" aria-hidden="true">
+      <label class="sr" for="pw">Password</label>
+      <input id="pw" type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+      <button class="btn scale" type="submit">Enter</button>
+    </form>
+    <?php if ($bad): ?><p class="err mono" role="alert">Wrong password</p><?php endif; ?>
+  </div>
+</header>
 
-<div id="stage" aria-hidden="true"><canvas id="c"></canvas><div class="fallback">BERNS' SITE IS<br>CURRENTLY UNDER<br>CONSTRUCTION</div></div>
+<main id="stage">
+  <h1 class="sr">Berns' site is currently under construction</h1>
+  <canvas id="c" aria-hidden="true"></canvas>
+  <div class="fallback mono" aria-hidden="true">Berns' site is<br>currently under<br>construction</div>
+</main>
 
 <section class="join" aria-label="Mailing list">
-  <p class="cap">Get an email when it opens</p>
+  <p class="mono">Get an email when it opens</p>
   <form id="join" method="post" action="/gate/subscribe.php" novalidate>
     <label class="sr" for="em">Email address</label>
     <input id="em" type="email" name="email" placeholder="Your email" autocomplete="email" inputmode="email" required>
     <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <button class="btn" type="submit" style="min-height:52px">Join the list</button>
+    <button class="btn scale" type="submit">Join the list</button>
   </form>
-  <p class="msg" id="msg" role="status" aria-live="polite"></p>
+  <p class="msg mono" id="msg" role="status" aria-live="polite"></p>
 </section>
-
-<div class="lock<?= $bad ? ' open' : '' ?>" id="lock">
-  <button type="button" id="lockBtn" aria-expanded="<?= $bad ? 'true' : 'false' ?>">
-    <svg viewBox="0 0 7 7" aria-hidden="true"><path fill="currentColor" d="M2 0h3v1h1v2h1v4H0V3h1V1h1zm0 1v2h3V1z" fill-rule="evenodd"/></svg>Private
-  </button>
-  <form method="post" autocomplete="on">
-    <input class="u" type="text" name="username" value="berns" autocomplete="username" tabindex="-1" aria-hidden="true">
-    <label class="sr" for="pw">Password</label>
-    <input id="pw" type="password" name="password" placeholder="Password" autocomplete="current-password" required>
-    <button class="btn" type="submit">Enter</button>
-  </form>
-  <?php if ($bad): ?><p class="err" role="alert">Wrong password</p><?php endif; ?>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script>
@@ -125,6 +150,7 @@ input{cursor:text}
   /* ---------- lock + mailing list ---------- */
   const lock = document.getElementById('lock'), lockBtn = document.getElementById('lockBtn');
   lockBtn.addEventListener('click', () => { lock.classList.add('open'); lockBtn.setAttribute('aria-expanded', 'true'); document.getElementById('pw').focus(); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && lock.classList.contains('open')) { lock.classList.remove('open'); lockBtn.setAttribute('aria-expanded', 'false'); lockBtn.focus(); } });
   if (lock.classList.contains('open')) document.getElementById('pw').focus();
 
   const form = document.getElementById('join'), msg = document.getElementById('msg');
@@ -251,14 +277,15 @@ input{cursor:text}
 
     // size: draw small, show big, so every pixel is a chunky square
     const resize = () => {
-      const w = innerWidth, h = innerHeight, PX = 2;
+      const w = Math.max(1, stage.clientWidth), h = Math.max(1, stage.clientHeight), PX = 2;
       renderer.setSize(Math.ceil(w / PX), Math.ceil(h / PX), false);
       cam.aspect = w / h;
-      const wantH = Math.max(3.5, 2.1 / cam.aspect);              // keep the whole sign in view on tall phones
+      // fit the whole sign (2 tall, about 1.6 wide as it turns) with a margin, whatever the shape of the space
+      const wantH = Math.max(2.55, 1.9 / cam.aspect);
       const dist = wantH / (2 * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)));
-      cam.position.set(0, 1.5, dist); cam.lookAt(0, 0.8, 0); cam.updateProjectionMatrix();
+      cam.position.set(0, 0.97 + dist * 0.16, dist); cam.lookAt(0, 0.97, 0); cam.updateProjectionMatrix();
     };
-    addEventListener('resize', resize); resize();
+    resize(); (window.ResizeObserver ? new ResizeObserver(resize).observe(stage) : addEventListener('resize', resize));
 
     // spin: slow auto turn, drag to spin it yourself (no clicking through to anything)
     let ang = reduce ? -0.55 : 0.4, vel = reduce ? 0 : 0.9, drag = false, lx = 0, lt = 0, dv = 0;
