@@ -3,7 +3,9 @@
    Options, price, buy flow, and the 3D wall view (three.js r128).
    ========================================================= */
 (() => {
-  const D = BERNS, U = BERNS_UI;
+  const D = BERNS;
+  const base = document.body.dataset.base || '';
+  const U = { url: p => base + p, price: (s, f) => s.price + (f.id === 'none' ? 0 : s.frame) };
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $ = id => document.getElementById(id);
   const id = new URLSearchParams(location.search).get('p');
@@ -16,9 +18,10 @@
   };
 
   /* ---------- Panel ---------- */
-  document.title = poster.name + '. Berns';
+  document.title = poster.name + '. Bernard Bannor';
   $('p-name').textContent = poster.name;
   $('p-ed').textContent = 'Edition of ' + poster.edition;
+  $('p-name').closest('.pdp-info').classList.add('in');
   $('flat-img').src = U.url(poster.img);
   $('flat-img').alt = poster.name + ', print';
 
@@ -42,14 +45,19 @@
     const desc = `${poster.name}, ${state.size.label}, ${state.frame.label.toLowerCase()}, £${total}`;
     const mail = `mailto:info@bernsds.com?subject=${encodeURIComponent('Print order: ' + poster.name)}&body=${encodeURIComponent(`Hi Berns,\n\nI'd like to order: ${desc}.\n\nDelivery address:\n\n`)}`;
     $('buy').href = link || mail;
-    $('buy').textContent = link ? `Buy now, £${total}` : `Order by email, £${total}`;
+    $('buy').textContent = link ? `Buy now · £${total}` : `Order by email · £${total}`;
     $('buy-note').hidden = !!link;
     $('buy-note').innerHTML = `Online checkout is being set up. Email me your order and I'll send a secure payment link.`;
   }
   sync();
 
-  $('more').innerHTML = D.posters.filter(p => p !== poster).slice(0, 3).map(U.posterTile).join('');
-  U.observe();
+  const from = Math.min(...D.sizes.map(z => z.price));
+  $('more').innerHTML = D.posters.filter(p => p !== poster).slice(0, 4).map(p => `
+    <a class="more-item" href="print.html?p=${encodeURIComponent(p.id)}">
+      <span class="more-img"><img src="${U.url(p.img)}" alt="" loading="lazy" draggable="false"></span>
+      <span class="more-name">${p.name}</span>
+      <span class="more-meta mono">From £${from}</span>
+    </a>`).join('');
 
   /* ---------- View modes ---------- */
   document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
@@ -67,7 +75,7 @@
 
   /* ---------- 3D ---------- */
   let renderer, scene, camera, controls, group, room = [], running = false, ready = false, tex = null;
-  const C = { ink: '#1A1A1A', wall: '#E6E7E9', floor: '#CDD0D3', bg: '#F1F2F3' };
+  const C = { ink: '#1A1A1A', wall: '#E6E7E9', floor: '#CDD0D3', bg: '#1A1A1A' };
 
   function grainTex(base, line) {
     const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
