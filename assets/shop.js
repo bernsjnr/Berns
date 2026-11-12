@@ -1,8 +1,8 @@
 /* =========================================================
    BERNS: Shop (v9, Nov 2026)
-   A stack of double-sided prints that turn on the X axis.
-   Scroll, swipe, arrow keys or tap one: the print you land on stands square to you, the ones to come lie back above,
-   the ones passed flip over (showing their info side) and lie below. Tap the print in hand to open it.
+   Double-sided prints on a curved rack, tilted on a diagonal (after the A24 disc gallery reference).
+   Scroll, swipe, arrow keys or tap one. The print in hand is full size and lifted; the others step back along the rack.
+   Tap the print in hand to open it. The rack loops.
    Content from assets/data.js (posters, sizes).
    ========================================================= */
 (() => {
@@ -18,27 +18,17 @@
   const list = D.posters;
   const n0 = list.length;
 
-  const sizesTxt = D.sizes.map(z => z.label.replace(/\s/g, '')).join(' · ');
-  /* each print is a thin double-sided slab: the artwork on the front, a plain info sheet on the back */
-  crate.innerHTML = list.map((p, i) => `
+  /* each print is a thin double-sided slab: the same artwork on both sides, so it reads from any angle */
+  crate.innerHTML = '<div class="rig" data-rig>' + list.map((p, i) => `
     <a class="book" href="print.html?p=${encodeURIComponent(p.id)}" data-i="${i}" aria-label="${p.name}, from £${from}" draggable="false">
       <span class="slab">
         <span class="f f-front"><img src="${base + p.img}" alt="" ${i > 3 ? 'loading="lazy"' : ''} draggable="false"></span>
-        <span class="f f-back" aria-hidden="true"><span class="bk">
-          <span class="bk-n mono">${pad(i + 1)} / ${pad(n0)}</span>
-          <span class="bk-name">${p.name}</span>
-          <span class="bk-rows">
-            <span class="bk-row"><i class="mono">Edition</i><b>${p.edition || 50}, signed and numbered</b></span>
-            <span class="bk-row"><i class="mono">Sizes</i><b>${sizesTxt}</b></span>
-            <span class="bk-row"><i class="mono">From</i><b>£${from}</b></span>
-            <span class="bk-row"><i class="mono">Made by</i><b>Printed, checked and posted by Berns</b></span>
-          </span>
-          <span class="bk-mark scale">Berns</span>
-        </span></span>
+        <span class="f f-back" aria-hidden="true"><img src="${base + p.img}" alt="" ${i > 3 ? 'loading="lazy"' : ''} draggable="false"></span>
         <span class="f e e-t"></span><span class="f e e-b"></span><span class="f e e-l"></span><span class="f e e-r"></span>
       </span>
-    </a>`).join('');
-  const books = [...crate.children];
+    </a>`).join('') + '</div>';
+  const rig = crate.firstElementChild;
+  const books = [...rig.children];
 
   let pos = 0, target = 0, raf = 0, active = -1;
   const n = list.length;
@@ -46,28 +36,33 @@
   const idx = () => mod(Math.round(pos));
   /* the crate loops: every print sits at its shortest distance round the ring from the one in hand */
   const wrap = d => { d = mod(d); return d >= n / 2 ? d - n : d; };
-  const LIFT = 0.16; /* how far the print in hand lifts out, as a share of its height */
   const smooth = t => t * t * (3 - 2 * t);
+  const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
-  /* d = how far a print is from the one in hand.
-     In hand (d = 0): square on to you. Still to come (d > 0): turned back on the X axis, lying away above, front showing.
-     Passed (d < 0): flipped over past the vertical so the back shows, lying forward below. */
-  const TILT = 72, FLIP = 108;
+  /* The prints hang on a curved wall in front of you, like a rack in a shop, the whole row tilted on a diagonal.
+     d = how far a print is from the one in hand. The one in hand is full size and lifted; the rest step back,
+     smaller, each turned in toward you. The row leans into the direction you scroll. */
+  const STEP = 0.33;      /* radians round the arc per print */
+  const RX = 3.4, RZ = 2.4; /* arc size, in print widths */
   function layout() {
-    const H = crate.clientHeight;
+    const W = crate.clientWidth, H = crate.clientHeight;
+    const vel = target - pos;
+    const lean = reduce ? 0 : clamp(Math.sign(vel) * Math.sqrt(Math.abs(vel)) * 0.055, -0.3, 0.3);
     books.forEach((b, i) => {
-      const d = wrap(i - pos), a = Math.abs(d), sg = Math.sign(d) || 1;
-      const s1 = smooth(Math.min(1, a));
-      const ty = sg * ((d >= 0 ? 0.74 : 0.62) * H * s1 + Math.max(a - 1, 0) * 0.2 * H);
-      const tz = (1 - Math.min(1, a)) * 0.12 * H - a * 0.05 * H;
-      const rx = d >= 0 ? TILT * s1 : -FLIP * s1;
-      const op = Math.max(0, Math.min(1, (3.4 - a) / 0.6));
-      b.style.transform = `translate3d(0,${ty.toFixed(1)}px,${tz.toFixed(1)}px) rotateX(${rx.toFixed(2)}deg)`;
-      b.style.zIndex = 300 - Math.round(a * 10);
+      const d = wrap(i - pos), a = Math.abs(d);
+      const ang = clamp(d * STEP, -1.3, 1.3);
+      const x = Math.sin(ang) * RX * W;
+      const z = (1 - Math.cos(ang)) * RZ * W + (a < 1 ? (1 - a) * 0.3 * W : 0);
+      const y = -(1 - Math.min(1, a)) * 0.05 * H;
+      const sc = Math.max(0.8, 1.08 - a * 0.2);
+      const ry = -ang * 57.2958 + lean * (a < 0.5 ? 1 : 1.12) * 57.2958;
+      const rz = -lean * 0.32 * (a < 0.5 ? 0.7 : 1) * 57.2958;
+      const op = clamp((3.6 - a) / 0.8, 0, 1);
+      b.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,${z.toFixed(1)}px) rotateY(${ry.toFixed(2)}deg) rotateZ(${rz.toFixed(2)}deg) scale(${sc.toFixed(3)})`;
       b.style.opacity = op.toFixed(3);
-      b.style.pointerEvents = op < 0.3 || a > 2.6 ? 'none' : '';
+      b.style.pointerEvents = op < 0.3 || a > 3 ? 'none' : '';
       /* fade by darkening toward the ink, not see-through, so prints never show each other through */
-      b.style.setProperty('--dim', Math.min(0.85, a <= 1 ? 0.38 * smooth(a) : 0.38 + (a - 1) * 0.22).toFixed(3));
+      b.style.setProperty('--dim', Math.min(0.85, 0.34 * smooth(Math.min(1, a)) + Math.max(a - 1, 0) * 0.16).toFixed(3));
       b.tabIndex = idx() === i ? 0 : -1;
     });
   }
@@ -109,7 +104,7 @@
     if (!drag.moved) return;
     const m = Math.abs(dx) > Math.abs(dy) ? dx : dy;
     const now = performance.now(); drag.v = (m - drag.last) / Math.max(1, now - drag.t); drag.last = m; drag.t = now;
-    pos = target = drag.start - m / (crate.clientHeight * 0.45);
+    pos = target = drag.start - m / (crate.clientWidth * 1.2);
     layout(); changed();
   });
   const end = () => {
@@ -139,5 +134,5 @@
 
   layout(); changed();
   /* the first print lifts out on arrival */
-  if (!reduce) { pos = 0.999; layout(); requestAnimationFrame(() => go(0)); }
+  if (!reduce) { pos = 2.6; layout(); requestAnimationFrame(() => go(0)); }
 })();

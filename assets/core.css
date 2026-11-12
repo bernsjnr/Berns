@@ -427,27 +427,19 @@ body[data-work-view="folders"] .deck,body[data-work-view="folders"] .work-cap{vi
   .hello-cue{display:none}
 }
 
-/* ---------- Shop (v9): double-sided prints turning on the X axis ---------- */
+/* ---------- Shop (v9): double-sided prints on a curved rack, tilted on a diagonal ---------- */
 body.shop{height:100vh;height:100svh;overflow:hidden}
 .shop-main{position:relative;height:100%;overflow:hidden}
-.crate-stage{position:absolute;inset:0;--w:calc(250 * var(--u));--h:calc(var(--w) * 1.414);touch-action:none}
-.crate{position:absolute;left:50%;top:calc(50% - 30 * var(--u));width:var(--w);height:var(--h);margin:calc(var(--h) / -2) 0 0 calc(var(--w) / -2);perspective:calc(1500 * var(--u));perspective-origin:50% 50%}
+.crate-stage{position:absolute;inset:0;--w:calc(290 * var(--u));--h:calc(var(--w) * 1.414);touch-action:none}
+.crate{position:absolute;left:50%;top:calc(50% - 30 * var(--u));width:var(--w);height:var(--h);margin:calc(var(--h) / -2) 0 0 calc(var(--w) / -2);perspective:calc(var(--w) * 4.6);perspective-origin:50% 50%}
+.rig{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(12deg) rotateY(-14deg)}
 .crate .book{position:absolute;inset:0;display:block;transform-style:preserve-3d;will-change:transform}
 .slab{--t:max(2px,calc(3 * var(--u)));position:relative;display:block;height:100%;transform-style:preserve-3d}
 .slab .f{position:absolute;display:block;backface-visibility:hidden;-webkit-backface-visibility:hidden;background-color:var(--ink)}
 .slab .f::after{content:'';position:absolute;inset:0;background:var(--ink);opacity:var(--dim,0);pointer-events:none}
 .f-front{inset:0;border-radius:2px;overflow:hidden;transform:translateZ(calc(var(--t) / 2))}
-.f-front img{width:100%;height:100%;object-fit:cover;pointer-events:none}
-.slab .f-back{inset:0;border-radius:2px;overflow:hidden;background-color:#F1F2F3;color:var(--ink);transform:rotateX(180deg) translateZ(calc(var(--t) / 2));container-type:size}
-.f-back::after{z-index:2}
-.bk{position:absolute;inset:0;display:flex;flex-direction:column;padding:9cqw;gap:6cqw}
-.bk-n{font-size:3.6cqw}
-.bk-name{font-family:var(--f-head);font-weight:700;font-size:9.4cqw;line-height:1.02;letter-spacing:-.02em}
-.bk-rows{margin-top:auto;display:grid;gap:3.2cqw}
-.bk-row{display:grid;grid-template-columns:19cqw 1fr;gap:3cqw;border-top:1px solid #E8E9EA;padding-top:3cqw;align-items:baseline}
-.bk-row i{font-style:normal;font-size:3cqw;color:var(--ink)}
-.bk-row b{font-family:var(--f-body);font-weight:700;font-size:4.2cqw;line-height:1.3}
-.bk-mark{font-size:6cqw;line-height:1}
+.slab .f-back{inset:0;border-radius:2px;overflow:hidden;transform:rotateY(180deg) translateZ(calc(var(--t) / 2))}
+.f-front img,.f-back img{width:100%;height:100%;object-fit:cover;pointer-events:none}
 .slab .e{backface-visibility:visible;-webkit-backface-visibility:visible;background-color:#E8E9EA}
 .e-t,.e-b{left:0;right:0;height:var(--t)}
 .e-t{top:0;transform:translateY(-50%) rotateX(90deg)}
@@ -460,8 +452,9 @@ body.shop{height:100vh;height:100svh;overflow:hidden}
 .shop-cap a{pointer-events:auto}
 .shop-cap .cap-link{font-size:calc(14 * var(--u))}
 @media (max-width:760px){
-  .crate-stage{--w:min(58vw,25svh)}
-  .crate{top:calc(50% - 24px);perspective:900px}
+  .crate-stage{--w:min(52vw,24svh)}
+  .crate{top:calc(50% - 24px)}
+  .rig{transform:rotateX(10deg) rotateY(-12deg)}
   .shop-cap{left:20px;right:20px;bottom:22px;gap:10px}
   .shop-cap .cap-name{font-size:20px}.shop-cap .cap-meta{font-size:11px}.shop-cap .cap-link{font-size:11px}
 }
