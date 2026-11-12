@@ -174,6 +174,7 @@ input::placeholder{color:var(--white);opacity:1}
 
   /* 5x7 pixel letters (only the ones the sign needs), so the type is crisp and needs no font */
   const GLYPH = {
+    A:['01110','10001','10001','11111','10001','10001','10001'], '!':['00100','00100','00100','00100','00100','00000','00100'],
     B:['11110','10001','10001','11110','10001','10001','11110'], E:['11111','10000','10000','11110','10000','10000','11111'],
     R:['11110','10001','10001','11110','10100','10010','10001'], N:['10001','11001','10101','10101','10011','10001','10001'],
     S:['01111','10000','10000','01110','00001','00001','11110'], "'":['00100','00100','01000','00000','00000','00000','00000'],
@@ -188,24 +189,30 @@ input::placeholder{color:var(--white);opacity:1}
     const g = cv.getContext('2d');
     const px = (x, y, c, w = 1, h = 1) => { g.fillStyle = c; g.fillRect(x, y, w, h); };
     px(0, 0, '#080CDF', W, H);
-    // small white warning triangle near the top (about a third of the face wide, per Berns's sketch)
-    const k = 18 / 30;
-    for (let y = 42; y <= 72; y++) for (let x = 0; x < W; x++) {
-      const dx = Math.abs(x - 47.5), half = (y - 42) * k;
-      const corner = (y < 44 && dx > 1) || (y > 70 && dx > half - (y - 70) * 1.6);   // rounded tip and feet
-      if (dx <= half && !corner) px(x, y, '#FFFFFF');
-    }
-    // Berns Blue exclamation mark
-    px(47, 52, '#080CDF', 2, 11);   // bar
-    px(47, 65, '#080CDF', 2, 2);    // dot
-    // words, 1px per art pixel
-    ['UNDER', 'CONSTRUCTION'].forEach((line, li) => {
-      const x0 = Math.round(48 - (line.length * 6 - 1) / 2), y0 = 88 + li * 12;
+    // Composition after the classic A-frame caution sign: CAUTION! under the handle, big symbol, two lines, ridged base
+    const words = (lines, y, gap) => lines.forEach((line, li) => {
+      const x0 = Math.round(48 - (line.length * 6 - 1) / 2), y0 = y + li * gap;
       [...line].forEach((ch, ci) => GLYPH[ch].forEach((row, ry) => [...row].forEach((bit, rx) => { if (bit === '1') px(x0 + ci * 6 + rx, y0 + ry, '#FFFFFF'); })));
     });
+    words(['CAUTION!'], 33, 0);
+    // white warning triangle, soft corners (the ⚠️)
+    const k = 29 / 50;
+    for (let y = 45; y <= 95; y++) for (let x = 0; x < W; x++) {
+      const dx = Math.abs(x - 47.5), half = (y - 45) * k;
+      const corner = (y < 48 && dx > 1) || (y > 92 && dx > half - (y - 92) * 1.6);
+      if (dx <= half && !corner) px(x, y, '#FFFFFF');
+    }
+    px(46, 59, '#080CDF', 4, 23);   // exclamation bar
+    px(46, 85, '#080CDF', 4, 4);    // dot
+    words(['UNDER', 'CONSTRUCTION'], 102, 11);
     snap(g, W, H);
-    // one quiet foot line
-    px(6, 174, '#0609A8', W - 12, 1);
+    // the moulded base: a panel edge, then chevron ridges, in the darker blue
+    const halfW = y => (0.76 + 0.24 * y / H) * 48;
+    px(8, 128, '#0609A8', W - 16, 1);
+    for (let y = 134; y < 186; y++) for (let x = 0; x < W; x++) {
+      const dx = Math.abs(x - 47.5);
+      if (dx <= halfW(y) - 5 && (((y + dx * 0.6) | 0) % 8) < 2) px(x, y, '#0609A8');
+    }
     const t = new THREE.CanvasTexture(cv);
     t.magFilter = t.minFilter = THREE.NearestFilter; t.generateMipmaps = false;
     return t;
