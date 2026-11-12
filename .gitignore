@@ -1,0 +1,3 @@
+
+# Stripe secret key lives only on the server
+api/config.php

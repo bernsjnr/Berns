@@ -44,12 +44,37 @@
     const link = poster.checkout && poster.checkout[key];
     const desc = `${poster.name}, ${state.size.label}, ${state.frame.label.toLowerCase()}, £${total}`;
     const mail = `mailto:info@bernsds.com?subject=${encodeURIComponent('Print order: ' + poster.name)}&body=${encodeURIComponent(`Hi Berns,\n\nI'd like to order: ${desc}.\n\nDelivery address:\n\n`)}`;
-    $('buy').href = link || mail;
-    $('buy').textContent = link ? `Buy now · £${total}` : `Order by email · £${total}`;
-    $('buy-note').hidden = !!link;
-    $('buy-note').innerHTML = `Online checkout is being set up. Email me your order and I'll send a secure payment link.`;
+    const live = !link && !!D.checkoutEndpoint;
+    $('buy').href = link || (live ? '#' : mail);
+    $('buy').dataset.live = live ? '1' : '';
+    $('buy').textContent = link || live ? `Buy now · £${total}` : `Order by email · £${total}`;
+    if (qs.get('paid') !== '1') {
+      $('buy-note').hidden = !!link || live;
+      $('buy-note').innerHTML = `Online checkout is being set up. Email me your order and I'll send a secure payment link.`;
+    }
   }
   sync();
+
+  /* Stripe Checkout through api/checkout.php: the server sets the price, Stripe takes the payment */
+  $('buy').addEventListener('click', async e => {
+    if (!$('buy').dataset.live) return;
+    e.preventDefault();
+    const btn = $('buy'), label = btn.textContent; btn.textContent = 'One moment…';
+    try {
+      const r = await fetch(base + D.checkoutEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ poster: poster.id, size: state.size.id, frame: state.frame.id }) });
+      const j = await r.json();
+      if (!j.url) throw new Error(j.error || 'No checkout');
+      location.href = j.url;
+    } catch (err) {
+      btn.textContent = label;
+      $('buy-note').hidden = false;
+      $('buy-note').textContent = 'Checkout did not open. Please try again, or email info@bernsds.com and I will sort it.';
+    }
+  });
+  if (qs.get('paid') === '1') {
+    $('buy-note').hidden = false;
+    $('buy-note').textContent = 'Thank you. Your order is in. A receipt is on its way to your email and I will post your print once it is checked.';
+  }
 
   const from = Math.min(...D.sizes.map(z => z.price));
   $('more').innerHTML = D.posters.filter(p => p !== poster).slice(0, 4).map(p => `
