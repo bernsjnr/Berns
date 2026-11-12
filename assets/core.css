@@ -471,9 +471,9 @@ body.shop{height:100vh;height:100svh;overflow:hidden}
 .pdp-view{position:sticky;top:calc(112 * var(--u));display:flex;flex-direction:column;align-items:center;gap:calc(22 * var(--u))}
 .stage-3d{position:relative;width:100%;height:calc(100vh - 112 * var(--u) - 130 * var(--u));height:calc(100svh - 112 * var(--u) - 130 * var(--u));min-height:300px;border-radius:16px;overflow:hidden;touch-action:pan-y}
 .stage-3d canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
-.flat{position:absolute;inset:0;display:grid;place-items:center}
+.flat{position:absolute;inset:0}
 .flat[hidden]{display:none}
-.flat img{height:100%;width:auto;max-width:100%;object-fit:contain;border-radius:2px;animation:lift .9s var(--out) both}
+.flat img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;animation:lift .9s var(--out) both}
 @keyframes lift{from{opacity:0;transform:translateY(calc(40 * var(--u))) scale(.94)}to{opacity:1;transform:none}}
 .hint{position:absolute;left:0;right:0;bottom:calc(20 * var(--u));text-align:center;font-size:calc(13 * var(--u));line-height:1;color:var(--ink);pointer-events:none}
 .stage-3d[data-mode="free"] .hint{color:var(--white)}

@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
-<link rel="stylesheet" href="../assets/core.css?v=68">
+<link rel="stylesheet" href="../assets/core.css?v=70">
 </head>
 <body data-base="../" data-page="shop" class="scroll pdp-page">
 
@@ -48,13 +48,13 @@
     <!-- The print: flat, on the wall, or turning in 3D -->
     <div class="pdp-view">
       <div class="stage-3d" id="stage">
-        <div class="flat" id="flat"><img id="flat-img" alt="" draggable="false"></div>
-        <p class="hint mono" id="hint" hidden>Drag to look around</p>
+        <div class="flat" id="flat" hidden><img id="flat-img" alt="" draggable="false"></div>
+        <p class="hint mono" id="hint">Drag to turn it</p>
       </div>
       <div class="views seg" role="group" aria-label="View">
-        <button type="button" class="mono" data-mode="flat" aria-pressed="true">Print</button>
+        <button type="button" class="mono" data-mode="free" aria-pressed="true">Turn it</button>
+        <button type="button" class="mono" data-mode="flat" aria-pressed="false">Print</button>
         <button type="button" class="mono" data-mode="room" aria-pressed="false">On the wall</button>
-        <button type="button" class="mono" data-mode="free" aria-pressed="false">Turn it</button>
       </div>
     </div>
     <model-viewer id="mv" ar ar-modes="webxr quick-look scene-viewer" ar-placement="wall" ar-scale="fixed" loading="eager" alt="" aria-hidden="true"
@@ -102,6 +102,6 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
-<script src="../assets/print.js?v=68" defer></script>
+<script src="../assets/print.js?v=70" defer></script>
 </body>
 </html>
