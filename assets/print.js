@@ -14,7 +14,7 @@
   const state = {
     size: D.sizes.find(s => s.id === qs.get('s')) || D.sizes[1],
     frame: D.frames.find(f => f.id === qs.get('f')) || D.frames[0],
-    mode: 'flat'
+    mode: 'free'
   };
 
   /* ---------- Panel ---------- */
@@ -44,12 +44,37 @@
     const link = poster.checkout && poster.checkout[key];
     const desc = `${poster.name}, ${state.size.label}, ${state.frame.label.toLowerCase()}, £${total}`;
     const mail = `mailto:info@bernsds.com?subject=${encodeURIComponent('Print order: ' + poster.name)}&body=${encodeURIComponent(`Hi Berns,\n\nI'd like to order: ${desc}.\n\nDelivery address:\n\n`)}`;
-    $('buy').href = link || mail;
-    $('buy').textContent = link ? `Buy now · £${total}` : `Order by email · £${total}`;
-    $('buy-note').hidden = !!link;
-    $('buy-note').innerHTML = `Online checkout is being set up. Email me your order and I'll send a secure payment link.`;
+    const live = !link && !!D.checkoutEndpoint;
+    $('buy').href = link || (live ? '#' : mail);
+    $('buy').dataset.live = live ? '1' : '';
+    $('buy').textContent = link || live ? `Buy now · £${total}` : `Order by email · £${total}`;
+    if (qs.get('paid') !== '1') {
+      $('buy-note').hidden = !!link || live;
+      $('buy-note').innerHTML = `Online checkout is being set up. Email me your order and I'll send a secure payment link.`;
+    }
   }
   sync();
+
+  /* Stripe Checkout through api/checkout.php: the server sets the price, Stripe takes the payment */
+  $('buy').addEventListener('click', async e => {
+    if (!$('buy').dataset.live) return;
+    e.preventDefault();
+    const btn = $('buy'), label = btn.textContent; btn.textContent = 'One moment…';
+    try {
+      const r = await fetch(base + D.checkoutEndpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ poster: poster.id, size: state.size.id, frame: state.frame.id }) });
+      const j = await r.json();
+      if (!j.url) throw new Error(j.error || 'No checkout');
+      location.href = j.url;
+    } catch (err) {
+      btn.textContent = label;
+      $('buy-note').hidden = false;
+      $('buy-note').textContent = 'Checkout did not open. Please try again, or email info@bernsds.com and I will sort it.';
+    }
+  });
+  if (qs.get('paid') === '1') {
+    $('buy-note').hidden = false;
+    $('buy-note').textContent = 'Thank you. Your order is in. A receipt is on its way to your email and I will post your print once it is checked.';
+  }
 
   const from = Math.min(...D.sizes.map(z => z.price));
   $('more').innerHTML = D.posters.filter(p => p !== poster).slice(0, 4).map(p => `
@@ -66,6 +91,8 @@
     document.querySelectorAll('[data-mode]').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === m));
     $('flat').hidden = m !== 'flat';
     $('hint').hidden = m === 'flat';
+    $('hint').textContent = m === 'free' ? 'Drag to turn it' : 'Drag to look around';
+    $('stage').dataset.mode = m;
     if (m === 'flat') { running = false; if (renderer) renderer.domElement.style.display = 'none'; return; }
     if (!init3D()) { setMode('flat'); return; }
     renderer.domElement.style.display = '';
@@ -112,6 +139,9 @@
     camera = new THREE.PerspectiveCamera(32, 1, .05, 60);
     controls = new THREE.OrbitControls(camera, renderer.domElement);
     Object.assign(controls, { enableDamping: true, dampingFactor: .08, enablePan: false, enableZoom: false });
+    let idle = 0;
+    controls.addEventListener('start', () => { clearTimeout(idle); controls.autoRotate = false; });
+    controls.addEventListener('end', () => { clearTimeout(idle); idle = setTimeout(() => { controls.autoRotate = state.mode === 'free' && !reduce; }, 2500); });
     scene.add(new THREE.HemisphereLight(0xffffff, 0xcdd0d3, .55));
     const sun = new THREE.DirectionalLight(0xffffff, .55); sun.position.set(1.6, 3.2, 2.4); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
     Object.assign(sun.shadow.camera, { left: -2, right: 2, top: 2, bottom: -2, near: .5, far: 8 }); sun.shadow.bias = -.0004; sun.shadow.radius = 4; scene.add(sun);
@@ -140,7 +170,7 @@
     const f = state.frame; let H;
     if (f.id === 'none') {
       const paper = new THREE.MeshStandardMaterial({ color: lin('#FBFBFA'), roughness: .9 });
-      const sheet = new THREE.Mesh(new THREE.BoxGeometry(pw, ph, .0015), [paper, paper, paper, paper, posterMat, paper]);
+      const sheet = new THREE.Mesh(new THREE.BoxGeometry(pw, ph, .0015), [paper, paper, paper, paper, posterMat, posterMat]);
       sheet.castShadow = true; g.add(sheet); H = ph; g.userData.depth = .002;
     } else {
       const m = pw < .35 ? .05 : .065, fw = .024, fd = .032, W = pw + 2 * m + 2 * fw; H = ph + 2 * m + 2 * fw;
@@ -181,10 +211,10 @@
   function resetView() {
     if (!group) return; const c = group.position.clone();
     const room = state.mode === 'room';
-    const dist = room ? 4.6 : 1.4 + group.userData.H;
+    const dist = room ? 4.6 : 0.2 + group.userData.H * 1.9;
     if (room) c.y = 1.05;   // frame the bench too, for scale
     controls.target.copy(c);
-    camera.position.set(c.x + (room ? .6 : .9), c.y + .1, c.z + dist); controls.update();
+    camera.position.set(c.x + (room ? .6 : 0), c.y + (room ? .1 : .02), c.z + dist); controls.update();
   }
   function applyMode() {
     if (!group) return;
@@ -192,7 +222,7 @@
     scene.background = new THREE.Color(free ? C.bg : C.wall);
     controls.minAzimuthAngle = free ? -Infinity : -1.0; controls.maxAzimuthAngle = free ? Infinity : 1.0;
     controls.minPolarAngle = free ? .15 : .95; controls.maxPolarAngle = free ? Math.PI - .15 : 1.72;
-    controls.autoRotate = free && !reduce; controls.autoRotateSpeed = 1.2;
+    controls.autoRotate = free && !reduce; controls.autoRotateSpeed = 2.4;
     group.position.z = free ? 0 : group.userData.depth / 2 - .03 + .001;
   }
   function loop() { if (!running) return; requestAnimationFrame(loop); controls.update(); renderer.render(scene, camera); }
@@ -242,4 +272,7 @@
       new QRCode($('qr'), { text: link.href, width: 224, height: 224, colorDark: '#1A1A1A', colorLight: '#F1F2F3', correctLevel: QRCode.CorrectLevel.M });
     }
   });
+
+  /* opens turning on its own, double-sided */
+  setMode('free');
 })();

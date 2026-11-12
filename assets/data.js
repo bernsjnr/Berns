@@ -55,6 +55,10 @@ window.BERNS = {
     { id: 'oak', label: 'Natural oak', swatch: '#C9A77C', col: '#C9A77C', grain: '#9C7A50' }
   ],
 
+  /* Where the Buy button sends the order. Empty = email order (static hosting, e.g. GitHub Pages).
+     On Hostinger set it to 'api/checkout.php' once api/config.php holds the Stripe key. */
+  checkoutEndpoint: '',
+
   /* Each print can hold one Stripe Payment Link per size + frame,
      keyed "<size>-<frame>", e.g. checkout: { 'a2-oak': 'https://buy.stripe.com/...' }.
      Missing link = the buy button falls back to an email order. */
