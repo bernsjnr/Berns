@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
-<link rel="stylesheet" href="../assets/core.css?v=73">
+<link rel="stylesheet" href="../assets/core.css?v=76">
 </head>
 <body data-base="../" data-page="shop" class="scroll pdp-page">
 
@@ -40,6 +40,7 @@
     <li><a class="scale" href="../studios/index.html"><span class="n mono">03</span><span class="t">Work</span></a></li>
     <li><a class="scale" href="index.html" aria-current="page"><span class="n mono">04</span><span class="t">Shop</span></a></li>
     <li><a class="scale" href="../contact/index.html"><span class="n mono">05</span><span class="t">Contact</span></a></li>
+    <li><a class="scale" href="../surprise/index.html"><span class="n mono">06</span><span class="t">Surprise</span></a></li>
   </ol>
 </nav>
 
@@ -85,8 +86,14 @@
   </section>
 
   <section class="more" aria-labelledby="more-t">
-    <p class="more-l mono" id="more-t">More prints</p>
-    <div class="more-grid" id="more"></div>
+    <div class="more-head">
+      <p class="more-l mono" id="more-t">More prints</p>
+      <div class="more-btns">
+        <button type="button" class="nav-arrow mono" id="more-prev" aria-label="Previous prints">&larr;</button>
+        <button type="button" class="nav-arrow mono" id="more-next" aria-label="Next prints">&rarr;</button>
+      </div>
+    </div>
+    <div class="more-grid" id="more" tabindex="0" role="region" aria-labelledby="more-t"></div>
   </section>
 
   <section class="pdp-close">
@@ -102,6 +109,6 @@
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/GLTFExporter.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
-<script src="../assets/print.js?v=71" defer></script>
+<script src="../assets/print.js?v=76" defer></script>
 </body>
 </html>

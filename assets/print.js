@@ -77,12 +77,31 @@
   }
 
   const from = Math.min(...D.sizes.map(z => z.price));
-  $('more').innerHTML = D.posters.filter(p => p !== poster).slice(0, 4).map(p => `
+  $('more').innerHTML = D.posters.filter(p => p !== poster).map(p => `
     <a class="more-item" href="print.html?p=${encodeURIComponent(p.id)}">
       <span class="more-img"><img src="${U.url(p.img)}" alt="" loading="lazy" draggable="false"></span>
       <span class="more-name">${p.name}</span>
       <span class="more-meta mono">From £${from}</span>
     </a>`).join('');
+  /* the rest of the prints in a carousel: swipe, drag, scroll or use the arrows */
+  {
+    const row = $('more');
+    const step = dir => row.scrollBy({ left: dir * row.clientWidth * 0.8, behavior: reduce ? 'auto' : 'smooth' });
+    $('more-prev').addEventListener('click', () => step(-1));
+    $('more-next').addEventListener('click', () => step(1));
+    let d = null;
+    row.addEventListener('pointerdown', e => { if (e.pointerType === 'mouse' && e.button === 0) d = { x: e.clientX, s: row.scrollLeft, moved: false }; });
+    addEventListener('pointermove', e => { if (!d) return; const dx = e.clientX - d.x; if (Math.abs(dx) > 5) { d.moved = true; row.classList.add('drag'); } if (d.moved) row.scrollLeft = d.s - dx; });
+    addEventListener('pointerup', () => {
+      if (d && d.moved) {
+        const stop = ev => ev.preventDefault();   /* a drag must not open a print */
+        row.addEventListener('click', stop, true);
+        setTimeout(() => { row.removeEventListener('click', stop, true); row.classList.remove('drag'); }, 60);
+      }
+      d = null;
+    });
+    row.addEventListener('dragstart', e => e.preventDefault());
+  }
 
   /* ---------- View modes ---------- */
   document.querySelectorAll('[data-mode]').forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));

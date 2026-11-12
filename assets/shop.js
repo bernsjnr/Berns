@@ -125,6 +125,9 @@
   crate.addEventListener('dragstart', e => e.preventDefault());
   crate.addEventListener('focusin', e => { const b = e.target.closest('.book'); if (b && +b.dataset.i !== idx()) go(Math.round(pos) + wrap(+b.dataset.i - Math.round(pos))); });
 
+  $('[data-prev]').addEventListener('click', () => go(Math.round(target) - 1));
+  $('[data-next]').addEventListener('click', () => go(Math.round(target) + 1));
+
   addEventListener('keydown', e => {
     if (root.classList.contains('menu-open')) return;
     if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); go(Math.round(target) + 1); }
