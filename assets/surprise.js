@@ -412,11 +412,202 @@
   }
 
   /* ---------------------------------------------------------
+     Coffee: pick a drink (or make your own), pour it layer by
+     layer into a spinning pixel glass, then tap the cup to drink it.
+     three.js drawn small and scaled up crisp, like the sign on the
+     holding page. Loaded only when needed.
+     --------------------------------------------------------- */
+  let threeP = null;
+  const loadThree = () => threeP || (threeP = new Promise((res, rej) => {
+    if (window.THREE) return res();
+    const s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js'; s.async = true;
+    s.onload = () => res(); s.onerror = () => { threeP = null; rej(new Error('three')); };
+    document.head.appendChild(s);
+  }));
+  const ING = {
+    e: { name: 'Espresso', col: 0x2B1608, hex: '#2B1608' },
+    w: { name: 'Hot water', col: 0xA9C1FF, hex: '#A9C1FF' },
+    m: { name: 'Milk', col: 0xF3E5CE, hex: '#F3E5CE' },
+    f: { name: 'Foam', col: 0xFFFFFF, hex: '#FFFFFF' },
+    c: { name: 'Chocolate', col: 0x7A4222, hex: '#7A4222' }
+  };
+  const DRINKS = [
+    { name: 'Espresso', mix: 'e' }, { name: 'Americano', mix: 'eewww' }, { name: 'Flat white', mix: 'eemmm' },
+    { name: 'Latte', mix: 'emmmf' }, { name: 'Cappuccino', mix: 'emmff' }, { name: 'Mocha', mix: 'cemmf' }
+  ];
+  const sig = s => [...s].sort().join('');
+  const runs = mix => { const out = []; for (const k of mix) { const l = out[out.length - 1]; if (l && l[0] === k) l[1]++; else out.push([k, 1]); } return out.map(([k, n]) => ING[k].name + (n > 1 ? ' x' + n : '')).join(', '); };
+  function judge(mix, target) {
+    if (target) {
+      const low = target.name.toLowerCase();
+      if (mix === target.mix) return `Spot on. A proper ${low}.`;
+      if (sig(mix) === sig(target.mix)) return `That is a ${low}, just not by the book.`;
+    }
+    const exact = DRINKS.find(d => d.mix === mix), same = DRINKS.find(d => sig(d.mix) === sig(mix));
+    const d = exact || same;
+    if (d) return target ? `Not the ${target.name.toLowerCase()}, but it is a ${d.name.toLowerCase()}.` : (exact ? `That is a ${d.name.toLowerCase()}.` : `Basically a ${d.name.toLowerCase()}.`);
+    if (/^w+$/.test(mix)) return 'That is hot water. Bold.';
+    return 'Your own recipe. I would drink it.';
+  }
+
+  function coffee(root) {
+    const T = window.THREE, CAP = 6;
+    const tally = coffee.tally || (coffee.tally = { made: 0 });
+    const wrap = el('div', 'g g-coffee'), view = el('div', 'cf-view'), cv = el('canvas', 'cf-cv'), ticket = el('div', 'cf-ticket'), row = el('div', 'cf-row');
+    cv.width = 200; cv.height = 190;
+    view.appendChild(cv); wrap.append(view, ticket, row); root.appendChild(wrap);
+
+    let renderer;
+    try { renderer = new T.WebGLRenderer({ canvas: cv, antialias: false, alpha: true }); }
+    catch (_) { ui.msg('The coffee machine is broken. Try Surprise me again.'); return { reset() {}, stop() {} }; }
+    renderer.setPixelRatio(1); renderer.setSize(200, 190, false);
+    const scene = new T.Scene(), cam = new T.PerspectiveCamera(30, 200 / 190, 0.1, 50);
+    cam.position.set(0, 2.6, 5.0); cam.lookAt(0, 0.88, 0);
+    const ramp = new T.DataTexture(Uint8Array.from([120, 190, 255]), 3, 1, T.LuminanceFormat);
+    ramp.minFilter = ramp.magFilter = T.NearestFilter; ramp.needsUpdate = true;
+    const toon = (color, extra) => new T.MeshToonMaterial(Object.assign({ color, gradientMap: ramp }, extra));
+    scene.add(new T.DirectionalLight(0xffffff, 0.8).translateX(-2).translateY(5).translateZ(3));
+    scene.add(new T.AmbientLight(0xffffff, 0.4));
+
+    /* saucer */
+    const plate = new T.Mesh(new T.CylinderGeometry(1.05, 0.95, 0.07, 28), toon(0xffffff)); plate.position.y = -0.035; scene.add(plate);
+
+    /* the glass: a lathe, thin and see-through, with a Berns Blue label and a handle */
+    const cup = new T.Group(); scene.add(cup);
+    const Y0 = 0.14, UH = 0.2, rin = y => 0.50 + (y - Y0) * (0.08 / 1.26);
+    const prof = [[0, 0], [0.52, 0], [0.62, 1.4], [0.58, 1.4], [0.5, Y0], [0, Y0]].map(p => new T.Vector2(p[0], p[1]));
+    const glass = new T.Mesh(new T.LatheGeometry(prof, 24), toon(0xffffff, { transparent: true, opacity: 0.14, side: T.DoubleSide, depthWrite: false }));
+    glass.renderOrder = 2; cup.add(glass);
+    const rim = new T.Mesh(new T.TorusGeometry(0.6, 0.018, 4, 24), toon(0xffffff)); rim.rotation.x = Math.PI / 2; rim.position.y = 1.4; cup.add(rim);
+    const handle = new T.Mesh(new T.TorusGeometry(0.27, 0.05, 6, 10, Math.PI), toon(0xffffff)); handle.rotation.z = -Math.PI / 2; handle.position.set(0.57, 0.74, 0); cup.add(handle);
+    { /* label */
+      const tc = document.createElement('canvas'); tc.width = 64; tc.height = 26; const g = tc.getContext('2d');
+      g.fillStyle = '#080CDF'; g.fillRect(0, 0, 64, 26); g.fillStyle = '#fff';
+      const GL = { B: ['11110','10001','10001','11110','10001','10001','11110'], E: ['11111','10000','10000','11110','10000','10000','11111'], R: ['11110','10001','10001','11110','10100','10010','10001'], N: ['10001','11001','10101','10101','10011','10001','10001'], S: ['01111','10000','10000','01110','00001','00001','11110'] };
+      [...'BERNS'].forEach((ch, ci) => GL[ch].forEach((r, ry) => [...r].forEach((bit, rx) => { if (bit === '1') g.fillRect(17 + ci * 6 + rx - 2, 9 + ry, 1, 1); })));
+      const tex = new T.CanvasTexture(tc); tex.magFilter = tex.minFilter = T.NearestFilter; tex.generateMipmaps = false;
+      const L = 1.7, band = new T.Mesh(new T.CylinderGeometry(0.612, 0.575, 0.4, 20, 1, true, -L / 2, L), toon(0xffffff, { map: tex }));
+      band.position.y = 0.62; cup.add(band);
+    }
+
+    /* the drink: six slices, each filled by a level that eases up when you pour */
+    const mats = {}; for (const k in ING) mats[k] = toon(ING[k].col);
+    const units = [];
+    for (let i = 0; i < CAP; i++) {
+      const g = new T.CylinderGeometry(rin(Y0 + (i + 1) * UH) - 0.012, rin(Y0 + i * UH) - 0.012, UH, 24); g.translate(0, UH / 2, 0);
+      const m = new T.Mesh(g, mats.e); m.position.y = Y0 + i * UH; m.visible = false; cup.add(m); units.push(m);
+    }
+    const stream = new T.Mesh(new T.CylinderGeometry(0.045, 0.045, 1, 6), mats.e); stream.visible = false; scene.add(stream);
+    const steam = [0, 1, 2, 3].map(() => { const m = new T.Mesh(new T.BoxGeometry(0.08, 0.08, 0.08), new T.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 })); m.visible = false; scene.add(m); return m; });
+
+    /* state */
+    let stack = [], target = null, phase = 'pick', lvl = 0, ang = 0.5, vel = reduce ? 0 : 0.7, drag = false, lx = 0, dv = 0, down = null, dying = 0, raf = 0, t = 0, last = performance.now();
+    const AUTO = reduce ? 0 : 0.7;
+
+    function paint() {
+      units.forEach((m, i) => { const f = Math.max(0, Math.min(1, lvl - i)); m.visible = f > 0.002; if (stack[i]) m.material = mats[stack[i]]; m.scale.y = Math.max(f, 0.001); });
+    }
+    function frame(now) {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt;
+      if (!drag) { vel += (AUTO - vel) * Math.min(1, dt * 0.8); ang += vel * dt; }
+      cup.rotation.y = ang;
+      const goal = phase === 'drinking' ? 0 : stack.length, sp = phase === 'drinking' ? 3.2 : (goal < lvl ? 8 : 4.2);
+      if (reduce) lvl = goal; else lvl += Math.sign(goal - lvl) * Math.min(Math.abs(goal - lvl), sp * dt);
+      if (phase === 'drinking') { dying += dt; cup.position.y = reduce ? 0 : Math.sin(Math.min(1, dying / 1.3) * Math.PI) * 0.28; if (lvl <= 0.001 && dying > 0.9) { finishDrink(); } }
+      paint();
+      const pouring = !reduce && phase === 'make' && stack.length && lvl < stack.length - 0.03 && lvl >= stack.length - 1.02;
+      stream.visible = pouring;
+      if (pouring) { const top = 2.7, bot = Y0 + lvl * UH + 0.02; stream.material = mats[stack[stack.length - 1]]; stream.scale.y = top - bot; stream.position.y = (top + bot) / 2; }
+      steam.forEach((s, k) => {
+        const on = !reduce && lvl > 0.5 && phase !== 'drinking';
+        s.visible = on; if (!on) return;
+        const ph = (t * 0.3 + k / 4) % 1, top = Y0 + lvl * UH;
+        s.position.set(Math.sin(t * 1.4 + k * 2) * 0.22 + (k - 1.5) * 0.12, top + 0.15 + ph * 0.6, Math.cos(t + k) * 0.1);
+        s.material.opacity = Math.sin(ph * Math.PI) * 0.75; s.rotation.y = t + k;
+      });
+      renderer.render(scene, cam);
+      raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+
+    /* spin by hand; a tap on the finished cup drinks it */
+    view.addEventListener('pointerdown', e => { drag = true; lx = e.clientX; down = [e.clientX, e.clientY]; view.setPointerCapture(e.pointerId); });
+    view.addEventListener('pointermove', e => { if (!drag) return; const dx = e.clientX - lx; lx = e.clientX; ang += dx * 0.012; dv = dx * 0.012 * 60; });
+    const release = e => {
+      if (!drag) return; drag = false; vel = dv; dv = 0;
+      if (e.type === 'pointerup' && down && Math.hypot(e.clientX - down[0], e.clientY - down[1]) < 8) { vel = AUTO; sip(); }
+    };
+    view.addEventListener('pointerup', release); view.addEventListener('pointercancel', release);
+    cv.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && phase === 'done') { e.preventDefault(); sip(); } });
+
+    /* the controls */
+    const chip = (label, on, cls, hex) => {
+      const b = el('button', 'chip mono' + (cls ? ' ' + cls : '')); b.type = 'button';
+      if (hex) { const s = el('i', 'sw'); s.style.background = hex; b.appendChild(s); }
+      b.appendChild(document.createTextNode(label)); b.addEventListener('click', on); return b;
+    };
+    function drawTicket() {
+      ticket.innerHTML = '';
+      if (!target || phase === 'pick') return;
+      [...target.mix].forEach((k, i) => {
+        const s = el('i', 'cf-t'); s.style.setProperty('--c', ING[k].hex);
+        if (stack[i] === k) s.classList.add('on'); else if (stack[i]) { s.classList.add('off'); s.textContent = '×'; }
+        ticket.appendChild(s);
+      });
+    }
+    function menu() {
+      row.innerHTML = ''; drawTicket();
+      if (phase === 'pick') {
+        DRINKS.forEach(d => row.appendChild(chip(d.name, () => choose(d))));
+        row.appendChild(chip('Your own', () => choose(null), 'chip-solid'));
+      } else if (phase === 'make') {
+        Object.keys(ING).forEach(k => row.appendChild(chip(ING[k].name, () => pour(k), '', ING[k].hex)));
+        if (stack.length) { row.appendChild(chip('Undo', undo)); row.appendChild(chip('Done', done, 'chip-solid')); }
+      }
+    }
+    function choose(d) {
+      tick(8); target = d; stack = []; phase = 'make'; ui.msg(d ? `Making a ${d.name.toLowerCase()}.` : 'Your own, then.');
+      ui.hint(d ? runs(d.mix) : 'Pour whatever you like, up to six'); ui.score(tally.made ? `Made ${tally.made}` : ''); menu();
+    }
+    function pour(k) {
+      if (stack.length >= CAP) { ui.msg('Full to the brim. Hit Done.'); return; }
+      tick(10); stack.push(k); menu();
+      if (stack.length >= CAP) ui.msg('Full to the brim. Hit Done.');
+      else if (target && stack.some((c, i) => c !== target.mix[i])) ui.msg('Not quite the recipe. Undo, or carry on.');
+      else ui.msg(target ? `Making a ${target.name.toLowerCase()}.` : 'Your own, then.');
+    }
+    function undo() {
+      tick(6); stack.pop(); menu();
+      ui.msg(target ? `Making a ${target.name.toLowerCase()}.` : 'Your own, then.');
+    }
+    function done() {
+      tick(14); phase = 'done'; tally.made++; ui.msg(judge(stack.join(''), target)); ui.hint('Tap the cup to drink it'); ui.score(`Made ${tally.made}`);
+      cv.setAttribute('role', 'button'); cv.setAttribute('tabindex', '0'); cv.setAttribute('aria-label', 'Drink it'); menu();
+    }
+    function sip() {
+      if (phase !== 'done') return;
+      tick(12); phase = 'drinking'; dying = 0; ui.msg('Ahh.'); ui.hint(''); cv.removeAttribute('role'); cv.removeAttribute('tabindex');
+    }
+    function finishDrink() {
+      phase = 'pick'; stack = []; target = null; lvl = 0; cup.position.y = 0; dying = 0;
+      ui.msg('Cheers. Another?'); ui.hint('Pick a coffee, or make your own'); menu();
+    }
+    function reset() {
+      phase = 'pick'; stack = []; target = null; lvl = 0; cup.position.y = 0; dying = 0;
+      cv.removeAttribute('role'); cv.removeAttribute('tabindex');
+      ui.msg('What are we making?'); ui.hint('Pick a coffee, or make your own'); ui.score(tally.made ? `Made ${tally.made}` : ''); menu();
+    }
+    reset();
+    return { reset, stop() { cancelAnimationFrame(raf); try { renderer.dispose(); renderer.forceContextLoss(); } catch (_) {} } };
+  }
+
+  /* ---------------------------------------------------------
      The surprise: nothing says what is in here. One button picks a
      game at random (never the same one twice running).
      --------------------------------------------------------- */
-  const GAMES = { connect4, wordsearch, snake, wordle, noughts };
-  const NAMES = Object.keys(GAMES);
+  const GAMES = { connect4, wordsearch, snake, wordle, noughts, coffee };
+  let NAMES = Object.keys(GAMES);
   const againBtn = $('[data-restart]'), nextBtn = $('[data-next]'), countEl = $('[data-count]');
   let cur = null, last = '', count = 0;
 
@@ -428,16 +619,21 @@
     w.appendChild(b); stage.appendChild(w);
     againBtn.hidden = nextBtn.hidden = true; ui.msg(''); ui.hint(''); ui.score(''); countEl.textContent = '';
   }
+  let token = 0;
   function draw() {
-    if (cur) cur.stop();
+    if (cur) { cur.stop(); cur = null; }
     let n; do { n = NAMES[rnd(NAMES.length)]; } while (n === last && NAMES.length > 1);
     last = n; count++;
     stage.innerHTML = ''; ui.msg(''); ui.hint(''); ui.score('');
-    cur = GAMES[n](stage);
     againBtn.hidden = nextBtn.hidden = false;
     countEl.textContent = 'Surprise ' + String(count).padStart(2, '0');
+    const my = ++token;
+    if (n !== 'coffee') { cur = GAMES[n](stage); return; }
+    /* the coffee needs three.js: wait for it, and if it never comes, draw something else */
+    loadThree().then(() => { if (my === token) cur = coffee(stage); }, () => { if (my === token) { NAMES = NAMES.filter(x => x !== 'coffee'); last = ''; count--; draw(); } });
   }
   nextBtn.addEventListener('click', e => { e.currentTarget.blur(); tick(8); draw(); });
   againBtn.addEventListener('click', e => { e.currentTarget.blur(); tick(6); if (cur) cur.reset(); });
   intro();
+  if ('requestIdleCallback' in window) requestIdleCallback(() => loadThree().catch(() => {})); else setTimeout(() => loadThree().catch(() => {}), 1500);
 })();
