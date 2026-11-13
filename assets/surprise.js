@@ -614,10 +614,10 @@
   function intro() {
     stage.innerHTML = '';
     const w = el('div', 'sur-intro');
-    w.append(el('h2', 'sur-h scale', 'Surprise?'), el('p', 'sur-p', 'I hid a few small games in here. Press the button and see what you get.'));
+    w.append(el('h2', 'sur-h scale', 'Surprise'));
     const b = el('button', 'btn btn-solid', 'Surprise me'); b.type = 'button'; b.addEventListener('click', () => { tick(10); draw(); });
     w.appendChild(b); stage.appendChild(w);
-    againBtn.hidden = nextBtn.hidden = true; ui.msg(''); ui.hint(''); ui.score(''); countEl.textContent = '';
+    againBtn.hidden = nextBtn.hidden = true; ui.msg(''); ui.hint(''); ui.score('');
   }
   let token = 0;
   function draw() {
@@ -626,7 +626,6 @@
     last = n; count++;
     stage.innerHTML = ''; ui.msg(''); ui.hint(''); ui.score('');
     againBtn.hidden = nextBtn.hidden = false;
-    countEl.textContent = 'Surprise ' + String(count).padStart(2, '0');
     const my = ++token;
     if (n !== 'coffee') { cur = GAMES[n](stage); return; }
     /* the coffee needs three.js: wait for it, and if it never comes, draw something else */
