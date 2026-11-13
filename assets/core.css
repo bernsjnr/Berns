@@ -634,6 +634,19 @@ body.sur{height:100vh;height:100svh;overflow:hidden}
   .ws-list{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 16px;font-size:12px}
 }
 
+/* Coffee */
+.g-coffee{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(14 * var(--u));width:100%;height:100%;margin:0}
+.cf-view{flex:1 1 0;min-height:0;width:100%;touch-action:none;user-select:none;-webkit-user-select:none}
+.cf-cv{display:block;width:100%;height:100%;object-fit:contain;image-rendering:pixelated;outline:0}
+.cf-ticket{display:flex;justify-content:center;gap:max(4px,calc(6 * var(--u)));min-height:max(14px,calc(18 * var(--u)))}
+.cf-t{--c:#fff;width:max(14px,calc(18 * var(--u)));height:max(14px,calc(18 * var(--u)));border:1px solid var(--white);display:grid;place-items:center;font:700 11px/1 var(--f-mono);font-style:normal;background:transparent}
+.cf-t.on{background:var(--c)}
+.cf-row{display:flex;flex-wrap:wrap;justify-content:center;gap:max(6px,calc(10 * var(--u)))}
+.cf-row .chip{font-size:max(11px,calc(14 * var(--u)))}
+.sw{display:inline-block;width:.75em;height:.75em;border:1px solid var(--white);flex:none}
+.chip-solid{background:var(--white);color:var(--ink);border-color:var(--white)}
+.chip-solid:hover,.chip-solid:focus-visible{background:var(--blue);color:var(--white);border-color:var(--blue)}
+
 @media (max-width:760px){
   .sur-main{padding:64px 20px 22px}
   .sur-count{font-size:11px}
