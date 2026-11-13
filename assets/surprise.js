@@ -428,7 +428,7 @@
   const ING = {
     e: { name: 'Espresso', col: 0x2B1608, hex: '#2B1608' },
     w: { name: 'Hot water', col: 0xA9C1FF, hex: '#A9C1FF' },
-    m: { name: 'Milk', col: 0xF3E5CE, hex: '#F3E5CE' },
+    m: { name: 'Oat milk', col: 0xEBDAC0, hex: '#EBDAC0' },
     f: { name: 'Foam', col: 0xFFFFFF, hex: '#FFFFFF' },
     c: { name: 'Chocolate', col: 0x7A4222, hex: '#7A4222' }
   };
@@ -437,16 +437,18 @@
     { name: 'Latte', mix: 'emmmf' }, { name: 'Cappuccino', mix: 'emmff' }, { name: 'Mocha', mix: 'cemmf' }
   ];
   const sig = s => [...s].sort().join('');
+  const oat = d => (d.mix.includes('m') ? 'oat ' : '') + d.name.toLowerCase();   /* it is always oat milk */
+  const an = w => (/^[aeiou]/.test(w) ? 'an ' : 'a ') + w;
   const runs = mix => { const out = []; for (const k of mix) { const l = out[out.length - 1]; if (l && l[0] === k) l[1]++; else out.push([k, 1]); } return out.map(([k, n]) => ING[k].name + (n > 1 ? ' x' + n : '')).join(', '); };
   function judge(mix, target) {
     if (target) {
-      const low = target.name.toLowerCase();
+      const low = oat(target);
       if (mix === target.mix) return `Spot on. A proper ${low}.`;
-      if (sig(mix) === sig(target.mix)) return `That is a ${low}, just not by the book.`;
+      if (sig(mix) === sig(target.mix)) return `That is ${an(low)}, just not by the book.`;
     }
     const exact = DRINKS.find(d => d.mix === mix), same = DRINKS.find(d => sig(d.mix) === sig(mix));
     const d = exact || same;
-    if (d) return target ? `Not the ${target.name.toLowerCase()}, but it is a ${d.name.toLowerCase()}.` : (exact ? `That is a ${d.name.toLowerCase()}.` : `Basically a ${d.name.toLowerCase()}.`);
+    if (d) return target ? `Not the ${oat(target)}, but it is ${an(oat(d))}.` : (exact ? `That is ${an(oat(d))}.` : `Basically ${an(oat(d))}.`);
     if (/^w+$/.test(mix)) return 'That is hot water. Bold.';
     return 'Your own recipe. I would drink it.';
   }
@@ -567,7 +569,7 @@
       }
     }
     function choose(d) {
-      tick(8); target = d; stack = []; phase = 'make'; ui.msg(d ? `Making a ${d.name.toLowerCase()}.` : 'Your own, then.');
+      tick(8); target = d; stack = []; phase = 'make'; ui.msg(d ? `Making ${an(oat(d))}.` : 'Your own, then.');
       ui.hint(d ? runs(d.mix) : 'Pour whatever you like, up to six'); ui.score(tally.made ? `Made ${tally.made}` : ''); menu();
     }
     function pour(k) {
@@ -575,11 +577,11 @@
       tick(10); stack.push(k); menu();
       if (stack.length >= CAP) ui.msg('Full to the brim. Hit Done.');
       else if (target && stack.some((c, i) => c !== target.mix[i])) ui.msg('Not quite the recipe. Undo, or carry on.');
-      else ui.msg(target ? `Making a ${target.name.toLowerCase()}.` : 'Your own, then.');
+      else ui.msg(target ? `Making ${an(oat(target))}.` : 'Your own, then.');
     }
     function undo() {
       tick(6); stack.pop(); menu();
-      ui.msg(target ? `Making a ${target.name.toLowerCase()}.` : 'Your own, then.');
+      ui.msg(target ? `Making ${an(oat(target))}.` : 'Your own, then.');
     }
     function done() {
       tick(14); phase = 'done'; tally.made++; ui.msg(judge(stack.join(''), target)); ui.hint('Tap the cup to drink it'); ui.score(`Made ${tally.made}`);
@@ -603,10 +605,157 @@
   }
 
   /* ---------------------------------------------------------
+     Fry plantain: slice it, oil the pan, drop the slices in, flip
+     them when they are golden, serve before they burn. Pixel art
+     drawn on a small canvas and scaled up crisp.
+     --------------------------------------------------------- */
+  function plantain(root) {
+    const W = 160, H = 120, PX0 = 18, PX1 = 128, MAXCUT = 8;
+    const tally = plantain.tally || (plantain.tally = { made: 0 });
+    const wrap = el('div', 'g g-coffee'), view = el('div', 'cf-view'), cv = el('canvas', 'cf-cv'), row = el('div', 'cf-row');
+    cv.width = W; cv.height = H; view.appendChild(cv); wrap.append(view, row); root.appendChild(wrap);
+    const g = cv.getContext('2d');
+
+    /* colours: pale flesh to gold to brown to black */
+    const STOPS = [[0, [234, 227, 165]], [0.3, [232, 200, 96]], [0.5, [217, 160, 48]], [0.7, [176, 110, 28]], [0.88, [107, 58, 20]], [1, [43, 22, 8]]];
+    const ramp = c => {
+      c = Math.max(0, Math.min(1, Math.round(c * 20) / 20));
+      for (let i = 1; i < STOPS.length; i++) if (c <= STOPS[i][0]) {
+        const a = STOPS[i - 1], b = STOPS[i], k = (c - a[0]) / (b[0] - a[0]);
+        return 'rgb(' + [0, 1, 2].map(j => Math.round(a[1][j] + (b[1][j] - a[1][j]) * k)).join(',') + ')';
+      }
+      return 'rgb(43,22,8)';
+    };
+    const side = c => c >= 0.38 && c <= 0.7 ? 1 : c < 0.38 ? c / 0.38 : Math.max(0, 1 - (c - 0.7) / 0.3);
+    const ell = (cx, cy, rx, ry, col) => {
+      g.fillStyle = col;
+      for (let y = -Math.round(ry); y <= Math.round(ry); y++) {
+        const h = rx * Math.sqrt(Math.max(0, 1 - (y / ry) * (y / ry)));
+        g.fillRect(Math.round(cx - h), Math.round(cy + y), Math.max(1, Math.round(2 * h)), 1);
+      }
+    };
+
+    /* state */
+    const PC = [78, 62], POR = [64, 46], PIR = [58, 41];
+    let phase, cuts, queue, slices, oiled, oilT, flash, bubbles, bt, t = 0, last = performance.now(), raf = 0, warned, eatT;
+    const pieces = () => { const b = [PX0, ...cuts, PX1]; return b.slice(1).map((x, i) => x - b[i]); };
+    const yc = (x, i) => 62 - 6 * Math.sin(Math.PI * (x - PX0) / (PX1 - PX0));
+
+    function drawPlantain() {
+      const b = [PX0, ...cuts, PX1], off = 2;
+      for (let i = 0; i < b.length - 1; i++) for (let x = b[i]; x < b[i + 1] - (i < b.length - 2 ? 1 : 0); x++) {
+        const tt = (x - PX0) / (PX1 - PX0), h = Math.round(4 + 7 * Math.sqrt(Math.sin(Math.PI * tt))), cy = Math.round(yc(x)), X = x + i * off;
+        g.fillStyle = '#EAE3A5'; g.fillRect(X, cy - h, 1, 2 * h);
+        g.fillStyle = '#F6F2C8'; g.fillRect(X, cy - h, 1, 1);
+        g.fillStyle = '#CFC57E'; g.fillRect(X, cy + h - 2, 1, 2);
+        if ((x * 7 + i * 13) % 23 === 0) { g.fillStyle = '#B9A95A'; g.fillRect(X, cy - 2 + ((x * 5) % 5), 1, 1); }
+      }
+      if (flash && t - flash.t < 0.14) { g.fillStyle = '#fff'; g.fillRect(flash.x + (cuts.indexOf(flash.cut) + 1) * off - 1, 36, 1, 52); }
+    }
+
+    function drawPan(plate) {
+      ell(PC[0], PC[1], POR[0], POR[1], '#fff');
+      ell(PC[0], PC[1], PIR[0], PIR[1], plate ? '#F1F2F3' : '#2B2B2B');
+      if (!plate) {
+        g.fillStyle = '#fff'; g.fillRect(PC[0] + POR[0] - 2, PC[1] - 2, 20, 4);
+        if (oiled) { const k = Math.min(1, oilT); ell(PC[0], PC[1], PIR[0] * k * 0.92, PIR[1] * k * 0.92, '#3A3A3A'); g.fillStyle = '#8A9095'; g.fillRect(PC[0] - 40, PC[1] - 24, 6, 1); g.fillRect(PC[0] - 36, PC[1] - 22, 2, 1); }
+      }
+    }
+
+    function drawSlice(s) {
+      const f = s.flip, sq = f > 0 ? Math.max(0.15, Math.abs(Math.cos(Math.PI * f))) : 1, lift = f > 0 ? Math.sin(Math.PI * f) * 9 : 0;
+      const top = f > 0 && f < 0.5 ? 1 - s.top : s.top, cy = s.y - s.drop - lift;
+      if (f === 0) ell(s.x, cy + 2, s.rx, s.ry, ramp(s.c[1 - top]));            /* the underside peeks out below: that is the one frying */
+      ell(s.x, cy, s.rx, s.ry * sq, ramp(s.c[top]));
+      if (f === 0) { g.fillStyle = 'rgba(255,255,255,.35)'; g.fillRect(Math.round(s.x - s.rx * 0.4), Math.round(cy - s.ry * 0.45), 2, 1); }
+    }
+
+    function frame(now) {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt; bt += dt;
+      if (oiled) oilT = Math.min(1, oilT + dt * 2.5);
+      if (phase === 'pan') {
+        slices.forEach(s => {
+          if (s.drop > 0) { s.drop = Math.max(0, s.drop - dt * 90); return; }
+          if (s.flip > 0) { s.flip += dt / 0.35; if (s.flip >= 1) { s.flip = 0; s.top = 1 - s.top; } return; }
+          const d = Math.hypot((s.x - PC[0]) / PIR[0], (s.y - PC[1]) / PIR[1]);
+          s.c[1 - s.top] += dt * 0.07 * (1.25 - 0.5 * Math.min(1, d));
+        });
+        if (!warned && slices.some(s => Math.max(s.c[0], s.c[1]) > 0.88)) { warned = true; ui.msg('Something is catching.'); }
+      }
+      if (phase === 'eating') { eatT += dt; if (eatT > 0.2) { eatT = 0; slices.shift(); tick(6); if (!slices.length) { reset(); } } }
+      if (bt > 0.12) { bt = 0; bubbles = []; if (!reduce && phase === 'pan') slices.forEach(s => { if (s.drop < 1) for (let k = 0; k < 2; k++) { const a = Math.random() * 6.28; bubbles.push([s.x + Math.cos(a) * (s.rx + 2), s.y + 2 + Math.sin(a) * (s.ry + 1)]); } }); }
+      g.clearRect(0, 0, W, H);
+      if (phase === 'cut') drawPlantain();
+      else {
+        drawPan(phase === 'done' || phase === 'eating');
+        slices.slice().sort((a, b) => a.y - b.y).forEach(drawSlice);
+        g.fillStyle = '#fff'; bubbles.forEach(p => g.fillRect(Math.round(p[0]), Math.round(p[1]), 1, 1));
+        if (!reduce && phase === 'pan') slices.forEach((s, i) => { if (Math.max(s.c[0], s.c[1]) > 0.88) { g.fillStyle = '#8A9095'; for (let k = 0; k < 3; k++) g.fillRect(Math.round(s.x + Math.sin(t * 3 + k + i) * 3), Math.round(s.y - 6 - ((t * 14 + k * 6) % 18)), 2, 2); } });
+      }
+      raf = requestAnimationFrame(frame);
+    }
+
+    /* controls */
+    const chip = (label, on, cls) => { const b = el('button', 'chip mono' + (cls ? ' ' + cls : ''), label); b.type = 'button'; b.addEventListener('click', on); return b; };
+    function menu() {
+      row.innerHTML = '';
+      if (phase === 'cut') {
+        if (cuts.length) row.appendChild(chip('Undo', () => { tick(5); cuts.pop(); menu(); }));
+        if (cuts.length >= 2) row.appendChild(chip('Into the pan', toPan, 'chip-solid'));
+      } else if (phase === 'pan') {
+        if (!oiled) row.appendChild(chip('Add oil', () => { tick(8); oiled = true; oilT = 0; ui.msg('Oil is going. Drop them in.'); ui.hint(`${queue.length} slices. Tap the pan to drop one, tap a slice to flip it`); menu(); }));
+        if (slices.length) row.appendChild(chip('Serve', serve, 'chip-solid'));
+      }
+    }
+    function toPan() {
+      tick(10); phase = 'pan'; oiled = false; oilT = 0; slices = []; warned = false;
+      queue = pieces().map(w => Math.max(7, Math.min(13, Math.round(5 + w * 0.35))));
+      ui.msg('Oil first.'); ui.hint('Hit Add oil'); menu();
+    }
+    function serve() {
+      let sc = 0, raw = 0, burnt = 0; const n = slices.length;
+      slices.forEach(s => { sc += (side(s.c[0]) + side(s.c[1])) / 2; if (Math.min(s.c[0], s.c[1]) < 0.2) raw++; if (Math.max(s.c[0], s.c[1]) > 0.88) burnt++; });
+      const avg = sc / n;
+      tick(14); phase = 'done'; tally.made++; ui.score(`Fried ${tally.made}`);
+      ui.msg(avg >= 0.88 ? 'Golden both sides. Proper plantain.' : avg >= 0.7 ? 'Nice. A couple of uneven ones.' : burnt >= n / 2 ? 'Burnt. Turn them sooner next time.' : raw >= n / 2 ? 'Still pale. Give them longer.' : 'A mixed batch. Still eating it.');
+      ui.hint('Tap the plate to eat'); cv.setAttribute('role', 'button'); cv.setAttribute('tabindex', '0'); cv.setAttribute('aria-label', 'Eat it'); menu();
+    }
+    function eat() { if (phase !== 'done') return; tick(8); phase = 'eating'; eatT = 0; ui.msg('Mmm.'); ui.hint(''); cv.removeAttribute('role'); cv.removeAttribute('tabindex'); }
+    const pt = e => { const r = cv.getBoundingClientRect(), sc = Math.min(r.width / W, r.height / H); return [(e.clientX - r.left - (r.width - W * sc) / 2) / sc, (e.clientY - r.top - (r.height - H * sc) / 2) / sc]; };
+    cv.addEventListener('pointerdown', e => {
+      const [x, y] = pt(e);
+      if (phase === 'cut') {
+        if (cuts.length >= MAXCUT) { ui.msg('That is plenty of slices.'); return; }
+        const bd = [PX0, ...cuts, PX1]; let px = Math.round(x); for (let i = 0; i < bd.length - 1; i++) if (x - i * 2 >= bd[i] && x - i * 2 < bd[i + 1]) { px = Math.round(x - i * 2); break; }   /* undo the little spread between slices */
+        if (px < PX0 + 7 || px > PX1 - 7 || Math.abs(y - yc(px)) > 18 || cuts.some(c => Math.abs(c - px) < 8)) return;
+        cuts.push(px); cuts.sort((a, b) => a - b); flash = { x: px, t, cut: px }; tick(8); ui.msg(`${cuts.length + 1} slices.`); menu();
+      } else if (phase === 'pan') {
+        const hit = slices.find(s => s.drop < 1 && s.flip === 0 && Math.abs(x - s.x) <= s.rx + 2 && Math.abs(y - s.y) <= s.ry + 3);
+        if (hit) { hit.flip = 0.001; tick(8); return; }
+        if (!oiled) { ui.msg('Oil first.'); return; }
+        if (!queue.length) return;
+        const d = Math.hypot((x - PC[0]) / PIR[0], (y - PC[1]) / PIR[1]), rx = queue[0], ry = Math.round(rx * 0.62);
+        if (d > 0.82) { ui.msg('Keep them in the pan.'); return; }
+        if (slices.some(s => Math.abs(x - s.x) < (rx + s.rx) * 0.85 && Math.abs(y - s.y) < (ry + s.ry) * 0.95)) { ui.msg('Give it room.'); return; }
+        queue.shift(); slices.push({ x, y, rx, ry, c: [0, 0], top: 0, flip: 0, drop: 22 }); tick(10);
+        ui.msg(queue.length ? 'In it goes.' : 'All in. Keep an eye on them.'); ui.hint(queue.length ? `${queue.length} left. Tap a slice to flip it` : 'Tap a slice to flip it. Serve when golden'); menu();
+      } else if (phase === 'done') eat();
+    });
+    cv.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && phase === 'done') { e.preventDefault(); eat(); } });
+    function reset() {
+      phase = 'cut'; cuts = []; queue = []; slices = []; oiled = false; oilT = 0; flash = null; bubbles = []; bt = 0; warned = false; eatT = 0;
+      cv.removeAttribute('role'); cv.removeAttribute('tabindex');
+      ui.msg('Slice the plantain.'); ui.hint('Tap along it to cut'); ui.score(tally.made ? `Fried ${tally.made}` : ''); menu();
+    }
+    reset(); raf = requestAnimationFrame(frame);
+    return { reset, stop() { cancelAnimationFrame(raf); } };
+  }
+
+  /* ---------------------------------------------------------
      The surprise: nothing says what is in here. One button picks a
      game at random (never the same one twice running).
      --------------------------------------------------------- */
-  const GAMES = { connect4, wordsearch, snake, wordle, noughts, coffee };
+  const GAMES = { connect4, wordsearch, snake, wordle, noughts, coffee, plantain };
   let NAMES = Object.keys(GAMES);
   const againBtn = $('[data-restart]'), nextBtn = $('[data-next]'), countEl = $('[data-count]');
   let cur = null, last = '', count = 0;
