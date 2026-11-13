@@ -31,16 +31,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .mono{font-family:var(--f-mono);font-weight:700;text-transform:uppercase;letter-spacing:0}
 
 /* ---------- Top bar ---------- */
-.bar{position:relative;z-index:60;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding:calc(56 * var(--u)) var(--hx) 0}
-.bar-name{font-size:calc(84 * var(--u));line-height:.86}
+.bar{position:relative;z-index:60;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;padding:calc(48 * var(--u)) var(--hx) 0}
+.bar-name{font-size:calc(27 * var(--u));line-height:1;white-space:nowrap}
+.bar-name br{display:none}
 .bar-name a{position:relative;display:block}
 .bar-name .scale{display:block}
 /* (ALSO KNOWN AS 'BERNS') slides in under the name on hover; on touch screens a first tap shows it (see core.js) */
-.aka{position:absolute;left:0;top:100%;margin-top:calc(22 * var(--u));font-size:calc(21 * var(--u));line-height:1;white-space:nowrap;
+.aka{position:absolute;left:0;top:100%;margin-top:calc(10 * var(--u));font-size:calc(14 * var(--u));line-height:1;white-space:nowrap;
   opacity:0;transform:translateY(calc(-6 * var(--u)));transition:opacity .2s var(--out),transform .2s var(--out)}
 .bar-name a:hover .aka,.bar-name a:focus-visible .aka,.bar-name a.show .aka{opacity:1;transform:none}
 @media (hover:none){.bar-name a:hover .aka,.bar-name a:focus-visible .aka{opacity:0}.bar-name a.show .aka{opacity:1;transform:none}}
-.bar-right{display:flex;align-items:center;gap:calc(26 * var(--u));padding-top:calc(6 * var(--u))}
+.bar-right{display:flex;align-items:center;gap:calc(26 * var(--u));padding-top:0}
 .bar-clock{font-size:calc(21 * var(--u));line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
 .bar-batt{display:block;width:calc(34 * var(--u));height:calc(17 * var(--u))}
 .bar-batt[hidden]{display:none}
@@ -48,7 +49,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .bar-batt .bolt{display:none}
 .bar-batt.charging .bolt{display:block}
 /* MENU sits one step up from the clock: same cap line, a touch bigger, Scale against mono */
-.bar-menu{display:flex;align-items:center;gap:.4em;font-size:calc(27 * var(--u));line-height:.8;padding:calc(4 * var(--u)) 0}
+.bar-menu{display:flex;align-items:center;gap:.4em;font-size:calc(27 * var(--u));line-height:1;padding:0}
 /* Plus that turns into a minus when the menu opens: two bars, the upright one turns flat */
 .pm{position:relative;display:block;width:.66em;height:.66em;flex:none}
 .pm::before,.pm::after{content:'';position:absolute;left:0;top:50%;width:100%;height:max(2px,.18em);transform:translateY(-50%);background:currentColor}
