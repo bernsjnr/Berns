@@ -68,7 +68,7 @@ html.menu-open .menu li:nth-child(2){transition-delay:.03s}
 html.menu-open .menu li:nth-child(3){transition-delay:.06s}
 html.menu-open .menu li:nth-child(4){transition-delay:.09s}
 html.menu-open .menu li:nth-child(5){transition-delay:.12s}
-.menu a{display:flex;align-items:flex-start;gap:calc(18 * var(--u));font-size:min(calc(104 * var(--u)),11vw);line-height:.9;padding:.04em 0}
+.menu a{display:flex;align-items:flex-start;gap:calc(18 * var(--u));font-size:min(calc(68 * var(--u)),8vw);line-height:.92;padding:.04em 0}
 .menu .t{text-decoration-line:underline;text-decoration-color:transparent;text-decoration-thickness:.07em;text-underline-offset:.08em;transition:text-decoration-color .15s var(--out)}
 .menu a:hover .t,.menu a:focus-visible .t,.menu a[aria-current="page"] .t{text-decoration-color:currentColor}
 .menu .n{font-size:max(11px,calc(18 * var(--u)));line-height:1;padding-top:.3em}
@@ -125,7 +125,7 @@ body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:aut
   .home-foot{padding-bottom:28px}
   .home-more{font-size:15px;margin-top:20px}
   .menu{padding-bottom:28px}
-  .menu a{font-size:11.5vw}
+  .menu a{font-size:9.5vw}
   .menu .n{font-size:11px}
 }
 
@@ -159,6 +159,11 @@ body.scroll .bar-name{font-size:calc(27 * var(--u));line-height:1;white-space:no
 body.scroll .bar-name br{display:none}
 body.scroll .bar-right{padding-top:0}
 body.scroll .bar-menu{line-height:1;padding:0}
+
+/* Menu open: the name drops to the same one-line size it has in the header on every other page */
+html.menu-open .bar-name{font-size:calc(27 * var(--u));line-height:1;white-space:nowrap}
+html.menu-open .bar-name br,html.menu-open .aka{display:none}
+html.menu-open .bar-right{padding-top:0}
 
 /* Fade up into place as it comes on screen */
 [data-reveal]{opacity:0;transform:translateY(28px);transition:opacity .9s var(--out),transform .9s var(--out)}
