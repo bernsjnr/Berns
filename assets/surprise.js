@@ -751,11 +751,177 @@
     return { reset, stop() { cancelAnimationFrame(raf); } };
   }
 
+  /* small pixel drawing helpers shared by the canvas games */
+  const pdisc = (g, cx, cy, r, col) => { g.fillStyle = col; for (let y = -r; y <= r; y++) { const h = Math.round(Math.sqrt(r * r + 0.5 - y * y)); g.fillRect(cx - h, cy + y, h * 2 + 1, 1); } };
+  const pring = (g, cx, cy, r, col) => {
+    g.fillStyle = col;
+    for (let y = -r; y <= r; y++) {
+      const o = Math.round(Math.sqrt(r * r + 0.5 - y * y)), ir = r - 1, i = Math.abs(y) < ir ? Math.round(Math.sqrt(ir * ir + 0.5 - y * y)) : -1;
+      if (i < 0) g.fillRect(cx - o, cy + y, o * 2 + 1, 1); else { g.fillRect(cx - o, cy + y, o - i + 1, 1); g.fillRect(cx + i, cy + y, o - i + 1, 1); }
+    }
+  };
+  const canvasPt = (cv, W, H) => e => { const r = cv.getBoundingClientRect(), sc = Math.min(r.width / W, r.height / H); return [(e.clientX - r.left - (r.width - W * sc) / 2) / sc, (e.clientY - r.top - (r.height - H * sc) / 2) / sc]; };
+
+  /* ---------------------------------------------------------
+     Bubbles: hold to blow, let go and it floats away, tap to pop.
+     --------------------------------------------------------- */
+  function bubbles(root) {
+    const W = 160, H = 120, tally = bubbles.tally || (bubbles.tally = { popped: 0 });
+    const wrap = el('div', 'g g-coffee'), view = el('div', 'cf-view'), cv = el('canvas', 'cf-cv');
+    cv.width = W; cv.height = H; view.appendChild(cv); wrap.appendChild(view); root.appendChild(wrap);
+    const g = cv.getContext('2d'), pt = canvasPt(cv, W, H);
+    let bs = [], parts = [], hold = null, wx = 80, t = 0, last = performance.now(), raf = 0, n = 0;
+    const pop = (b, count) => {
+      for (let k = 0; k < 8; k++) { const a = k / 8 * 6.283 + Math.random() * 0.4; parts.push({ x: b.x, y: b.y, vx: Math.cos(a) * (30 + b.r * 2), vy: Math.sin(a) * (30 + b.r * 2), life: 0.28, r: b.r }); }
+      if (count) { tally.popped++; n++; tick(6); ui.score(`Popped ${tally.popped}`); if (n % 10 === 0) ui.msg(`${n} popped. Keep going.`); }
+    };
+    cv.addEventListener('pointerdown', e => {
+      const [x, y] = pt(e);
+      const hit = bs.find(b => Math.hypot(b.x - x, b.y - y) <= b.r + 3);
+      if (hit) { bs.splice(bs.indexOf(hit), 1); pop(hit, true); return; }
+      try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+      wx = Math.max(14, Math.min(W - 14, x)); hold = { r: 2, t: 0 }; ui.msg('');
+    });
+    cv.addEventListener('pointermove', e => { if (hold) wx = Math.max(14, Math.min(W - 14, pt(e)[0])); });
+    const up = () => {
+      if (!hold) return;
+      if (hold.r >= 5) bs.push({ x: wx, y: H - 30 - hold.r, r: Math.round(hold.r), vx: (Math.random() - 0.5) * 8, ph: Math.random() * 6.28, age: 0 });
+      hold = null;
+    };
+    cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+
+    function frame(now) {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt;
+      if (hold) { hold.r += dt * (reduce ? 14 : 11); if (hold.r > 24) { pop({ x: wx, y: H - 30 - hold.r, r: 24 }, false); hold = null; ui.msg('Too much air.'); } }
+      bs.forEach(b => {
+        b.age += dt; b.y -= (9 + 80 / (b.r + 4)) * dt; b.x += (b.vx + Math.sin(t * 1.5 + b.ph) * 9) * dt;
+        if (b.x < b.r + 2) { b.x = b.r + 2; b.vx = Math.abs(b.vx); } if (b.x > W - b.r - 2) { b.x = W - b.r - 2; b.vx = -Math.abs(b.vx); }
+      });
+      bs = bs.filter(b => { if (b.age > 18 || b.y < b.r) { pop(b, false); return false; } return true; });
+      parts.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt; });
+      parts = parts.filter(p => p.life > 0);
+      g.clearRect(0, 0, W, H);
+      const drawB = (x, y, r) => {
+        x = Math.round(x); y = Math.round(y); r = Math.round(r);
+        pdisc(g, x, y, r - 1, 'rgba(8,12,223,.30)'); pring(g, x, y, r, '#fff');
+        g.fillStyle = '#fff'; g.fillRect(x - Math.round(r * 0.55), y - Math.round(r * 0.45), 2, 1); g.fillRect(x - Math.round(r * 0.45), y - Math.round(r * 0.6), 1, 2);
+        g.fillStyle = '#080CDF'; g.fillRect(x + Math.round(r * 0.35), y + Math.round(r * 0.5), 2, 1);
+      };
+      bs.forEach(b => drawB(b.x, b.y, b.r));
+      // the wand
+      const wxr = Math.round(wx); g.fillStyle = '#fff'; g.fillRect(wxr, H - 24, 1, 24); pring(g, wxr, H - 29, 5, '#fff');
+      if (hold) drawB(wx, H - 30 - hold.r + 3, hold.r);
+      g.fillStyle = '#fff'; parts.forEach(p => g.fillRect(Math.round(p.x), Math.round(p.y), 1, 1));
+      raf = requestAnimationFrame(frame);
+    }
+    function reset() { bs = []; parts = []; hold = null; n = 0; ui.msg('Blow some bubbles.'); ui.hint('Hold to blow, let go to float, tap to pop'); ui.score(tally.popped ? `Popped ${tally.popped}` : ''); }
+    reset(); raf = requestAnimationFrame(frame);
+    return { reset, stop() { cancelAnimationFrame(raf); } };
+  }
+
+  /* ---------------------------------------------------------
+     Penalty: five kicks. Press where you want it to go, let go to shoot.
+     Corners beat the keeper. Miss the frame and it is wide.
+     --------------------------------------------------------- */
+  function penalty(root) {
+    const W = 160, H = 120, GL = 40, GR = 120, GT = 22, GB = 58, SP = [80, 100], KICKS = 5;
+    const tally = penalty.tally || (penalty.tally = { goals: 0, shots: 0 });
+    const wrap = el('div', 'g g-coffee'), view = el('div', 'cf-view'), cv = el('canvas', 'cf-cv'), ticket = el('div', 'cf-ticket');
+    cv.width = W; cv.height = H; view.appendChild(cv); wrap.append(view, ticket); root.appendChild(wrap);
+    const g = cv.getContext('2d'), pt = canvasPt(cv, W, H);
+    let phase, results, aim, shot, keeper, t = 0, last = performance.now(), raf = 0, wait = 0, flash = 0;
+
+    function pips() {
+      ticket.innerHTML = '';
+      for (let i = 0; i < KICKS; i++) { const s = el('i', 'cf-t'); s.style.setProperty('--c', '#fff'); if (results[i] === true) s.classList.add('on'); else if (results[i] === false) { s.classList.add('off'); s.textContent = '×'; } ticket.appendChild(s); }
+    }
+    const down = e => {
+      if (phase === 'end') { reset(); return; }
+      if (phase !== 'aim') return;
+      try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+      aim = pt(e);
+    };
+    cv.addEventListener('pointerdown', down);
+    cv.addEventListener('pointermove', e => { if (aim) aim = pt(e); });
+    const release = e => { if (!aim) return; const a = e.type === 'pointerup' ? pt(e) : aim; aim = null; if (e.type === 'pointerup') shoot(a[0], a[1]); };
+    cv.addEventListener('pointerup', release); cv.addEventListener('pointercancel', release);
+
+    function shoot(x, y) {
+      const tx = x + (Math.random() - 0.5) * 10, ty = Math.min(GB - 1, y + (Math.random() - 0.5) * 8);
+      let out, dive;
+      const r = Math.random(), side = tx < 80 ? -1 : 1;
+      dive = r < 0.4 ? side : r < 0.8 ? -side : 0;
+      if (tx < GL - 3 || tx > GR + 3) out = 'wide';
+      else if (ty < GT - 3) out = 'over';
+      else if (Math.abs(tx - GL) <= 3 || Math.abs(tx - GR) <= 3 || Math.abs(ty - GT) <= 2) out = 'post';
+      else {
+        const reach = ty < GT + 10 ? 9 : 16, kx = 80 + dive * 34;
+        const bins = ty < GT + 10 && Math.abs(tx - 80) > 26;
+        out = !bins && Math.abs(tx - kx) <= reach ? 'saved' : (bins ? 'bins' : 'goal');
+      }
+      shot = { sx: SP[0], sy: SP[1], tx, ty, t: 0, out }; keeper = { dive, t: 0 }; phase = 'shot'; tick(10); ui.msg(''); ui.hint('');
+    }
+    function settle() {
+      const ok = shot.out === 'goal' || shot.out === 'bins'; results.push(ok); tally.shots++; if (ok) tally.goals++;
+      ui.msg({ goal: 'Goal!', bins: 'Top bins!', saved: 'Saved!', wide: 'Wide.', over: 'Over the bar.', post: 'Off the post!' }[shot.out]);
+      tick(ok ? 18 : 8); if (ok) flash = 0.4; pips(); ui.score(`${results.filter(Boolean).length} of ${KICKS}`); phase = 'result'; wait = 1.3;
+    }
+    function next() {
+      if (results.length >= KICKS) {
+        const n = results.filter(Boolean).length;
+        ui.msg(['Rough day at the spot.', 'One. Keep practising.', 'Two. Keep practising.', 'Three. Decent.', 'Four out of five. Clinical.', 'Five from five. Ice cold.'][n]); ui.hint('Tap, or hit Again, for another five'); phase = 'end'; return;
+      }
+      phase = 'aim'; shot = null; keeper = { dive: 0, t: 0 }; ui.msg(`Kick ${results.length + 1} of ${KICKS}.`); ui.hint('Press where you want it, let go to shoot');
+    }
+    const ease = k => 1 - (1 - k) * (1 - k);
+
+    function drawKeeper() {
+      const kx = Math.round(80 + (keeper.dive ? keeper.dive * 34 * ease(Math.min(1, keeper.t / 0.4)) : 0)), p = Math.min(1, keeper.t / 0.4);
+      if (!keeper.dive || keeper.t === 0) {
+        g.fillStyle = '#8A9095'; g.fillRect(kx - 3, GB - 5, 2, 5); g.fillRect(kx + 1, GB - 5, 2, 5);
+        g.fillStyle = '#080CDF'; g.fillRect(kx - 4, GB - 13, 8, 8); g.fillRect(kx - 7, GB - 14, 3, 6); g.fillRect(kx + 4, GB - 14, 3, 6);
+        g.fillStyle = '#fff'; g.fillRect(kx - 2, GB - 18, 4, 4); g.fillRect(kx - 8, GB - 16, 3, 3); g.fillRect(kx + 5, GB - 16, 3, 3);
+      } else {
+        const s = keeper.dive, y = Math.round(GB - 11 - Math.sin(p * Math.PI) * 4);
+        g.fillStyle = '#8A9095'; g.fillRect(kx - s * 12, y + 1, 6, 3);
+        g.fillStyle = '#080CDF'; g.fillRect(kx - 6, y - 2, 12, 7);
+        g.fillStyle = '#fff'; g.fillRect(kx + s * 6 - (s < 0 ? 2 : 0), y - 3, 4, 4); g.fillRect(kx + s * 10 - (s < 0 ? 2 : 0), y - 5 - (p > 0.5 ? 1 : 0), 4, 3);
+      }
+    }
+    function frame(now) {
+      const dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt; if (flash > 0) flash -= dt;
+      if (phase === 'shot') { shot.t += dt; keeper.t += dt; if (shot.t >= 0.5) settle(); }
+      else if (phase === 'result') { keeper.t += dt; wait -= dt; if (wait <= 0) next(); }
+      g.clearRect(0, 0, W, H);
+      // pitch: goal line, box, spot
+      g.fillStyle = 'rgba(255,255,255,.35)'; g.fillRect(8, GB, W - 16, 1); g.fillRect(24, GB, 1, 58); g.fillRect(W - 25, GB, 1, 58); g.fillRect(24, GB + 58, W - 48, 1); g.fillRect(48, GB, 1, 22); g.fillRect(W - 49, GB, 1, 22); g.fillRect(48, GB + 22, W - 96, 1);
+      g.fillStyle = '#fff'; g.fillRect(SP[0] - 1, SP[1] + 4, 2, 1);
+      // net
+      g.fillStyle = flash > 0 ? 'rgba(255,255,255,.55)' : 'rgba(255,255,255,.18)';
+      for (let x = GL + 4; x < GR; x += 5) g.fillRect(x, GT, 1, GB - GT); for (let y = GT + 4; y < GB; y += 5) g.fillRect(GL, y, GR - GL, 1);
+      drawKeeper();
+      g.fillStyle = '#fff'; g.fillRect(GL - 1, GT - 1, 2, GB - GT + 2); g.fillRect(GR - 1, GT - 1, 2, GB - GT + 2); g.fillRect(GL - 1, GT - 1, GR - GL + 2, 2);
+      // ball
+      let bx = SP[0], by = SP[1], br = 3;
+      if (shot) {
+        const k = Math.min(1, shot.t / 0.5), e2 = ease(k); bx = shot.sx + (shot.tx - shot.sx) * e2; by = shot.sy + (shot.ty - shot.sy) * e2 - Math.sin(k * Math.PI) * 5; br = Math.max(1, Math.round(3 - 1.6 * e2));
+        if (shot.out === 'saved' && phase === 'result') by += Math.min(12, Math.max(0, 1.3 - wait) * 20);
+      }
+      pdisc(g, Math.round(bx), Math.round(by), br, '#fff'); if (br >= 2) { g.fillStyle = '#2B2B2B'; g.fillRect(Math.round(bx) - 1, Math.round(by), 1, 1); g.fillRect(Math.round(bx) + 1, Math.round(by) - 1, 1, 1); }
+      // aim
+      if (aim && phase === 'aim') { const ax = Math.round(aim[0]), ay = Math.round(aim[1]); g.fillStyle = '#080CDF'; g.fillRect(ax - 5, ay, 4, 1); g.fillRect(ax + 2, ay, 4, 1); g.fillRect(ax, ay - 5, 1, 4); g.fillRect(ax, ay + 2, 1, 4); g.fillStyle = '#fff'; g.fillRect(ax, ay, 1, 1); }
+      raf = requestAnimationFrame(frame);
+    }
+    function reset() { results = []; aim = null; shot = null; keeper = { dive: 0, t: 0 }; flash = 0; pips(); ui.score(''); next(); }
+    reset(); raf = requestAnimationFrame(frame);
+    return { reset, stop() { cancelAnimationFrame(raf); } };
+  }
+
   /* ---------------------------------------------------------
      The surprise: nothing says what is in here. One button picks a
      game at random (never the same one twice running).
      --------------------------------------------------------- */
-  const GAMES = { connect4, wordsearch, snake, wordle, noughts, coffee, plantain };
+  const GAMES = { connect4, wordsearch, snake, wordle, noughts, coffee, plantain, bubbles, penalty };
   let NAMES = Object.keys(GAMES);
   const againBtn = $('[data-restart]'), nextBtn = $('[data-next]'), countEl = $('[data-count]');
   let cur = null, last = '', count = 0;
