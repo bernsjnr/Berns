@@ -846,3 +846,7 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 .wm .s{font-family:'scale-variable','Helvetica Neue',Helvetica,Arial,sans-serif;font-variation-settings:"wdth" 125,"wght" 400;font-weight:400;text-transform:uppercase;margin-left:.3em}
 .wm.stack{flex-direction:column;align-items:flex-start}
 .wm.stack .s{font-size:.99em;margin-left:.022em;margin-top:-.101em;font-variation-settings:"wdth" 117,"wght" 400}
+/* Studio signature: stacked wordmark over WORK, inline wordmark in the footers */
+.wk-mark{margin:0 0 calc(28 * var(--u));font-size:calc(40 * var(--u))}
+.foot .wm{font-size:1em;vertical-align:baseline}
+@media (max-width:760px){.wk-mark{font-size:26px;margin-bottom:16px}}
