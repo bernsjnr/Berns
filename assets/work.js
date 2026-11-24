@@ -2,7 +2,8 @@
    BERNS: Work page (v9, Nov 2026). The file stack.
    Every project is a file in its own colour, stacked newest first; each title peeks out
    above the next file. One file is open at a time (media, one line, Read the case study).
-   Tap or click a file to pull it open, tap the open file to read its case study.
+   Desktop: click a file to pull it open, click the open file to read its case study.
+   Phones: the pile stays still; one tap on any file opens its case study.
    On desktop a file lifts out of the pile as you hover it. See all opens every file.
    Filters: discipline (All, Animation, Design, Art direction) and who it was for
    (The Guardian, Studio clients, Community, Personal). Content: assets/data.js.
@@ -29,6 +30,7 @@
   const haptic = ms => { if (window.BERNS_HAPTIC) window.BERNS_HAPTIC(ms); };
   const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
+  const touch = matchMedia('(hover: none), (pointer: coarse)');
   let tag = 'All', folder = null, all = false, cur = null, first = true;
 
   /* ---------- Filters ---------- */
@@ -134,6 +136,8 @@
     const li = a.parentElement;
     if (all || li.classList.contains('open')) return;          /* open file: go to the case study */
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; /* new tab: let it through */
+    /* Phones and tablets: one tap goes straight to the case study. Nothing in the pile moves. */
+    if (touch.matches) { haptic(12); return; }
     e.preventDefault();
     open(li, true);
   });
