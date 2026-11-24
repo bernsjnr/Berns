@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
-<link rel="stylesheet" href="../assets/core.css?v=95">
+<link rel="stylesheet" href="../assets/core.css?v=96">
 <script src="../assets/motion.js?v=1"></script>
 </head>
 <body data-base="../" data-page="work" class="scroll work">
@@ -49,33 +49,34 @@
 
 <main class="wk">
   <header class="wk-head">
-    <p class="wk-mark" data-reveal><span class="wm stack" role="img" aria-label="Berns Studios"><span class="b" aria-hidden="true">Berns</span><span class="s" aria-hidden="true">Studios</span></span></p>
     <h1 class="wk-title scale" data-reveal>Work</h1>
-    <!-- Filters (built in work.js): what it is, then who it was for -->
-    <div class="wk-filters" data-reveal="2">
-      <div class="filters" data-filters role="group" aria-label="Filter by discipline"></div>
-      <div class="froms mono" data-froms role="group" aria-label="Filter by who it was for"></div>
-    </div>
   </header>
 
-  <div class="wk-label" data-reveal="3">
+  <div class="wk-label" data-reveal="2">
     <h2 class="wk-h"><span data-label>Recently added</span> <span class="wk-count" data-count></span></h2>
-    <button type="button" class="wk-all mono" data-all aria-pressed="false">See all</button>
+    <div class="wk-tools mono">
+      <!-- One Filter button; the dropdown holds what it is and who it was for (built in work.js) -->
+      <div class="flt" data-flt>
+        <button type="button" class="flt-btn" data-flt-btn aria-expanded="false" aria-controls="flt-panel">Filter<span class="flt-n" data-flt-n></span><span class="pm" aria-hidden="true"></span></button>
+        <div class="flt-panel" id="flt-panel" data-flt-panel hidden></div>
+      </div>
+      <button type="button" class="wk-all" data-all aria-pressed="false">See all</button>
+    </div>
   </div>
 
-  <!-- The stack: one file per project, newest first. Tap a file to pull it open, tap again to read it. -->
+  <!-- The stack: one file per project, newest first, all closed. Tap a file to open its preview, tap again to read the case study. -->
   <ol class="stack" data-stack aria-label="Projects"></ol>
   <p class="wk-empty" data-empty hidden><span>Nothing here yet.</span> <button type="button" class="mono" data-clear>Clear filters</button></p>
 </main>
 
 <footer class="foot mono">
-  <span>Bernard Bannor / <span class="wm" role="img" aria-label="Berns Studios"><span class="b" aria-hidden="true">Berns</span><span class="s" aria-hidden="true">Studios</span></span></span>
+  <span>Bernard Bannor</span>
   <a href="#top" onclick="scrollTo({top:0,behavior:'smooth'});return false">Back to top &uarr;</a>
 </footer>
 
 <script src="../assets/data.js"></script>
 <script src="../assets/core.js?v=48"></script>
-<script src="../assets/work.js?v=41"></script>
+<script src="../assets/work.js?v=42"></script>
 <i id="ready" hidden></i>
 </body>
 </html>
