@@ -203,7 +203,7 @@ html.menu-open .bar-right{padding-top:0}
 .mark{display:flex;flex-direction:column;gap:calc(10 * var(--u))}
 .mark-logo{height:calc(64 * var(--u));display:flex;align-items:flex-end;margin-bottom:calc(22 * var(--u))}
 .mark-logo svg{display:block;height:100%;width:auto;max-width:100%}
-.mark-logo--bs svg{height:calc(26 * var(--u))}
+.mark-logo--bs .wm{font-size:calc(33 * var(--u))}
 .mark-role{font-family:var(--f-head);font-weight:700;font-size:calc(34 * var(--u));line-height:1;letter-spacing:-.02em}
 .mark-meta{font-size:calc(16 * var(--u));line-height:1.3}
 a.mark .mark-role{text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:.06em;text-underline-offset:.14em;transition:text-decoration-color .2s var(--out)}
@@ -437,7 +437,7 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
   .marks{grid-template-columns:minmax(0,1fr);gap:48px;margin-top:56px;max-width:none}
   .mark{align-items:center;gap:6px}
   .mark-logo{height:44px;margin-bottom:14px;justify-content:center}
-  .mark-logo--bs svg{height:18px}
+  .mark-logo--bs .wm{font-size:25px}
   .mark-role{font-size:22px}
   .mark-meta,.hosted li .mono,.hosted-n{font-size:11px}
   .groups{margin-top:48px;text-align:left}
@@ -838,3 +838,11 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
   .cs-pin{position:relative;min-height:100svh}
   .cs-rise,.cs-hero > *{animation:none;opacity:1;transform:none}
 }
+
+/* Berns Studios wordmark (2026): live Scale, tracking 0. Ink or white only, never blue. */
+.wm{display:inline-flex;align-items:baseline;line-height:1;white-space:nowrap;color:inherit;letter-spacing:0}
+.wm .b,.wm .s{display:block;flex:none}
+.wm .b{font-family:'scale-variable','Helvetica Neue',Helvetica,Arial,sans-serif;font-variation-settings:"wdth" 125,"wght" 900;font-weight:900;text-transform:uppercase}
+.wm .s{font-family:'scale-variable','Helvetica Neue',Helvetica,Arial,sans-serif;font-variation-settings:"wdth" 125,"wght" 400;font-weight:400;text-transform:uppercase;margin-left:.3em}
+.wm.stack{flex-direction:column;align-items:flex-start}
+.wm.stack .s{font-size:.99em;margin-left:.022em;margin-top:-.101em;font-variation-settings:"wdth" 117,"wght" 400}
