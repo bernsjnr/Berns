@@ -1,212 +1,168 @@
 /* =========================================================
-   BERNS: Work page (v9, Nov 2026)
-   A swipeable stack of cards (Apple Music style coverflow), filters
-   (All, Animation, Design, Art direction) and a Folders view.
-   Content comes from assets/data.js (projects: tags, folder, bg, ink).
-   Swipe or drag, arrow keys, trackpad/wheel, or tap a side card.
+   BERNS: Work page (v9, Nov 2026). The file stack.
+   Every project is a file in its own colour, stacked newest first; each title peeks out
+   above the next file. One file is open at a time (media, one line, Read the case study).
+   Tap or click a file to pull it open, tap the open file to read its case study.
+   On desktop a file lifts out of the pile as you hover it. See all opens every file.
+   Filters: discipline (All, Animation, Design, Art direction) and who it was for
+   (The Guardian, Studio clients, Community, Personal). Content: assets/data.js.
    ========================================================= */
 (() => {
   const D = window.BERNS;
-  const root = document.documentElement;
   const base = document.body.dataset.base || '';
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const $ = s => document.querySelector(s);
 
-  const stage = $('[data-stage]');
-  const deck = $('[data-deck]');
-  const foldersEl = $('[data-folders]');
+  const stack = $('[data-stack]');
   const filtersEl = $('[data-filters]');
-  const viewBtns = [...document.querySelectorAll('[data-view]')];
-  const chip = $('[data-folder-chip]');
-  const cap = {
-    n: $('[data-cap-n]'), name: $('[data-cap-name]'), meta: $('[data-cap-meta]'),
-    link: $('[data-cap-link]'), count: $('[data-cap-count]')
-  };
+  const fromsEl = $('[data-froms]');
+  const label = $('[data-label]');
+  const count = $('[data-count]');
+  const allBtn = $('[data-all]');
+  const empty = $('[data-empty]');
 
   const TAGS = ['All', 'Animation', 'Design', 'Art direction'];
-  const FOLDERS = [...new Set(D.projects.map(p => p.folder))];
-  const tickHaptic = () => { if (window.BERNS_HAPTIC) window.BERNS_HAPTIC(10); };
+  const ORDER = ['The Guardian', 'Studio clients', 'Community', 'Personal'];
+  const FOLDERS = [...new Set(D.projects.map(p => p.folder))].sort((a, b) => (ORDER.indexOf(a) + 99) % 99 - (ORDER.indexOf(b) + 99) % 99);
   const pad = n => String(n).padStart(2, '0');
   const url = p => `project.html?p=${encodeURIComponent(p.id)}`;
+  const haptic = ms => { if (window.BERNS_HAPTIC) window.BERNS_HAPTIC(ms); };
+  const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  let tag = 'All', folder = null, view = 'cards';
-  let list = [], cards = [];
-  let pos = 0, target = 0, raf = 0, active = -1;
+  let tag = 'All', folder = null, all = false, cur = null, first = true;
 
   /* ---------- Filters ---------- */
   filtersEl.innerHTML = TAGS.map((t, i) =>
     `<button type="button" class="f" data-tag="${t}" aria-pressed="${t === tag}">${t}</button>${i < TAGS.length - 1 ? '<span aria-hidden="true">, </span>' : ''}`).join('');
+  fromsEl.innerHTML = FOLDERS.map(f => `<button type="button" data-folder="${esc(f)}" aria-pressed="false">${esc(f)}</button>`).join('');
   filtersEl.addEventListener('click', e => {
-    const b = e.target.closest('[data-tag]'); if (!b) return;
-    tag = b.dataset.tag; setView('cards'); build();
+    const b = e.target.closest('[data-tag]'); if (!b || b.dataset.tag === tag) return;
+    tag = b.dataset.tag; build();
   });
-  chip.addEventListener('click', () => { folder = null; build(); });
-  viewBtns.forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+  fromsEl.addEventListener('click', e => {
+    const b = e.target.closest('[data-folder]'); if (!b) return;
+    folder = folder === b.dataset.folder ? null : b.dataset.folder; build();
+  });
+  $('[data-clear]').addEventListener('click', () => { tag = 'All'; folder = null; build(); });
+  allBtn.addEventListener('click', () => {
+    all = !all;
+    allBtn.setAttribute('aria-pressed', all);
+    allBtn.textContent = all ? 'Stack' : 'See all';
+    stack.classList.toggle('all', all);
+    [...stack.children].forEach(li => li.classList.toggle('open', all || li === cur));
+    play();
+  });
 
-  function setView(v) {
-    view = v;
-    viewBtns.forEach(b => b.setAttribute('aria-pressed', b.dataset.view === v));
-    document.body.dataset.workView = v;
-    if (v === 'folders') { pauseAll(); buildFolders(); }
+  /* ---------- Files ---------- */
+  function media(p) {
+    if (p.video) return `<video muted loop playsinline preload="none" poster="${base + (p.poster || p.img)}" data-src="${base + p.video}"></video>`;
+    return `<img src="${base + (p.img || p.cover)}" alt="" loading="lazy" draggable="false">`;
+  }
+  function file(p, i) {
+    const n = pad(D.projects.indexOf(p) + 1);
+    const side = [p.discipline, p.year].filter(Boolean).map(esc).join(' &middot; ');
+    return `<li class="file" style="--bg:${p.bg};--fg:${p.ink ? 'var(--ink)' : 'var(--white)'};--i:${i}">
+      <a class="file-a" href="${url(p)}" data-vt-case="${p.id}" draggable="false">
+        <span class="file-head">
+          <span class="file-title">${esc(p.name)}</span>
+          <span class="file-side mono"><span class="file-disc">${side}</span><span class="file-n">${n}</span></span>
+        </span>
+        <span class="file-body"><span class="file-in"><span class="file-grid">
+          <span class="file-media">${media(p)}</span>
+          <span class="file-text">
+            <span class="file-sum">${esc(p.summary || p.discipline)}</span>
+            <span class="file-foot">
+              <span class="file-meta mono">${[p.client, p.year].filter(Boolean).map(esc).join(' &middot; ') || esc(p.discipline)}</span>
+              <span class="file-go mono"><span class="go">Read the case study</span></span>
+            </span>
+          </span>
+        </span></span></span>
+        <span class="file-tail" aria-hidden="true"><span class="file-peek mono">${esc(p.summary || '')}</span></span>
+      </a>
+    </li>`;
   }
 
-  /* ---------- Cards ---------- */
-  function media(p, eager) {
-    const src = base + (p.cover || p.poster || p.img);
-    return `<img src="${src}" alt="" ${eager ? '' : 'loading="lazy"'} draggable="false">` +
-      (p.video && !p.cover ? `<video muted loop playsinline preload="none" poster="${src}" data-src="${base + p.video}"></video>` : '');
-  }
   function build() {
-    list = D.projects.filter(p => (tag === 'All' || p.tags.includes(tag)) && (!folder || p.folder === folder));
+    const list = D.projects.filter(p => (tag === 'All' || p.tags.includes(tag)) && (!folder || p.folder === folder));
     [...filtersEl.querySelectorAll('[data-tag]')].forEach(b => b.setAttribute('aria-pressed', b.dataset.tag === tag));
-    chip.hidden = !folder;
-    if (folder) chip.querySelector('span').textContent = folder;
-    deck.innerHTML = list.map((p, i) => `
-      <a class="card${p.ink ? ' card--ink' : ''}" href="${url(p)}" style="--bg:${p.bg}" data-i="${i}" aria-label="${p.name}${p.client ? ', ' + p.client : ''}" draggable="false">
-        <span class="card-n mono">${pad(i + 1)}</span>
-        <span class="card-media">${media(p, i < 3)}</span>
-        <span class="card-name">${p.name}</span>
-        <span class="card-tag mono">${p.discipline}</span>
-      </a>`).join('');
-    cards = [...deck.children];
-    pos = target = 0; active = -1;
-    if (!list.length) deck.innerHTML = '<p class="empty mono">Nothing here yet</p>';
-    layout(true); caption();
+    [...fromsEl.querySelectorAll('[data-folder]')].forEach(b => b.setAttribute('aria-pressed', b.dataset.folder === folder));
+    label.textContent = tag === 'All' && !folder ? 'Recently added' : [tag === 'All' ? '' : tag, folder || ''].filter(Boolean).join(', ');
+    count.textContent = `(${list.length})`;
+    empty.hidden = !!list.length;
+    stack.innerHTML = list.map(file).join('');
+    /* open the newest file, or the one you just came back from (then skip the sweep, so the case study can shrink back into it) */
+    const back = first && window.BERNS_FROM ? window.BERNS_FROM() : null;
+    stack.classList.remove('in');
+    if (!back) { void stack.offsetWidth; stack.classList.add('in'); }
+    const lis = [...stack.children];
+    cur = lis.find(li => li.querySelector('.file-a').dataset.vtCase === back) || lis[0] || null;
+    lis.forEach(li => li.classList.toggle('open', all || li === cur));
+    if (first && back && cur && cur !== lis[0]) {
+      const r = cur.getBoundingClientRect();
+      if (r.top > innerHeight * .6) scrollTo(0, scrollY + r.top - innerHeight * .25);
+    }
+    first = false;
+    watch(); play();
   }
 
-  /* place every card around the current position: centre flat, neighbours turned away into depth */
-  /* the cards loop: every card is placed by its shortest distance round the ring from the current position */
-  const n = () => cards.length;
-  const idx = () => n() ? ((Math.round(pos) % n()) + n()) % n() : 0;
-  const wrap = d => { const m = n(); d = ((d % m) + m) % m; return d >= m / 2 ? d - m : d; };
-  function layout() {
-    const w = deck.clientWidth, m = n();
-    cards.forEach((c, i) => {
-      const d = wrap(i - pos), a = Math.abs(d), s = Math.sign(d), near = Math.min(a, 1), far = Math.max(a - 1, 0);
-      const x = s * (near * 0.74 + far * 0.27) * w;
-      const z = -(near * 0.5 + far * 0.08) * w;
-      const ry = -s * near * 64;
-      c.style.transform = `translate3d(${x.toFixed(1)}px,0,${z.toFixed(1)}px) rotateY(${ry.toFixed(2)}deg)`;
-      c.style.zIndex = 100 - Math.round(a * 10);
-      c.style.setProperty('--dim', (near * 0.42 + far * 0.1).toFixed(3));
-      /* fade out at the far edge, where a card crosses from one side of the ring to the other */
-      const op = Math.max(0, Math.min(1, (m / 2 - a) / 0.6, (4.6 - a) / 0.6));
-      c.style.opacity = m < 3 ? (a < 1.2 ? 1 : 0) : op;
-      c.style.pointerEvents = op < 0.5 ? 'none' : '';
-      c.tabIndex = idx() === i ? 0 : -1;
+  /* Pull a file open. The file you tapped stays under your finger while the others slide,
+     then the page eases down if the open file runs off the bottom. */
+  function open(li, anchor) {
+    if (li === cur || all) return;
+    const top0 = li.getBoundingClientRect().top;
+    if (cur) cur.classList.remove('open');
+    li.classList.add('open'); cur = li;
+    haptic(12);
+    play();
+    if (!anchor || reduce) return;
+    const t0 = performance.now();
+    const step = () => {
+      const d = li.getBoundingClientRect().top - top0;
+      if (Math.abs(d) > .5) scrollBy(0, d);
+      if (performance.now() - t0 < 820) requestAnimationFrame(step);
+      else {
+        const r = li.getBoundingClientRect(), barH = 96;
+        const over = r.bottom - innerHeight + 24;
+        if (over > 0) scrollBy({ top: Math.min(over, r.top - barH), behavior: 'smooth' });
+      }
+    };
+    requestAnimationFrame(step);
+  }
+
+  stack.addEventListener('click', e => {
+    const a = e.target.closest('.file-a'); if (!a) return;
+    const li = a.parentElement;
+    if (all || li.classList.contains('open')) return;          /* open file: go to the case study */
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; /* new tab: let it through */
+    e.preventDefault();
+    open(li, true);
+  });
+  /* Keyboard: a file opens as you tab onto it, Enter reads it */
+  stack.addEventListener('focusin', e => {
+    const a = e.target.closest('.file-a');
+    if (a && a.matches(':focus-visible')) open(a.parentElement, false);
+  });
+  stack.addEventListener('dragstart', e => e.preventDefault());
+
+  /* Only open files on screen play their loop */
+  let io = null;
+  const seen = new Set();
+  function watch() {
+    if (io) io.disconnect();
+    seen.clear();
+    if (!('IntersectionObserver' in window)) return;
+    io = new IntersectionObserver(es => { es.forEach(e => e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)); play(); }, { threshold: .2 });
+    stack.querySelectorAll('video').forEach(v => io.observe(v));
+  }
+  function play() {
+    stack.querySelectorAll('video').forEach(v => {
+      const on = !reduce && v.closest('.file').classList.contains('open') && (seen.has(v) || !io);
+      if (on) {
+        if (!v.src) v.src = v.dataset.src;
+        v.play().then(() => v.classList.add('on')).catch(() => {});
+      } else if (!v.paused) v.pause();
     });
   }
-  function tick() {
-    const d = target - pos;
-    pos = reduce || Math.abs(d) < 0.001 ? target : pos + d * 0.16;
-    layout();
-    const i = idx();
-    if (i !== active) { active = i; caption(); tickHaptic(); }
-    if (pos !== target) raf = requestAnimationFrame(tick); else { raf = 0; playActive(); }
-  }
-  function go(i) {
-    if (!list.length) return;
-    target = list.length < 2 ? 0 : i;
-    pauseAll();
-    if (!raf) raf = requestAnimationFrame(tick);
-  }
-  function caption() {
-    const p = list[idx()];
-    if (!p) { cap.name.textContent = ''; cap.meta.textContent = ''; cap.count.textContent = '00 / 00'; cap.link.hidden = true; return; }
-    cap.name.textContent = p.name;
-    cap.meta.textContent = [p.client, p.discipline, p.year].filter(Boolean).join(' · ');
-    cap.link.href = url(p); cap.link.hidden = false;
-    cap.count.textContent = `${pad(idx() + 1)} / ${pad(list.length)}`;
-  }
-
-  /* only the card in the middle plays its loop */
-  function pauseAll() { deck.querySelectorAll('video').forEach(v => { v.pause(); v.classList.remove('on'); }); }
-  function playActive() {
-    if (reduce || view !== 'cards') return;
-    const v = cards[idx()] && cards[idx()].querySelector('video');
-    if (!v) return;
-    if (!v.src) v.src = v.dataset.src;
-    v.play().then(() => v.classList.add('on')).catch(() => {});
-  }
-
-  /* ---------- Input: drag / swipe, wheel, keys, tap ---------- */
-  let drag = null;
-  stage.addEventListener('pointerdown', e => {
-    if (view !== 'cards' || e.button > 0) return;
-    drag = { x: e.clientX, start: pos, t: performance.now(), moved: false, last: e.clientX, v: 0, id: e.pointerId };
-  });
-  addEventListener('pointermove', e => {
-    if (!drag) return;
-    const dx = e.clientX - drag.x;
-    if (!drag.moved && Math.abs(dx) > 6) { drag.moved = true; stage.setPointerCapture(drag.id); stage.classList.add('dragging'); pauseAll(); }
-    if (!drag.moved) return;
-    const now = performance.now();
-    drag.v = (e.clientX - drag.last) / Math.max(1, now - drag.t); drag.last = e.clientX; drag.t = now;
-    const step = deck.clientWidth * 0.5;
-    pos = target = list.length < 2 ? 0 : drag.start - dx / step;
-    layout();
-    const i = idx(); if (i !== active) { active = i; caption(); tickHaptic(); }
-  });
-  const end = () => {
-    if (!drag) return;
-    stage.classList.remove('dragging');
-    /* a quick flick carries one extra card, never more */
-    if (drag.moved) go(Math.round(pos) - Math.max(-1, Math.min(1, Math.round(drag.v * 1.2))));
-    setTimeout(() => { drag = null; }, 0);
-  };
-  addEventListener('pointerup', end);
-  addEventListener('pointercancel', end);
-
-  /* a drag never opens a card; tapping a side card brings it to the middle; tapping the middle card opens it */
-  deck.addEventListener('click', e => {
-    const c = e.target.closest('.card'); if (!c) return;
-    if (drag && drag.moved) { e.preventDefault(); return; }
-    const i = +c.dataset.i;
-    if (i !== idx()) { e.preventDefault(); go(Math.round(pos) + Math.round(wrap(i - Math.round(pos)))); }
-  });
-  deck.addEventListener('dragstart', e => e.preventDefault());
-
-  let acc = 0, accT = 0;
-  stage.addEventListener('wheel', e => {
-    if (view !== 'cards') return;
-    const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    e.preventDefault();
-    const now = performance.now(); if (now - accT > 220) acc = 0; accT = now;
-    acc += d;
-    if (Math.abs(acc) > 70) { go(Math.round(target) + Math.sign(acc)); acc = 0; }
-  }, { passive: false });
-
-  addEventListener('keydown', e => {
-    if (view !== 'cards' || root.classList.contains('menu-open')) return;
-    if (e.target.closest && e.target.closest('input,textarea')) return;
-    if (e.key === 'ArrowRight') { e.preventDefault(); go(Math.round(target) + 1); }
-    else if (e.key === 'ArrowLeft') { e.preventDefault(); go(Math.round(target) - 1); }
-  });
-  $('[data-prev]').addEventListener('click', () => go(Math.round(target) - 1));
-  $('[data-next]').addEventListener('click', () => go(Math.round(target) + 1));
-  addEventListener('resize', () => layout());
-
-  /* ---------- Folders: a stack of sleeves per folder; open one to swipe through it ---------- */
-  function buildFolders() {
-    foldersEl.innerHTML = FOLDERS.map(f => {
-      const ps = D.projects.filter(p => p.folder === f);
-      const top = ps[0];
-      return `<button type="button" class="folder" data-folder="${f}">
-        <span class="folder-stack" aria-hidden="true">
-          ${ps.slice(1, 3).reverse().map((p, k) => `<span class="sheet sheet--${k}" style="--bg:${p.bg}"></span>`).join('')}
-          <span class="sheet-top" style="--bg:${top.bg}"><img src="${base + (top.cover || top.poster || top.img)}" alt="" loading="lazy"></span>
-        </span>
-        <span class="folder-name">${f}</span>
-        <span class="folder-count mono">${pad(ps.length)} ${ps.length === 1 ? 'project' : 'projects'}</span>
-      </button>`;
-    }).join('');
-  }
-  foldersEl.addEventListener('click', e => {
-    const b = e.target.closest('[data-folder]'); if (!b) return;
-    folder = b.dataset.folder; tag = 'All'; setView('cards'); build();
-  });
 
   build();
-  setView('cards');
-  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => layout());
 })();

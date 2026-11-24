@@ -71,7 +71,7 @@ html.menu-open .menu li:nth-child(4){transition-delay:.09s}
 html.menu-open .menu li:nth-child(5){transition-delay:.12s}
 .menu a{display:flex;align-items:flex-start;gap:calc(18 * var(--u));font-size:min(calc(68 * var(--u)),8vw);line-height:.92;padding:.04em 0}
 .menu .t{text-decoration-line:underline;text-decoration-color:transparent;text-decoration-thickness:.07em;text-underline-offset:.08em;transition:text-decoration-color .15s var(--out)}
-.menu a:hover .t,.menu a:focus-visible .t,.menu a[aria-current="page"] .t{text-decoration-color:currentColor}
+.menu a:hover .t,.menu a:focus-visible .t,.menu a[aria-current] .t{text-decoration-color:currentColor}
 .menu .n{font-size:max(11px,calc(18 * var(--u)));line-height:1;padding-top:.3em}
 
 /* ---------- Pixel cursor (classic set, 75% of the old size) ---------- */
@@ -289,16 +289,12 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
 .foot{display:flex;justify-content:space-between;gap:16px;padding:0 var(--hx) calc(40 * var(--u));font-size:calc(14 * var(--u))}
 
 /* =========================================================
-   Work: one screen. Filters on top, a swipeable stack of cards in the
-   middle (centre card flat, neighbours turned away), caption underneath.
+   Shared controls: comma filters, chips, mono switches, captions, round arrows
+   (Work, Shop, Print page, Surprise)
    ========================================================= */
-body.work{height:100vh;height:100svh;overflow:hidden}
-.work-main{height:100%;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr) auto;padding:calc(132 * var(--u)) var(--hx) calc(40 * var(--u))}
-.work-top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px}
-.work-filters{min-width:0;display:flex;align-items:baseline;flex-wrap:wrap;gap:12px 20px}
 .filters{font-family:var(--f-head);font-weight:700;font-size:calc(44 * var(--u));line-height:1;letter-spacing:-.02em}
 .filters .f{font:inherit;letter-spacing:inherit;padding:0 .06em;transition:background-color .2s var(--out)}
-.filters .f[aria-pressed="true"]{background:var(--blue)}
+.filters .f[aria-pressed="true"]{background:var(--blue);color:var(--white)}
 .filters .f:hover{text-decoration:underline;text-decoration-thickness:.06em;text-underline-offset:.14em}
 .chip{display:inline-flex;align-items:center;gap:.6em;font-size:calc(14 * var(--u));line-height:1;padding:.7em 1.1em;border:1px solid currentColor;border-radius:999px}
 .chip:hover{background:var(--white);color:var(--ink)}
@@ -307,26 +303,8 @@ body.work{height:100vh;height:100svh;overflow:hidden}
 .views button{padding:4px 0;border-bottom:1px solid transparent}
 .views button[aria-pressed="true"]{border-bottom-color:currentColor}
 .views .chip{padding:.7em 1.1em;border:1px solid currentColor}
-
 .stage{position:relative;min-height:0;perspective:calc(1800 * var(--u));touch-action:pan-y;user-select:none;-webkit-user-select:none}
-.deck{position:absolute;left:50%;top:50%;width:min(calc(420 * var(--u)),58vw);aspect-ratio:4/5;max-height:94%;transform:translate(-50%,-50%);transform-style:preserve-3d}
-.deck .card{position:absolute;inset:0;display:flex;flex-direction:column;border-radius:16px;overflow:hidden;background:var(--bg);color:var(--white);
-  will-change:transform;-webkit-user-drag:none}
-.deck .card::after{content:'';position:absolute;inset:0;background:var(--ink);opacity:var(--dim,0);pointer-events:none}
-.deck .card{color:var(--white)}
-.deck .card::before{content:'';position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(to top,rgba(26,26,26,.9) 0%,rgba(26,26,26,.55) 22%,rgba(26,26,26,0) 48%),linear-gradient(to bottom,rgba(26,26,26,.45) 0%,rgba(26,26,26,0) 18%)}
-.card-n,.card-name,.card-tag{z-index:2;opacity:calc(1 - var(--dim,0) * 2.4)}
-.card-n{position:absolute;top:calc(20 * var(--u));left:calc(22 * var(--u));font-size:calc(13 * var(--u));line-height:1;z-index:1}
-.card-media{position:absolute;inset:0;display:block}
-.card-media img,.card-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
-.card-media video{opacity:0;transition:opacity .25s var(--out)}
-.card-media video.on{opacity:1}
-.card-name{position:absolute;left:calc(22 * var(--u));right:calc(22 * var(--u));bottom:calc(46 * var(--u));font-family:var(--f-head);font-weight:700;font-size:calc(30 * var(--u));line-height:1;letter-spacing:-.02em}
-.card-tag{position:absolute;left:calc(22 * var(--u));bottom:calc(22 * var(--u));font-size:calc(12 * var(--u));line-height:1}
-.stage.dragging .card{cursor:grabbing}
 .empty{position:absolute;inset:0;display:grid;place-items:center;font-size:14px}
-
-.work-cap{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;align-items:center;gap:calc(32 * var(--u));padding-top:calc(24 * var(--u))}
 .cap-name{font-family:var(--f-head);font-weight:700;font-size:calc(36 * var(--u));line-height:1;letter-spacing:-.02em}
 .cap-meta{margin-top:calc(10 * var(--u));font-size:calc(14 * var(--u));line-height:1.2}
 .cap-side{display:flex;flex-direction:column;align-items:flex-end;gap:calc(10 * var(--u));font-size:calc(14 * var(--u));line-height:1}
@@ -334,44 +312,107 @@ body.work{height:100vh;height:100svh;overflow:hidden}
 .nav-arrow{width:calc(56 * var(--u));height:calc(56 * var(--u));border:1px solid currentColor;border-radius:50%;font-size:calc(18 * var(--u));line-height:1;
   transition:background-color .2s var(--out),color .2s var(--out)}
 .nav-arrow:hover{background:var(--white);color:var(--ink)}
-.work-cap .nav-arrow:first-child{order:0}
-.work-cap .nav-arrow:last-child{order:4}
-
-/* Folders view: a sleeve per folder, the next projects peeking out above it */
-.folders{position:absolute;inset:0;display:none;grid-template-columns:repeat(4,minmax(0,1fr));align-content:center;gap:calc(40 * var(--u));padding:0 calc(40 * var(--u))}
-body[data-work-view="folders"] .folders{display:grid}
-body[data-work-view="folders"] .deck,body[data-work-view="folders"] .work-cap{visibility:hidden}
-.folder{display:flex;flex-direction:column;align-items:flex-start;gap:calc(8 * var(--u));text-align:left}
-.folder-stack{position:relative;display:block;width:100%;aspect-ratio:1;margin-bottom:calc(10 * var(--u))}
-.sheet{position:absolute;left:calc(var(--i,1) * 7%);right:calc(var(--i,1) * 7%);top:0;height:20%;border-radius:12px 12px 0 0;background:var(--bg)}
-.sheet--0{--i:2;top:0}
-.sheet--1{--i:1;top:5%}
-.sheet-top{position:absolute;left:0;right:0;bottom:0;top:10%;display:block;border-radius:16px;overflow:hidden;background:var(--bg);transition:transform .25s var(--out)}
-.sheet-top img{width:100%;height:100%;object-fit:cover}
-.folder:hover .sheet-top,.folder:focus-visible .sheet-top{transform:translateY(-4%)}
-.folder-name{font-family:var(--f-head);font-weight:700;font-size:calc(26 * var(--u));line-height:1;letter-spacing:-.02em}
-.folder-count{font-size:calc(12 * var(--u));line-height:1}
-
 @media (max-width:760px){
-  .work-main{padding:64px 20px 22px}
-  .work-top{flex-direction:column;align-items:stretch;gap:14px}
-  .work-filters{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px}
-  .work-filters::-webkit-scrollbar{display:none}
-  .filters{font-size:24px;white-space:nowrap}
   .chip{font-size:11px;flex:none}
   .views{font-size:11px;gap:16px}
-  .deck{width:72vw}
-  .card-n{font-size:10px;top:14px;left:14px}
-  .card-name{font-size:19px;left:14px;right:14px;bottom:32px}
-  .card-tag{font-size:10px;left:14px;bottom:14px}
-  .work-cap{grid-template-columns:minmax(0,1fr) auto;gap:6px 14px;padding-top:14px}
-  .work-cap .nav-arrow{display:none}
   .cap-name{font-size:22px}
   .cap-meta{font-size:11px;margin-top:8px}
   .cap-side{font-size:11px;gap:8px}
-  .folders{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 16px;padding:0}
-  .folder-name{font-size:17px}
-  .folder-count{font-size:10px}
+}
+
+/* =========================================================
+   Work: the file stack (Nov 2026, after Berns's "Hello / Recent files" reference).
+   Every project is a file in its own colour, newest first. Each title peeks out above the
+   next file; one file is open (the work, one line, Read the case study). On desktop a file
+   lifts out of the pile as you hover it; tap pulls a file open; tap again reads it.
+   Sizes: --peek is how much of each file shows, --tail how much the next file covers.
+   ========================================================= */
+.wk{padding:calc(172 * var(--u)) var(--hx) calc(120 * var(--u))}
+.wk-title{font-size:min(19vw,calc(236 * var(--u)));line-height:.8;margin-left:-.03em}
+.wk-filters{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px calc(40 * var(--u));margin-top:calc(60 * var(--u));padding-bottom:calc(28 * var(--u));border-bottom:1px solid currentColor}
+.froms{display:flex;flex-wrap:wrap;gap:calc(8 * var(--u)) calc(18 * var(--u));font-size:calc(14 * var(--u));line-height:1}
+.froms button{text-transform:inherit;padding:.4em .25em;text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:1px;text-underline-offset:.35em;
+  transition:background-color .2s var(--out),text-decoration-color .2s var(--out)}
+.froms button:hover{text-decoration-color:currentColor}
+.froms button[aria-pressed="true"]{background:var(--blue);color:var(--white);text-decoration-color:transparent}
+.wk-label{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin:calc(44 * var(--u)) 0 calc(30 * var(--u))}
+.wk-h{font-family:var(--f-head);font-weight:700;font-size:calc(40 * var(--u));line-height:1;letter-spacing:-.02em}
+.wk-count{font-weight:400}
+.wk-all{font-size:calc(14 * var(--u));line-height:1;padding:.3em 0;border-bottom:1px solid currentColor;transition:background-color .15s var(--out)}
+.wk-all:hover,.wk-all:focus-visible{background:var(--blue);color:var(--white)}
+.wk-empty{display:flex;flex-wrap:wrap;align-items:baseline;gap:12px 24px;padding:calc(64 * var(--u)) 0;font-family:var(--f-head);font-weight:700;font-size:calc(36 * var(--u));line-height:1;letter-spacing:-.02em}
+.wk-empty[hidden]{display:none}
+.wk-empty button{font-size:calc(14 * var(--u));line-height:1;padding:.3em 0;border-bottom:1px solid currentColor}
+
+.stack{--peek:calc(128 * var(--u));--tail:calc(64 * var(--u));--pad:calc(36 * var(--u));--rad:24px;list-style:none;position:relative;padding-bottom:calc(48 * var(--u))}
+.file{position:relative}
+.file + .file{margin-top:calc(-1 * var(--tail))}
+.file-a{position:relative;display:flex;flex-direction:column;background:var(--bg);color:var(--fg);border-radius:var(--rad);
+  transition:transform .55s var(--out);-webkit-user-drag:none;-webkit-tap-highlight-color:transparent}
+.file-a:focus-visible{outline-offset:-6px}
+.file-head{display:flex;align-items:flex-start;justify-content:space-between;gap:calc(32 * var(--u));height:var(--peek);padding:calc(28 * var(--u)) var(--pad) 0}
+.file-title{min-width:0;font-family:var(--f-head);font-weight:700;font-size:calc(78 * var(--u));line-height:.92;letter-spacing:-.03em}
+.file-side{flex:none;display:flex;gap:calc(28 * var(--u));padding-top:calc(10 * var(--u));font-size:calc(13 * var(--u));line-height:1;white-space:nowrap}
+/* open and close: the file's body grows from nothing to its full height */
+.file-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .75s var(--out)}
+.file.open .file-body{grid-template-rows:1fr}
+.file-in{min-height:0;overflow:hidden}
+.file-grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:calc(48 * var(--u));padding:calc(4 * var(--u)) var(--pad) calc(40 * var(--u));
+  opacity:0;transform:translateY(calc(28 * var(--u)));transition:opacity .3s var(--out),transform .75s var(--out)}
+.file.open .file-grid{opacity:1;transform:none;transition:opacity .7s var(--out) .12s,transform .8s var(--out)}
+.file-media{grid-column:2;grid-row:1;position:relative;display:block;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:rgba(26,26,26,.2)}
+.file-media img,.file-media video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;transition:transform .9s var(--out)}
+.file-text{grid-column:1;grid-row:1;display:flex;flex-direction:column;justify-content:space-between;gap:calc(32 * var(--u))}
+.file-sum{font-family:var(--f-head);font-weight:700;font-size:calc(34 * var(--u));line-height:1.06;letter-spacing:-.018em;max-width:20ch}
+.file-foot{display:flex;flex-direction:column;align-items:flex-start;gap:calc(16 * var(--u))}
+.file-meta{font-size:calc(13 * var(--u));line-height:1.3}
+.file-go{display:inline-block;font-size:calc(14 * var(--u));line-height:1;padding:calc(16 * var(--u)) calc(24 * var(--u));border:1px solid currentColor;border-radius:999px;
+  transition:background-color .2s var(--out),color .2s var(--out)}
+.file.open .file-a:hover .file-go{background:var(--fg);color:var(--bg)}
+.file.open .file-a:hover .file-media img,.file.open .file-a:hover .file-media video{transform:scale(1.03)}
+.file-tail{display:block;height:var(--tail);padding:0 var(--pad);overflow:hidden}
+.file-peek{display:block;padding-top:calc(4 * var(--u));max-width:70ch;font-size:calc(13 * var(--u));line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  opacity:0;transition:opacity .3s var(--out)}
+.file:last-child:not(.open) .file-peek{opacity:1}
+.stack.all .file-peek{display:none}
+/* Desktop: hover lifts a file out of the pile and the files in front step down, showing its line */
+@media (hover:hover) and (pointer:fine){
+  .file:not(.open):hover .file-a{transform:translateY(calc(-12 * var(--u)))}
+  .file:not(.open):hover ~ .file .file-a{transform:translateY(calc(44 * var(--u)))}
+  .file:not(.open):hover .file-peek{opacity:1;transition-delay:.1s}
+}
+/* Arrival: the files sweep up into the pile one after another */
+.stack.in .file{animation:file-in .9s var(--out) both;animation-delay:calc(var(--i) * 55ms + 60ms)}
+@keyframes file-in{from{opacity:0;transform:translateY(calc(80 * var(--u)))}}
+
+@media (max-width:760px){
+  .wk{padding:96px 20px 56px}
+  .wk-title{font-size:19.5vw}
+  .wk-filters{flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:14px;margin-top:22px;padding-bottom:18px}
+  .wk-filters .filters,.froms{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px;white-space:nowrap}
+  .wk-filters .filters::-webkit-scrollbar,.froms::-webkit-scrollbar{display:none}
+  .filters{font-size:26px}
+  .froms{gap:14px;font-size:11px}
+  .froms button{flex:none}
+  .wk-label{margin:22px 0 16px}
+  .wk-h{font-size:22px}
+  .wk-all{font-size:11px}
+  .wk-empty{font-size:22px;padding:40px 0}
+  .wk-empty button{font-size:11px}
+  .stack{--peek:62px;--tail:40px;--pad:18px;--rad:16px;padding-bottom:24px}
+  .file-head{padding-top:17px;gap:12px}
+  .file-title{font-size:30px;line-height:.95}
+  .file-side{padding-top:3px;font-size:10px}
+  .file-disc{display:none}
+  .file-grid{grid-template-columns:minmax(0,1fr);gap:16px;padding:2px var(--pad) 22px}
+  .file-media,.file-text{grid-column:1;grid-row:auto}
+  .file-media{border-radius:10px}
+  .file-text{gap:18px}
+  .file-sum{font-size:20px;line-height:1.1}
+  .file-foot{flex-direction:row;justify-content:space-between;align-items:center;gap:12px}
+  .file-meta{font-size:10px}
+  .file-go{font-size:11px;padding:12px 16px;flex:none}
+  .file-peek{display:none}
 }
 
 /* Phones: one clear type scale, everything centred.
@@ -663,4 +704,132 @@ body.sur{height:100vh;height:100svh;overflow:hidden}
   .sur-msg{font-size:20px}
   .sur-hint{font-size:10px;margin-top:6px}
   .sur-foot .chip{font-size:11px}
+}
+
+/* =========================================================
+   Case study (studios/project.html + assets/case.js), Nov 2026.
+   Opens in the project's own colour (--p-bg / --p-fg, set in the page head): crumb, title,
+   line, the work in a thin frame, a short summary. Scrolling through the pinned opener opens
+   the frame up until the work fills the screen, then the write-up reads on white.
+   Ends with the close and the next project waiting at the bottom as a file in its colour.
+   ========================================================= */
+html[data-ground="project"]{--ground:var(--p-bg)}
+html[data-ground="project"] body{background:var(--p-bg);color:var(--p-fg)}
+.cs-open{position:relative;height:230vh;height:230svh}
+.cs-pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:calc(132 * var(--u)) var(--hx) calc(34 * var(--u))}
+.cs-top,.cs-bot{display:flex;flex-direction:column;align-items:center;will-change:opacity,transform}
+.cs-crumb{font-size:calc(14 * var(--u));line-height:1}
+.cs-crumb a{text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:1px;text-underline-offset:.35em;transition:text-decoration-color .2s var(--out)}
+.cs-crumb a:hover,.cs-crumb a:focus-visible{text-decoration-color:currentColor}
+.cs-title{margin-top:calc(26 * var(--u));max-width:12ch;font-size:min(10.5vw,calc(124 * var(--u)));line-height:.86;text-wrap:balance}
+.cs-by{margin-top:calc(22 * var(--u));font-size:calc(14 * var(--u));line-height:1.3}
+.cs-slot{flex:1 1 0;min-height:72px;width:100%;margin:calc(34 * var(--u)) 0 calc(28 * var(--u))}
+.cs-sum{max-width:30ch;font-family:var(--f-head);font-weight:700;font-size:calc(28 * var(--u));line-height:1.1;letter-spacing:-.015em;text-wrap:balance}
+.cs-cue{margin-top:calc(24 * var(--u));font-size:calc(12 * var(--u));line-height:1}
+/* the thin frame round the work, like a print, and the work itself (placed and grown by case.js) */
+.cs-ring{position:absolute;left:0;top:0;border:1px solid currentColor;pointer-events:none}
+.cs-hero{position:absolute;left:0;top:0;margin:0;overflow:hidden;will-change:transform;background:rgba(26,26,26,.18)}
+.cs-hero img,.cs-hero video{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
+/* first arrival: the words rise in one after another and the work lifts into its frame */
+.cs-rise{opacity:0;transform:translateY(24px);animation:rise .9s var(--out) forwards}
+.cs-crumb.cs-rise{animation-delay:.1s}
+.cs-title.cs-rise{animation-delay:.18s}
+.cs-by.cs-rise{animation-delay:.3s}
+.cs-sum.cs-rise{animation-delay:.42s}
+.cs-cue.cs-rise{animation-delay:.9s}
+.cs-hero > *{animation:lift-in 1.1s var(--out) .2s both}
+@keyframes lift-in{from{opacity:0;transform:scale(1.08)}}
+
+/* The read: white ground, ink text, the project's colour for the pull quote */
+.cs-read{--accent:var(--ink);min-height:100vh;min-height:100svh;padding:calc(150 * var(--u)) var(--hx) calc(150 * var(--u))}
+.cs-facts{list-style:none;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));column-gap:calc(32 * var(--u));border-top:1px solid currentColor;border-bottom:1px solid currentColor}
+.cs-facts li{display:flex;flex-direction:column;gap:calc(12 * var(--u));padding:calc(24 * var(--u)) 0}
+.cs-facts .mono{font-size:calc(13 * var(--u));line-height:1}
+.cs-facts span:last-child{font-size:calc(19 * var(--u));line-height:1.35}
+.cs-sec{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:calc(96 * var(--u));margin-top:calc(120 * var(--u))}
+.cs-sec-h{align-self:start;position:sticky;top:calc(124 * var(--u));padding-top:calc(6 * var(--u))}
+.cs-sec-n{font-size:calc(14 * var(--u));line-height:1}
+.cs-sec-t{margin-top:calc(16 * var(--u));font-family:var(--f-head);font-weight:700;font-size:calc(40 * var(--u));line-height:1;letter-spacing:-.02em}
+.cs-sec-body{max-width:36em}
+.cs-sec-body p{font-size:calc(21 * var(--u));line-height:1.55}
+.cs-sec-body p + p{margin-top:1em}
+.cs-sec-body .lede{font-family:var(--f-head);font-weight:400;font-size:calc(36 * var(--u));line-height:1.2;letter-spacing:-.012em}
+.cs-sec-body .lede + p{margin-top:calc(32 * var(--u))}
+.cs-sec-body .cs-credit{margin-top:calc(40 * var(--u));font-size:calc(13 * var(--u));line-height:1.5}
+.cs-quote{margin:calc(150 * var(--u)) auto 0;max-width:16ch;text-align:center;font-size:min(7.2vw,calc(98 * var(--u)));line-height:.9;color:var(--accent);text-wrap:balance}
+.cs-fig{margin:calc(120 * var(--u)) 0 0;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#F1F2F3}
+.cs-fig img,.cs-fig video{display:block;width:100%;height:100%;object-fit:cover}
+.cs .close{min-height:0;padding-top:calc(200 * var(--u));padding-bottom:calc(200 * var(--u))}
+
+/* Next project: the next file waits at the bottom in its own colour and lifts as you reach for it */
+.cs-end{overflow:hidden;padding-top:calc(40 * var(--u))}
+.cs-next{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;min-height:64vh;min-height:64svh;margin-bottom:-48px;
+  padding:calc(34 * var(--u)) var(--hx) calc(64 * var(--u) + 48px);background:var(--bg);color:var(--fg);border-radius:24px 24px 0 0;transition:transform .7s var(--out)}
+.cs-next:hover,.cs-next:focus-visible{transform:translateY(calc(-32 * var(--u)))}
+.cs-next:focus-visible{outline-offset:-8px}
+.cs-next-l{align-self:stretch;display:flex;justify-content:space-between;font-size:calc(14 * var(--u));line-height:1}
+.cs-next-t{margin-top:auto;padding-top:calc(48 * var(--u));max-width:12ch;font-size:min(10.5vw,calc(124 * var(--u)));line-height:.86;text-wrap:balance}
+.cs-next-by{margin-top:calc(22 * var(--u));font-size:calc(14 * var(--u));line-height:1.3}
+.cs-next-go{margin-top:calc(40 * var(--u));margin-bottom:auto;display:inline-block;font-size:calc(14 * var(--u));line-height:1;padding:calc(16 * var(--u)) calc(24 * var(--u));border:1px solid currentColor;border-radius:999px;transition:background-color .2s var(--out),color .2s var(--out)}
+.cs-next:hover .cs-next-go{background:var(--fg);color:var(--bg)}
+
+@media (max-width:760px){
+  .cs-open{height:200vh;height:200svh}
+  .cs-pin{padding:80px 20px 20px}
+  .cs-crumb{font-size:11px}
+  .cs-title{margin-top:14px;font-size:12vw}
+  .cs-by{margin-top:12px;font-size:10px;max-width:34ch}
+  .cs-slot{margin:22px 0 18px}
+  .cs-sum{font-size:18px;max-width:24ch}
+  .cs-cue{margin-top:14px;font-size:10px}
+  .cs-read{padding:72px 20px 88px}
+  .cs-facts{grid-template-columns:minmax(0,1fr);border-bottom:0}
+  .cs-facts li{flex-direction:row;justify-content:space-between;align-items:baseline;gap:16px;padding:14px 0;border-bottom:1px solid currentColor;text-align:right}
+  .cs-facts .mono{font-size:10px}
+  .cs-facts span:last-child{font-size:15px}
+  .cs-sec{grid-template-columns:minmax(0,1fr);row-gap:14px;margin-top:56px}
+  .cs-sec-h{position:static;padding:0}
+  .cs-sec-n{font-size:11px}
+  .cs-sec-t{margin-top:10px;font-size:24px}
+  .cs-sec-body p{font-size:16px;line-height:1.55}
+  .cs-sec-body .lede{font-size:21px;line-height:1.22}
+  .cs-sec-body .lede + p{margin-top:20px}
+  .cs-sec-body .cs-credit{font-size:10px;margin-top:28px}
+  .cs-quote{margin-top:72px;font-size:11.4vw}
+  .cs-fig{margin-top:56px;border-radius:12px}
+  .cs .close{padding:96px 20px}
+  .cs-end{padding-top:16px}
+  .cs-next{min-height:58svh;padding:20px 20px calc(32px + 48px);border-radius:16px 16px 0 0}
+  .cs-next-l{font-size:10px}
+  .cs-next-t{font-size:12vw;padding-top:32px}
+  .cs-next-by{font-size:10px;margin-top:12px}
+  .cs-next-go{font-size:11px;padding:12px 16px;margin-top:24px}
+}
+
+/* =========================================================
+   Page to page (assets/motion.js). The browser's own cross-document view transitions:
+   the old page fades, the new one lifts in, the bar holds still, and a project's file
+   grows into its case study (view-transition-name "case", set only for that moment).
+   ========================================================= */
+@view-transition{navigation:auto}
+.bar{view-transition-name:bar}
+::view-transition-group(*){animation-duration:.7s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+::view-transition-old(root){animation:vt-out .42s cubic-bezier(.22,1,.36,1) both}
+::view-transition-new(root){animation:vt-in .75s cubic-bezier(.22,1,.36,1) .06s both}
+::view-transition-group(case){overflow:clip;animation-duration:.85s}
+::view-transition-old(case),::view-transition-new(case){animation-duration:.6s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+@keyframes vt-out{to{opacity:0}}
+@keyframes vt-in{from{opacity:0;transform:translateY(24px)}}
+/* Browsers without it: the same feel, done by hand */
+html.fade-in main,html.fade-in .foot{animation:vt-in .75s var(--out) both}
+html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);transition:opacity .24s var(--out),transform .24s var(--out)}
+
+@media (prefers-reduced-motion:reduce){
+  @view-transition{navigation:none}
+  .stack.in .file{animation:none}
+  .file-a,.file-body,.file-grid,.file-peek,.file-media img,.file-media video,.cs-next,.cs-next-go{transition:none}
+  .cs-open{height:auto}
+  .cs-pin{position:relative;min-height:100svh}
+  .cs-rise,.cs-hero > *{animation:none;opacity:1;transform:none}
 }

@@ -9,13 +9,16 @@
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
 <title>Work. Bernard Bannor</title>
 <meta name="description" content="Design, animation and art direction by Bernard Bannor and Berns Studios.">
+<!-- hold the first paint until the files are built, so a page transition lands on them -->
+<link rel="expect" href="#ready" blocking="render">
 <link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
-<link rel="stylesheet" href="../assets/core.css?v=91">
+<link rel="stylesheet" href="../assets/core.css?v=92">
+<script src="../assets/motion.js?v=1"></script>
 </head>
-<body data-base="../" data-page="work" class="scroll work" data-work-view="cards">
+<body data-base="../" data-page="work" class="scroll work">
 
 <header class="bar">
   <p class="bar-name"><a href="../home/index.html"><span class="scale">Bernard <br>Bannor</span><span class="aka mono">(Also known as &lsquo;Berns&rsquo;)</span></a></p>
@@ -44,44 +47,34 @@
   </ol>
 </nav>
 
-
-<main class="work-main">
-  <h1 class="sr">Work</h1>
-
-  <!-- Filters (built in work.js) and the Cards / Folders switch -->
-  <div class="work-top">
-    <div class="work-filters">
+<main class="wk">
+  <header class="wk-head">
+    <h1 class="wk-title scale" data-reveal>Work</h1>
+    <!-- Filters (built in work.js): what it is, then who it was for -->
+    <div class="wk-filters" data-reveal="2">
       <div class="filters" data-filters role="group" aria-label="Filter by discipline"></div>
+      <div class="froms mono" data-froms role="group" aria-label="Filter by who it was for"></div>
     </div>
-    <div class="views mono" role="group" aria-label="View">
-        <button type="button" class="chip mono" data-folder-chip hidden><span></span> &times;<span class="sr"> Clear folder</span></button>
-      <button type="button" data-view="cards" aria-pressed="true">Cards</button>
-      <button type="button" data-view="folders" aria-pressed="false">Folders</button>
-    </div>
+  </header>
+
+  <div class="wk-label" data-reveal="3">
+    <h2 class="wk-h"><span data-label>Recently added</span> <span class="wk-count" data-count></span></h2>
+    <button type="button" class="wk-all mono" data-all aria-pressed="false">See all</button>
   </div>
 
-  <!-- Swipe through the cards; the one in the middle plays and opens -->
-  <section class="stage" data-stage aria-roledescription="carousel" aria-label="Projects">
-    <div class="deck" data-deck></div>
-    <div class="folders" data-folders></div>
-  </section>
-
-  <div class="work-cap" aria-live="polite">
-    <button type="button" class="nav-arrow mono" data-prev aria-label="Previous project">&larr;</button>
-    <div class="cap-text">
-      <p class="cap-name" data-cap-name></p>
-      <p class="cap-meta mono"><span data-cap-meta></span></p>
-    </div>
-    <div class="cap-side">
-      <span class="cap-count mono" data-cap-count></span>
-      <a class="cap-link mono" data-cap-link href="#"><span class="go">View project</span></a>
-    </div>
-    <button type="button" class="nav-arrow mono" data-next aria-label="Next project">&rarr;</button>
-  </div>
+  <!-- The stack: one file per project, newest first. Tap a file to pull it open, tap again to read it. -->
+  <ol class="stack" data-stack aria-label="Projects"></ol>
+  <p class="wk-empty" data-empty hidden><span>Nothing here yet.</span> <button type="button" class="mono" data-clear>Clear filters</button></p>
 </main>
 
+<footer class="foot mono">
+  <span>Bernard Bannor / Berns Studios</span>
+  <a href="#top" onclick="scrollTo({top:0,behavior:'smooth'});return false">Back to top &uarr;</a>
+</footer>
+
 <script src="../assets/data.js"></script>
-<script src="../assets/core.js?v=47"></script>
-<script src="../assets/work.js?v=39"></script>
+<script src="../assets/core.js?v=48"></script>
+<script src="../assets/work.js?v=40"></script>
+<i id="ready" hidden></i>
 </body>
 </html>
