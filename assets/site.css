@@ -343,3 +343,7 @@ body.opening .bar-nav a{opacity:1}
   .front-text{justify-self:stretch}
   .front-name{font-size:clamp(36px,11vw,64px)}
 }
+
+/* Page to page: the same soft crossfade as the rebuilt pages */
+@view-transition{navigation:auto}
+@media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}

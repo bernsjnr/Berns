@@ -5,38 +5,54 @@
 window.BERNS = {
 
   /* ---------- Work ----------
-     `video` = short muted loop (assets/video), `img` = still.
-     `about` = write-up for the project page. Empty = "Write-up to come". */
-  /* Work page cards. `tags` drive the filters (Animation, Design, Art direction),
-     `folder` groups them in Folders view. `bg` is the card colour around the work, `ink` = dark text on it.
-     Order follows the live bernsds.com grid. */
+     Order = recently added: newest first. The Work page stacks them in this order.
+     `bg` = the project's colour, pulled from its own imagery. It colours the file on the Work page and
+     the opener of the case study. `ink: true` = ink text on that colour (light colours), otherwise white.
+     `summary` = one line under the title (first drafts, Berns to edit). `quote` = pull quote, lifted from the write-up.
+     `cover` / `img` = still, `video` = muted loop (assets/video) with `poster`. `gallery` = extra media for the
+     case study, placed between the write-up sections: { video, poster } or { img }.
+     `about` = write-up for the case study (## headings). Empty = "Full write-up coming soon".
+     `tags` drive the discipline filters, `folder` the second filter (The Guardian, Studio clients, Community, Personal). */
   projects: [
     { id: 'this-bed-i-made', name: 'This Bed I Made', client: "Guvna B", discipline: "Art direction and motion", year: '2026',
-      tags: ['Animation', 'Design', 'Art direction'], folder: 'Studio clients', bg: '#121A19',
-      cover: 'assets/work/this-bed-i-made-cover.webp', video: 'assets/video/this-bed-i-made.mp4', poster: 'assets/video/this-bed-i-made.jpg', about: "## The brief\nGuvna B approached me directly to lead the art direction and visual identity for his comeback album, This Bed I Made, his return to music after a period away. The creative needed to carry the weight of the album's central thesis: no one above accountability, no one beyond redemption.\n\n## The approach\nWith significant creative freedom, I explored multiple directions for the album cover, typography and overall visual language before landing on the final system. The typography was sourced and refined to feel right for the record, weighty but considered.\n\nThe illustration work centred on an abstract coin design, a dual-faced motif representing the choice between two states. The coin was later engraved and used as a physical prop in the film.\n\n## The execution\nThe project spanned the full visual ecosystem of the album: front and back cover, vinyl packaging, merchandise, digital and social assets, film assets and animation. The engraved coin I illustrated became a key element in the accompanying film production.\n\n## The impact\nA strong collaboration with a three-time MOBO Award winner, delivered across every touchpoint of the release." },
+      tags: ['Animation', 'Design', 'Art direction'], folder: 'Studio clients', bg: '#A47B1C', ink: true,
+      summary: "Art direction and the full visual world for Guvna B's comeback album, from the cover to the film.",
+      quote: 'No one above accountability, no one beyond redemption.',
+      cover: 'assets/work/this-bed-i-made-cover.webp', video: 'assets/video/this-bed-i-made.mp4', poster: 'assets/video/this-bed-i-made.jpg',
+      gallery: [{ video: 'assets/video/this-bed-i-made.mp4', poster: 'assets/video/this-bed-i-made.jpg' }], about: "## The brief\nGuvna B approached me directly to lead the art direction and visual identity for his comeback album, This Bed I Made, his return to music after a period away. The creative needed to carry the weight of the album's central thesis: no one above accountability, no one beyond redemption.\n\n## The approach\nWith significant creative freedom, I explored multiple directions for the album cover, typography and overall visual language before landing on the final system. The typography was sourced and refined to feel right for the record, weighty but considered.\n\nThe illustration work centred on an abstract coin design, a dual-faced motif representing the choice between two states. The coin was later engraved and used as a physical prop in the film.\n\n## The execution\nThe project spanned the full visual ecosystem of the album: front and back cover, vinyl packaging, merchandise, digital and social assets, film assets and animation. The engraved coin I illustrated became a key element in the accompanying film production.\n\n## The impact\nA strong collaboration with a three-time MOBO Award winner, delivered across every touchpoint of the release." },
     { id: 'holibobs', name: 'Holibobs', client: 'The Guardian Labs', discipline: 'Campaign', year: '2026',
-      tags: ['Art direction', 'Animation'], folder: 'The Guardian', bg: '#E3B04B', ink: true,
+      tags: ['Art direction', 'Animation'], folder: 'The Guardian', bg: '#6D5F43',
+      summary: 'Art direction and animation for a summer campaign with The Guardian Labs.',
       video: 'assets/video/holibobs.mp4', poster: 'assets/video/holibobs.jpg', about: '' },
     { id: 'together', name: 'TOGETHER', client: "The Guardian", discipline: "Identity and motion", year: '',
-      tags: ['Design', 'Animation'], folder: 'The Guardian', bg: '#D02E2E',
+      tags: ['Design', 'Animation'], folder: 'The Guardian', bg: '#BA241E',
+      summary: 'A Black History Month campaign I started inside The Guardian, from the identity to the video series.',
+      quote: 'Black History Month needed to be more than a moment.',
       img: 'assets/work/together.webp', about: "## The brief\nBlack History Month needed to be more than a moment. As the lead designer, I initiated the concept internally and was given full creative freedom to build something that felt genuinely rooted, a campaign that reflected the diversity, beauty and unity of the Black community, not just acknowledged it.\n\n## The approach\nI developed the full visual identity for the series, starting with the logo. The concept was built around rotation and scale as a design language, a visual metaphor for how different people and perspectives come together to form something unified. Pan-African colours ran throughout, chosen deliberately to echo the empowerment of Africans both on the continent and across the diaspora.\n\nWorking as the sole designer, I led the creative direction end to end, collaborating with an in-house videographer and photographer, directing all shoots, editing the full video series and creating all motion graphics and animations myself.\n\n## The execution\nThe campaign ran across multiple touchpoints: visual identity deployed across in-person food and drink pop-ups and live events; motion graphics and animation for the video series and all event visuals, including guest-facing materials coordinated directly with speakers; and a video series directed, edited and screened on displays throughout The Guardian's head office, and shared via LinkedIn.\n\nI hosted the panel event How Black-Owned Brands Stand Firm in Power and Pride, bringing together Jojo Sonubi (Recess / No Signal Radio), Melina Mavoungou (UK Black Business Show) and Sophia Tassew (KHULA).\n\n## The impact\nThe campaign reached 150+ people through live activations and extended further via LinkedIn. Internally it became a reference point, directly shaping the new creative direction of The Guardian's D&I team and influencing how they approach visual identity and video content going forward. It is still being referenced today." },
     { id: 'track-and-play', name: 'Track + Play', client: "Track + Play", discipline: "Branding, motion and web", year: '',
-      tags: ['Animation', 'Design'], folder: 'Community', bg: '#0B0B0B',
+      tags: ['Animation', 'Design'], folder: 'Community', bg: '#0D0D0D',
+      summary: 'Identity, motion and website for the community sports day I co-founded.',
+      quote: 'Giving adults the chance to relive the energy and magic of school sports day.',
       video: 'assets/video/track-and-play.mp4', poster: 'assets/work/track-and-play.webp', about: "## The brief\nTrack + Play is an annual community sports day co-founded through a collaboration between BULLY THE ROADS, the running collective I founded, and Rise and Rally, a social badminton group. The brief was to build a visual identity from scratch for an event rooted in a simple idea: giving adults the chance to relive the energy and magic of school sports day, in a welcoming, genuinely competitive environment.\n\n## The approach\nThe identity centres on a logo developed across multiple iterations, arriving at Track + Play in both longform and shortform versions. The + is deliberately layered. It positions Track as an interchangeable variable, allowing the brand to flex into new territories: Football + Play, Cook + Play and beyond. A strategic decision built into the logo from day one, keeping the identity cohesive while leaving room to grow.\n\n## The execution\nThe logo animation was designed to convey energy, momentum and competitive spirit. Print extended the identity into the physical event space: banners, staff lanyards and play cards. Each piece balanced the comedic charm of adults doing a sports day with the genuine competition at its core.\n\nTo announce the launch, I animated a visual teaser and did the voiceover, collaborating with Jude Amponsah on sound design to capture the mood of the brand. Promotional social content built awareness and established a visual narrative ahead of the event. A team photoshoot rounded it out, generating excitement and a little friendly rivalry before the big day. Alongside the event assets, I built the Track + Play website, extending the identity into a digital home for the brand.\n\n## The impact\nA brand built to last beyond a single event, with the strategic flexibility to expand into new formats and audiences as Track + Play grows.\n\nCredits: Temi Ajlore, Jude Amponsah, Kente Club, Kelvin Atiasé, Emma Hardy." },
     { id: 'bully-the-roads', name: 'BULLY THE ROADS', client: 'BULLY THE ROADS', discipline: 'Identity', year: '',
-      tags: ['Design', 'Art direction'], folder: 'Community', bg: '#C4573A',
+      tags: ['Design', 'Art direction'], folder: 'Community', bg: '#0B3A0E',
+      summary: 'Identity for the London running club I founded.',
       img: 'assets/work/bully-the-roads.webp', about: '' },
     { id: 'everyone-wants-posters', name: 'Everyone Wants Posters', client: '', discipline: 'Poster design', year: '',
-      tags: ['Design'], folder: 'Personal', bg: '#F2C230', ink: true,
+      tags: ['Design'], folder: 'Personal', bg: '#D6B624', ink: true,
+      summary: 'My own series of typographic posters. Some of them are in the shop.',
       img: 'assets/work/everyone-wants-posters.webp', about: '' },
     { id: 'monzo', name: 'Monzo', client: 'The Guardian Labs', discipline: 'Display campaign', year: '',
-      tags: ['Design', 'Animation'], folder: 'The Guardian', bg: '#14233C',
+      tags: ['Design', 'Animation'], folder: 'The Guardian', bg: '#10265A',
+      summary: 'A display campaign for Monzo, made with The Guardian Labs.',
       img: 'assets/work/monzo-guardian-labs.webp', about: '' },
     { id: 'va', name: 'V&A Youth Collective', client: 'V&A', discipline: 'Event design', year: '',
-      tags: ['Design', 'Art direction'], folder: 'Studio clients', bg: '#E8E9EA', ink: true,
+      tags: ['Design', 'Art direction'], folder: 'Studio clients', bg: '#84181D',
+      summary: "Event design for the V&A Youth Collective's Career Insight talk with Rule of Thirds.",
       img: 'assets/work/va.webp', about: '' },
     { id: 'nteriors', name: 'NTERIORS', client: 'NTERIORS', discipline: 'Identity', year: '',
       tags: ['Design'], folder: 'Studio clients', bg: '#F5F2EA', ink: true,
+      summary: 'A brand identity for NTERIORS.',
       img: 'assets/work/nteriors.webp', about: '' }
   ],
 
