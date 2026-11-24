@@ -106,4 +106,5 @@ Placeholders still to replace: poster prices and Stripe links, project write-ups
 - Voice: first person, direct, warm, concise. No em dashes. British spelling. Intro "Hello, I'm Berns." Sign-off "Time to bring your ideas to life." (Berns dropped "Let's make something you're proud of", Nov 2026). Bios in third person.
 
 ## How Berns likes to work
+- **Merge and go live, always** (Berns's call, Nov 2026): when a change is done, push the branch, open a PR into main and merge it straight away so GitHub Pages is live. No need to ask first.
 Iterative passes, concise replies, senior-level (don't over-explain). Send full files rather than snippets.
