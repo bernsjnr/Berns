@@ -1,12 +1,12 @@
 /* =========================================================
    BERNS: Work page (v9, Nov 2026). The file stack.
    Every project is a file in its own colour, stacked newest first; each title peeks out
-   above the next file. One file is open at a time (media, one line, Read the case study).
-   Desktop: click a file to pull it open, click the open file to read its case study.
-   Phones: the pile stays still; one tap on any file opens its case study.
+   above the next file. Every file starts closed. Tap a file to open its preview (media, one
+   line, Read the case study); tap the open file to read the case study. Desktop and phones.
    On desktop a file lifts out of the pile as you hover it. See all opens every file.
-   Filters: discipline (All, Animation, Design, Art direction) and who it was for
-   (The Guardian, Studio clients, Community, Personal). Content: assets/data.js.
+   Filter: one button with a dropdown holding both groups, what it is (Animation, Design,
+   Art direction) and who it was for (The Guardian, Studio clients, Community, Personal).
+   Tap an option to pick it, tap again to clear it. Content: assets/data.js.
    ========================================================= */
 (() => {
   const D = window.BERNS;
@@ -15,14 +15,16 @@
   const $ = s => document.querySelector(s);
 
   const stack = $('[data-stack]');
-  const filtersEl = $('[data-filters]');
-  const fromsEl = $('[data-froms]');
+  const flt = $('[data-flt]');
+  const fltBtn = $('[data-flt-btn]');
+  const panel = $('[data-flt-panel]');
+  const fltN = $('[data-flt-n]');
   const label = $('[data-label]');
   const count = $('[data-count]');
   const allBtn = $('[data-all]');
   const empty = $('[data-empty]');
 
-  const TAGS = ['All', 'Animation', 'Design', 'Art direction'];
+  const TAGS = ['Animation', 'Design', 'Art direction'];
   const ORDER = ['The Guardian', 'Studio clients', 'Community', 'Personal'];
   const FOLDERS = [...new Set(D.projects.map(p => p.folder))].sort((a, b) => (ORDER.indexOf(a) + 99) % 99 - (ORDER.indexOf(b) + 99) % 99);
   const pad = n => String(n).padStart(2, '0');
@@ -30,22 +32,31 @@
   const haptic = ms => { if (window.BERNS_HAPTIC) window.BERNS_HAPTIC(ms); };
   const esc = s => String(s || '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  const touch = matchMedia('(hover: none), (pointer: coarse)');
-  let tag = 'All', folder = null, all = false, cur = null, first = true;
+  let tag = null, folder = null, all = false, cur = null, first = true;
 
-  /* ---------- Filters ---------- */
-  filtersEl.innerHTML = TAGS.map((t, i) =>
-    `<button type="button" class="f" data-tag="${t}" aria-pressed="${t === tag}">${t}</button>${i < TAGS.length - 1 ? '<span aria-hidden="true">, </span>' : ''}`).join('');
-  fromsEl.innerHTML = FOLDERS.map(f => `<button type="button" data-folder="${esc(f)}" aria-pressed="false">${esc(f)}</button>`).join('');
-  filtersEl.addEventListener('click', e => {
-    const b = e.target.closest('[data-tag]'); if (!b || b.dataset.tag === tag) return;
-    tag = b.dataset.tag; build();
+  /* ---------- Filter dropdown ---------- */
+  const opt = (k, v) => `<button type="button" class="flt-o" data-${k}="${esc(v)}" aria-pressed="false"><span class="flt-box" aria-hidden="true"></span>${esc(v)}</button>`;
+  panel.innerHTML = `
+    <div class="flt-g" role="group" aria-label="What it is"><p class="flt-l">What it is</p>${TAGS.map(t => opt('tag', t)).join('')}</div>
+    <div class="flt-g" role="group" aria-label="Who it was for"><p class="flt-l">Who it was for</p>${FOLDERS.map(f => opt('folder', f)).join('')}</div>
+    <button type="button" class="flt-clear" data-flt-clear>Clear filters</button>`;
+  const setOpen = on => {
+    panel.hidden = !on;
+    fltBtn.setAttribute('aria-expanded', on);
+    flt.classList.toggle('on', on);
+  };
+  fltBtn.addEventListener('click', () => setOpen(panel.hidden));
+  document.addEventListener('click', e => { if (!panel.hidden && !flt.contains(e.target)) setOpen(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { setOpen(false); fltBtn.focus(); } });
+  panel.addEventListener('click', e => {
+    const t = e.target.closest('[data-tag]'), f = e.target.closest('[data-folder]');
+    if (t) tag = tag === t.dataset.tag ? null : t.dataset.tag;
+    else if (f) folder = folder === f.dataset.folder ? null : f.dataset.folder;
+    else if (e.target.closest('[data-flt-clear]')) { tag = folder = null; setOpen(false); }
+    else return;
+    haptic(8); build();
   });
-  fromsEl.addEventListener('click', e => {
-    const b = e.target.closest('[data-folder]'); if (!b) return;
-    folder = folder === b.dataset.folder ? null : b.dataset.folder; build();
-  });
-  $('[data-clear]').addEventListener('click', () => { tag = 'All'; folder = null; build(); });
+  $('[data-clear]').addEventListener('click', () => { tag = folder = null; build(); });
   allBtn.addEventListener('click', () => {
     all = !all;
     allBtn.setAttribute('aria-pressed', all);
@@ -85,23 +96,28 @@
   }
 
   function build() {
-    const list = D.projects.filter(p => (tag === 'All' || p.tags.includes(tag)) && (!folder || p.folder === folder));
-    [...filtersEl.querySelectorAll('[data-tag]')].forEach(b => b.setAttribute('aria-pressed', b.dataset.tag === tag));
-    [...fromsEl.querySelectorAll('[data-folder]')].forEach(b => b.setAttribute('aria-pressed', b.dataset.folder === folder));
-    label.textContent = tag === 'All' && !folder ? 'Recently added' : [tag === 'All' ? '' : tag, folder || ''].filter(Boolean).join(', ');
+    const list = D.projects.filter(p => (!tag || p.tags.includes(tag)) && (!folder || p.folder === folder));
+    panel.querySelectorAll('[data-tag]').forEach(b => b.setAttribute('aria-pressed', b.dataset.tag === tag));
+    panel.querySelectorAll('[data-folder]').forEach(b => b.setAttribute('aria-pressed', b.dataset.folder === folder));
+    const n = (tag ? 1 : 0) + (folder ? 1 : 0);
+    fltN.textContent = n ? ` (${n})` : '';
+    panel.querySelector('[data-flt-clear]').hidden = !n;
+    label.textContent = n ? [tag, folder].filter(Boolean).join(', ') : 'Recently added';
     count.textContent = `(${list.length})`;
     empty.hidden = !!list.length;
     stack.innerHTML = list.map(file).join('');
-    /* open the newest file, or the one you just came back from (then skip the sweep, so the case study can shrink back into it) */
+    /* every file starts closed. Coming back from a case study, skip the sweep (so the case study
+       can shrink back into its file) and bring that file into view. */
     const back = first && window.BERNS_FROM ? window.BERNS_FROM() : null;
     stack.classList.remove('in');
     if (!back) { void stack.offsetWidth; stack.classList.add('in'); }
     const lis = [...stack.children];
-    cur = lis.find(li => li.querySelector('.file-a').dataset.vtCase === back) || lis[0] || null;
-    lis.forEach(li => li.classList.toggle('open', all || li === cur));
-    if (first && back && cur && cur !== lis[0]) {
-      const r = cur.getBoundingClientRect();
-      if (r.top > innerHeight * .6) scrollTo(0, scrollY + r.top - innerHeight * .25);
+    cur = null;
+    lis.forEach(li => li.classList.toggle('open', all));
+    const from = back && lis.find(li => li.querySelector('.file-a').dataset.vtCase === back);
+    if (from) {
+      const r = from.getBoundingClientRect();
+      if (r.top > innerHeight * .6) scrollTo(0, scrollY + r.top - innerHeight * .4);
     }
     first = false;
     watch(); play();
@@ -136,8 +152,6 @@
     const li = a.parentElement;
     if (all || li.classList.contains('open')) return;          /* open file: go to the case study */
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.button) return; /* new tab: let it through */
-    /* Phones and tablets: one tap goes straight to the case study. Nothing in the pile moves. */
-    if (touch.matches) { haptic(12); return; }
     e.preventDefault();
     open(li, true);
   });

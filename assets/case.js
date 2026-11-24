@@ -30,6 +30,9 @@
     return .2126 * c[0] + .7152 * c[1] + .0722 * c[2];
   };
   const accent = 1.05 / (lum(p.bg) + .05) >= 3.2 ? p.bg : 'var(--ink)';
+  /* The frame round the work: one solid line, white or ink, whichever reads better on the project colour */
+  const L = lum(p.bg);
+  const ringColour = 1.05 / (L + .05) >= (L + .05) / (lum('#1A1A1A') + .05) ? '#FFFFFF' : '#1A1A1A';
 
   /* Hero: the cover if there is one, otherwise the loop or the still */
   const heroSrc = p.cover || (p.video ? p.poster : p.img);
@@ -111,6 +114,7 @@
   const pin = sec.querySelector('.cs-pin');
   const slot = sec.querySelector('[data-slot]');
   const ring = sec.querySelector('[data-ring]');
+  ring.style.setProperty('--ring', ringColour);
   const fg = sec.querySelector('[data-hero]');
   const top = sec.querySelector('.cs-top');
   const bot = sec.querySelector('.cs-bot');
@@ -123,8 +127,8 @@
   const measure = () => {
     const pr = pin.getBoundingClientRect();
     const s = slot.getBoundingClientRect();
-    const gap = Math.max(6, Math.min(12, innerWidth * .008));
-    /* frame: the work fitted inside the slot, with room for the ring */
+    const gap = innerWidth < 760 ? 2 : 3; /* the frame's line width: it hugs the work, no gap */
+    /* frame: the work fitted inside the slot, with room for the line */
     let w = s.width - gap * 2, h = w / aspect;
     if (h > s.height - gap * 2) { h = Math.max(40, s.height - gap * 2); w = h * aspect; }
     F = { x: s.left - pr.left + (s.width - w) / 2, y: s.top - pr.top + (s.height - h) / 2, w, h, gap };
@@ -137,6 +141,7 @@
     T = { x: (pr.width - W) / 2, y: t0 + (room - H) / 2, w: W, h: H };
     fg.style.left = T.x + 'px'; fg.style.top = T.y + 'px';
     fg.style.width = T.w + 'px'; fg.style.height = T.h + 'px';
+    ring.style.setProperty('--ring-w', gap + 'px');
     ring.style.left = F.x - gap + 'px'; ring.style.top = F.y - gap + 'px';
     ring.style.width = F.w + gap * 2 + 'px'; ring.style.height = F.h + gap * 2 + 'px';
   };

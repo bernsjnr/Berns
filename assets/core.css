@@ -289,13 +289,9 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
 .foot{display:flex;justify-content:space-between;gap:16px;padding:0 var(--hx) calc(40 * var(--u));font-size:calc(14 * var(--u))}
 
 /* =========================================================
-   Shared controls: comma filters, chips, mono switches, captions, round arrows
+   Shared controls: chips, mono switches, captions, round arrows
    (Work, Shop, Print page, Surprise)
    ========================================================= */
-.filters{font-family:var(--f-head);font-weight:700;font-size:calc(44 * var(--u));line-height:1;letter-spacing:-.02em}
-.filters .f{font:inherit;letter-spacing:inherit;padding:0 .06em;transition:background-color .2s var(--out)}
-.filters .f[aria-pressed="true"]{background:var(--blue);color:var(--white)}
-.filters .f:hover{text-decoration:underline;text-decoration-thickness:.06em;text-underline-offset:.14em}
 .chip{display:inline-flex;align-items:center;gap:.6em;font-size:calc(14 * var(--u));line-height:1;padding:.7em 1.1em;border:1px solid currentColor;border-radius:999px}
 .chip:hover{background:var(--white);color:var(--ink)}
 .chip[hidden]{display:none}
@@ -329,13 +325,30 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
    ========================================================= */
 .wk{padding:calc(172 * var(--u)) var(--hx) calc(120 * var(--u))}
 .wk-title{font-size:min(19vw,calc(236 * var(--u)));line-height:.8;margin-left:-.03em}
-.wk-filters{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px calc(40 * var(--u));margin-top:calc(60 * var(--u));padding-bottom:calc(28 * var(--u));border-bottom:1px solid currentColor}
-.froms{display:flex;flex-wrap:wrap;gap:calc(8 * var(--u)) calc(18 * var(--u));font-size:calc(14 * var(--u));line-height:1}
-.froms button{text-transform:inherit;padding:.4em .25em;text-decoration:underline;text-decoration-color:transparent;text-decoration-thickness:1px;text-underline-offset:.35em;
-  transition:background-color .2s var(--out),text-decoration-color .2s var(--out)}
-.froms button:hover{text-decoration-color:currentColor}
-.froms button[aria-pressed="true"]{background:var(--blue);color:var(--white);text-decoration-color:transparent}
-.wk-label{display:flex;justify-content:space-between;align-items:baseline;gap:24px;margin:calc(44 * var(--u)) 0 calc(30 * var(--u))}
+.wk-head{padding-bottom:calc(40 * var(--u));border-bottom:1px solid currentColor}
+.wk-label{display:flex;justify-content:space-between;align-items:center;gap:24px;margin:calc(36 * var(--u)) 0 calc(30 * var(--u))}
+.wk-tools{flex:none;white-space:nowrap;display:flex;align-items:center;gap:calc(28 * var(--u));font-size:calc(14 * var(--u));line-height:1}
+/* Filter: one button, a dropdown with both groups. White sheet on ink, no shadow. */
+.flt{position:relative}
+.flt-btn{display:inline-flex;align-items:center;gap:.7em;padding:calc(14 * var(--u)) calc(20 * var(--u));border:1px solid currentColor;border-radius:999px;transition:background-color .2s var(--out),color .2s var(--out)}
+.flt-btn:hover,.flt.on .flt-btn{background:var(--white);color:var(--ink)}
+.flt-btn .pm{width:.8em;height:.8em}
+.flt-btn .pm::before,.flt-btn .pm::after{height:1px}
+.flt.on .pm::after{transform:translateY(-50%) rotate(0deg)}
+.flt-panel{position:absolute;right:0;top:calc(100% + 10px);z-index:20;width:max(280px,calc(340 * var(--u)));padding:calc(10 * var(--u)) calc(24 * var(--u)) calc(20 * var(--u));background:var(--white);color:var(--ink);border-radius:16px;
+  animation:flt-in .25s var(--out)}
+.flt-panel[hidden]{display:none}
+@keyframes flt-in{from{opacity:0;transform:translateY(-6px)}}
+.flt-g{display:flex;flex-direction:column;padding:calc(14 * var(--u)) 0}
+.flt-g + .flt-g{border-top:1px solid #E8E9EA}
+.flt-clear:not([hidden]){display:inline-block;border-top:0}
+.flt-l{font-size:calc(12 * var(--u));line-height:1;margin-bottom:calc(10 * var(--u))}
+.flt-o{display:flex;align-items:center;gap:12px;width:100%;padding:9px 0;text-align:left;font-family:var(--f-head);font-weight:700;font-size:calc(24 * var(--u));line-height:1.1;letter-spacing:-.015em;text-transform:none}
+.flt-box{flex:none;width:14px;height:14px;border:1px solid currentColor;border-radius:4px;transition:background-color .15s var(--out),border-color .15s var(--out)}
+.flt-o:hover .flt-box{background:#E8E9EA}
+.flt-o[aria-pressed="true"] .flt-box{background:var(--blue);border-color:var(--blue)}
+.flt-clear{margin-top:calc(16 * var(--u));padding:.3em 0;border-bottom:1px solid currentColor}
+.flt-clear[hidden]{display:none}
 .wk-h{font-family:var(--f-head);font-weight:700;font-size:calc(40 * var(--u));line-height:1;letter-spacing:-.02em}
 .wk-count{font-weight:400}
 .wk-all{font-size:calc(14 * var(--u));line-height:1;padding:.3em 0;border-bottom:1px solid currentColor;transition:background-color .15s var(--out)}
@@ -344,7 +357,7 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
 .wk-empty[hidden]{display:none}
 .wk-empty button{font-size:calc(14 * var(--u));line-height:1;padding:.3em 0;border-bottom:1px solid currentColor}
 
-.stack{--peek:calc(128 * var(--u));--tail:calc(64 * var(--u));--pad:calc(36 * var(--u));--rad:24px;list-style:none;position:relative;padding-bottom:calc(48 * var(--u))}
+.stack:not(.wm){--peek:calc(128 * var(--u));--tail:calc(64 * var(--u));--pad:calc(36 * var(--u));--rad:24px;list-style:none;position:relative;padding-bottom:calc(48 * var(--u))}
 .file{position:relative}
 .file + .file{margin-top:calc(-1 * var(--tail))}
 .file-a{position:relative;display:flex;flex-direction:column;background:var(--bg);color:var(--fg);border-radius:var(--rad);
@@ -381,10 +394,9 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
   .file:not(.open):hover ~ .file .file-a{transform:translateY(calc(44 * var(--u)))}
   .file:not(.open):hover .file-peek{opacity:1;transition-delay:.1s}
 }
-/* Phones: a tap goes straight to the case study, so a file just lifts a touch under your finger */
+/* Phones: a file lifts a touch under your finger */
 @media (hover:none),(pointer:coarse){
-  .file-a{transition:transform .25s var(--out)}
-  .file-a:active{transform:translateY(-8px)}
+  .file:not(.open) .file-a:active{transform:translateY(-6px)}
 }
 /* Arrival: the files sweep up into the pile one after another */
 .stack.in .file{animation:file-in .9s var(--out) both;animation-delay:calc(var(--i) * 55ms + 60ms)}
@@ -393,18 +405,21 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
 @media (max-width:760px){
   .wk{padding:96px 20px 56px}
   .wk-title{font-size:19.5vw}
-  .wk-filters{flex-direction:column;align-items:stretch;flex-wrap:nowrap;gap:14px;margin-top:22px;padding-bottom:18px}
-  .wk-filters .filters,.froms{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px;white-space:nowrap}
-  .wk-filters .filters::-webkit-scrollbar,.froms::-webkit-scrollbar{display:none}
-  .filters{font-size:26px}
-  .froms{gap:14px;font-size:11px}
-  .froms button{flex:none}
-  .wk-label{margin:22px 0 16px}
+  .wk-head{padding-bottom:20px}
+  .wk-label{margin:20px 0 16px}
+  .wk-tools{gap:14px;font-size:11px}
+  .wk-h{min-width:0;white-space:nowrap}
+  .flt{position:static}
+  .wk-label{position:relative}
+  .flt-btn{padding:10px 14px}
+  .flt-panel{left:0;right:0;width:auto;padding:6px 20px 16px}
+  .flt-l{font-size:11px}
+  .flt-o{font-size:20px}
   .wk-h{font-size:22px}
   .wk-all{font-size:11px}
   .wk-empty{font-size:22px;padding:40px 0}
   .wk-empty button{font-size:11px}
-  .stack{--peek:62px;--tail:40px;--pad:18px;--rad:16px;padding-bottom:24px}
+  .stack:not(.wm){--peek:62px;--tail:40px;--pad:18px;--rad:16px;padding-bottom:24px}
   .file-head{padding-top:17px;gap:12px}
   .file-title{font-size:30px;line-height:.95}
   .file-side{padding-top:3px;font-size:10px}
@@ -733,7 +748,7 @@ html[data-ground="project"] body{background:var(--p-bg);color:var(--p-fg)}
 .cs-sum{max-width:30ch;font-family:var(--f-head);font-weight:700;font-size:calc(28 * var(--u));line-height:1.1;letter-spacing:-.015em;text-wrap:balance}
 .cs-cue{margin-top:calc(24 * var(--u));font-size:calc(12 * var(--u));line-height:1}
 /* the thin frame round the work, like a print, and the work itself (placed and grown by case.js) */
-.cs-ring{position:absolute;left:0;top:0;border:1px solid currentColor;pointer-events:none}
+.cs-ring{position:absolute;left:0;top:0;border:var(--ring-w,3px) solid var(--ring,currentColor);pointer-events:none}
 .cs-hero{position:absolute;left:0;top:0;margin:0;overflow:hidden;will-change:transform;background:rgba(26,26,26,.18)}
 .cs-hero img,.cs-hero video{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;-webkit-user-drag:none}
 /* first arrival: the words rise in one after another and the work lifts into its frame */
@@ -846,7 +861,4 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 .wm .s{font-family:'scale-variable','Helvetica Neue',Helvetica,Arial,sans-serif;font-variation-settings:"wdth" 125,"wght" 400;font-weight:400;text-transform:uppercase;margin-left:.3em}
 .wm.stack{flex-direction:column;align-items:flex-start}
 .wm.stack .s{font-size:.99em;margin-left:.022em;margin-top:-.101em;font-variation-settings:"wdth" 117,"wght" 400}
-/* Studio signature: stacked wordmark over WORK, inline wordmark in the footers */
-.wk-mark{margin:0 0 calc(28 * var(--u));font-size:calc(40 * var(--u))}
 .foot .wm{font-size:1em;vertical-align:baseline}
-@media (max-width:760px){.wk-mark{font-size:26px;margin-bottom:16px}}
