@@ -113,7 +113,7 @@ a.tile:hover .media img,a.tile:hover .media video{transform:scale(1.025)}
 .contact .big{max-width:14ch}
 .mail{font-size:clamp(20px,1.75vw,26px);border-bottom:1px solid currentColor;padding-bottom:2px}
 .contact .mark{color:var(--ink);margin-top:32px}
-.contact .mark .bs-logo{font-size:18px}
+.contact .mark .wm{font-size:24px}
 
 /* Project page */
 .p-head{display:grid;grid-template-columns:1fr 1fr;gap:var(--gap);padding:120px var(--pad) 32px;align-items:end}
@@ -347,3 +347,11 @@ body.opening .bar-nav a{opacity:1}
 /* Page to page: the same soft crossfade as the rebuilt pages */
 @view-transition{navigation:auto}
 @media (prefers-reduced-motion:reduce){@view-transition{navigation:none}}
+
+/* Berns Studios wordmark (2026): live Scale, tracking 0. Ink or white only, never blue. */
+.wm{display:inline-flex;align-items:baseline;line-height:1;white-space:nowrap;color:inherit;letter-spacing:0}
+.wm .b,.wm .s{display:block;flex:none}
+.wm .b{font-family:'scale-variable','Helvetica Neue',Helvetica,Arial,sans-serif;font-variation-settings:"wdth" 125,"wght" 900;font-weight:900;text-transform:uppercase}
+.wm .s{font-family:'scale-variable','Helvetica Neue',Helvetica,Arial,sans-serif;font-variation-settings:"wdth" 125,"wght" 400;font-weight:400;text-transform:uppercase;margin-left:.3em}
+.wm.stack{flex-direction:column;align-items:flex-start}
+.wm.stack .s{font-size:.99em;margin-left:.022em;margin-top:-.101em;font-variation-settings:"wdth" 117,"wght" 400}
