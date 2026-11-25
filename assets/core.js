@@ -234,7 +234,8 @@
       let cur = '';
       const pick = () => {
         const mid = innerHeight / 2;
-        const c = chaps.find(s => { const r = s.getBoundingClientRect(); return r.top <= mid && r.bottom > mid; });
+        /* the innermost one wins, so a scene nested in a chapter (the case study quote) sets its own colour */
+        const c = chaps.filter(s => { const r = s.getBoundingClientRect(); return r.top <= mid && r.bottom > mid; }).pop();
         const g = c ? c.dataset.ground : 'ink';
         if (g !== cur) { cur = g; root.dataset.ground = g; }
       };

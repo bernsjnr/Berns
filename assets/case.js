@@ -76,11 +76,12 @@
   if (p.chapters) {
     body = '';
     let fn = 0;
-    /* The quote, set in the record's own lettering, fading up a line at a time like the end credits */
+    /* The quote, set in the record's own lettering. A pinned scene, like About: scroll and the first line
+       fades up out of the dark, then the second, like the end credits; it holds, then lets you go. */
     const quote = () => p.quoteArt
-      ? `<figure class="cs-mantra" data-reveal role="img" aria-label="${esc(p.quote)}" style="--gold:${p.quoteArt.colour || '#F4DC8B'}">
-          ${p.quoteArt.lines.map((l, j) => `<span class="ln" style="--r:${l.r};--m:url('${base + l.img}');--d:${(.25 + j * 1.5).toFixed(2)}s"></span>`).join('')}
-        </figure>`
+      ? `<section class="cs-mantra" data-mantra data-ground="ink" role="img" aria-label="${esc(p.quote)}" style="--gold:${p.quoteArt.colour || '#F4DC8B'}">
+          <div class="cs-mantra-pin">${p.quoteArt.lines.map(l => `<span class="ln" style="--r:${l.r};--m:url('${base + l.img}')"></span>`).join('')}</div>
+        </section>`
       : `<blockquote class="cs-quote scale" data-reveal><p>${esc(p.quote)}</p></blockquote>`;
     /* Instagram stories, as they ran: a phone you can tap through */
     const stories = w => {
@@ -111,11 +112,21 @@
     };
     const cell = m => {
       const n = pad(++fn);
+      if (m.sleeve) return `<div class="cs-cell" style="--r:${m.r || 1}">
+        <div class="cs-media cs-3d" data-sleeve='${esc(JSON.stringify({ front: base + m.sleeve.front, back: base + m.sleeve.back }))}' tabindex="0" role="group" aria-roledescription="3D object" aria-label="${esc(m.cap || 'The sleeve')}. Drag or use the arrow keys to turn it.">
+          <img class="cs-3d-poster" src="${base + m.sleeve.front}" alt="" loading="lazy" decoding="async" draggable="false">
+        </div>
+        ${m.cap ? `<p class="cs-cap mono"><span>${n}</span>${esc(m.cap)}</p>` : ''}
+      </div>`;
       const media = m.video
         ? `<video muted loop playsinline preload="none" poster="${base + m.poster}" data-src="${base + m.video}"${m.cap ? ` aria-label="${esc(m.cap)}"` : ''}></video>`
         : `<img src="${base + m.img}" alt="${esc(m.cap || '')}" loading="lazy" decoding="async">`;
+      /* scrub: a play/pause and a slider under the loop, so it can be watched start to end */
+      const scrub = m.video && m.scrub ? `<div class="cs-scrub"><button class="cs-pp mono" type="button">Pause</button>
+          <input type="range" min="0" max="1000" step="1" value="0" aria-label="Scrub through ${esc(m.cap || 'the video')}">
+          <span class="cs-time mono" aria-hidden="true">0:00</span></div>` : '';
       return `<div class="cs-cell" style="--r:${m.r || 1}">
-        <div class="cs-media"${m.bg ? ` style="background:${m.bg}"` : ''}>${media}</div>
+        <div class="cs-media"${m.bg ? ` style="background:${m.bg}"` : ''}>${media}</div>${scrub}
         ${m.cap ? `<p class="cs-cap mono"><span>${n}</span>${esc(m.cap)}</p>` : ''}
       </div>`;
     };
@@ -129,17 +140,22 @@
       if (w.row === 'film') return `<figure class="cs-row r-film" data-reveal>
         <div class="cs-film">
           <button class="cs-play" type="button" data-yt="${esc(w.youtube)}" data-title="${esc(w.title || p.name)}" aria-label="Play ${esc(w.title || 'the film')}">
-            <img src="${base + w.poster}" alt="" loading="lazy" decoding="async">
+            <img src="${/^https?:/.test(w.poster) ? w.poster : base + w.poster}" alt="" loading="lazy" decoding="async" onload="if(this.naturalWidth<=120)this.onerror()" onerror="if(this.dataset.f){this.onerror=null;this.onload=null;this.src='${base + (w.still || 'assets/work/tbim/title-card.webp')}'}else{this.dataset.f=1;this.src='https://i.ytimg.com/vi/${esc(w.youtube)}/hqdefault.jpg'}">
             <span class="cs-play-b mono"><svg viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" fill="currentColor"/></svg>Play the film</span>
           </button>
         </div>
         <figcaption class="cs-cap mono"><span>${pad(++fn)}</span><span class="t">${esc(w.cap || '')} <a href="https://www.youtube.com/watch?v=${esc(w.youtube)}" target="_blank" rel="noopener">Watch on YouTube</a></span></figcaption></figure>`;
       if (w.row === 'stories') return stories(w);
+      /* A looping carousel: three in view and a hint of the next; swipe, drag, scroll or the arrows */
+      if (w.row === 'carousel') return `<figure class="cs-row r-carousel" data-reveal>
+        <div class="cs-car" data-carousel tabindex="0" role="region" aria-roledescription="carousel" aria-label="${esc(w.cap || 'Merch')}"><div class="cs-car-track">${w.items.map(cell).join('')}</div></div>
+        <div class="cs-car-nav"><button class="cs-car-b" type="button" data-dir="-1" aria-label="Previous"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button><button class="cs-car-b" type="button" data-dir="1" aria-label="Next"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
+      </figure>`;
       if (w.row === 'palette') return `<figure class="cs-row r-palette" data-reveal>
         <div class="cs-swatches">${w.colours.map(([nm, hex]) => `<div class="cs-sw"><span style="background:${hex}"></span><p class="mono">${esc(nm)}<br>${hex}</p></div>`).join('')}</div>
         ${w.cap ? `<figcaption class="cs-cap mono"><span>${pad(++fn)}</span>${esc(w.cap)}</figcaption>` : ''}</figure>`;
       const tall = w.items.every(m => (m.r || 1) <= 1.05);
-      return `<figure class="cs-row r-${w.row}${tall ? ' tall' : ''}${w.cap && w.items.some(m => m.cap) ? ' set' : ''}"${w.bg ? ` style="--row-bg:${w.bg}"` : ''} data-reveal>
+      return `<figure class="cs-row r-${w.row}${tall ? ' tall' : ''}${w.cap && w.items.some(m => m.cap) ? ' set' : ''}"${w.bg || w.w ? ` style="${w.bg ? `--row-bg:${w.bg};` : ''}${w.w ? `--w:${w.w}` : ''}"` : ''} data-reveal>
         <div class="cs-cells">${w.items.map(cell).join('')}</div>
         ${w.cap ? `<figcaption class="cs-cap mono">${w.items.some(m => m.cap) ? '' : `<span>${pad(++fn)}</span>`}${esc(w.cap)}</figcaption>` : ''}
       </figure>`;
@@ -281,19 +297,104 @@
   if ('IntersectionObserver' in window) {
     const vo = new IntersectionObserver(es => es.forEach(en => {
       const v = en.target;
-      if (en.isIntersecting && !reduce) { if (!v.src && v.dataset.src) v.src = v.dataset.src; v.play().catch(() => {}); }
+      if (en.isIntersecting && !reduce && !v.dataset.hold) { if (!v.src && v.dataset.src) v.src = v.dataset.src; v.play().catch(() => {}); }
       else v.pause();
     }), { threshold: .2 });
     document.querySelectorAll('#case video:not(.ig video)').forEach(v => vo.observe(v));
   }
 
+  /* Scrubbable loops: drag the slider to any point, Pause holds it there */
+  document.querySelectorAll('.cs-scrub').forEach(sc => {
+    const v = sc.parentElement.querySelector('video');
+    const range = sc.querySelector('input'), pp = sc.querySelector('.cs-pp'), tm = sc.querySelector('.cs-time');
+    const fmt = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+    const load = () => { if (!v.src && v.dataset.src) v.src = v.dataset.src; };
+    const sync = () => { pp.textContent = v.paused ? 'Play' : 'Pause'; };
+    let dragging = false, was = false;
+    const paint = () => {
+      if (v.duration) { if (!dragging) range.value = Math.round(v.currentTime / v.duration * 1000); tm.textContent = `${fmt(v.currentTime)} / ${fmt(v.duration)}`; }
+      range.style.setProperty('--p', range.value / 10 + '%');
+    };
+    v.addEventListener('timeupdate', paint); v.addEventListener('loadedmetadata', paint);
+    v.addEventListener('play', sync); v.addEventListener('pause', sync);
+    (function f() { if (!v.paused) paint(); requestAnimationFrame(f); })();
+    pp.addEventListener('click', () => {
+      load();
+      if (v.paused) { delete v.dataset.hold; v.play().catch(() => {}); } else { v.dataset.hold = '1'; v.pause(); }
+    });
+    const start = () => { load(); if (!dragging) { dragging = true; was = !v.paused; v.pause(); } };
+    const end = () => { if (!dragging) return; dragging = false; if (was && !v.dataset.hold) v.play().catch(() => {}); };
+    range.addEventListener('pointerdown', start); range.addEventListener('keydown', start);
+    range.addEventListener('pointerup', end); range.addEventListener('keyup', end); range.addEventListener('change', end);
+    range.addEventListener('input', () => {
+      load();
+      const go = () => { v.currentTime = range.value / 1000 * v.duration; paint(); };
+      if (v.duration) go(); else v.addEventListener('loadedmetadata', go, { once: true });
+    });
+    sync();
+  });
+
+  /* The quote scene: progress through the pinned section drives each line */
+  const mantra = document.querySelector('[data-mantra]');
+  if (mantra) {
+    const lines = [...mantra.querySelectorAll('.ln')];
+    const landed = lines.map(() => false);
+    const step = (a, b, v) => clamp((v - a) / (b - a));
+    const paint = () => {
+      const r = mantra.getBoundingClientRect();
+      const prog = reduce ? .5 : clamp(-r.top / Math.max(1, r.height - innerHeight));
+      const out = 1 - step(.84, 1, prog);
+      lines.forEach((l, j) => {
+        const a = step(.1 + j * .24, .32 + j * .24, prog);
+        const e = 1 - Math.pow(1 - a, 3);
+        l.style.opacity = (e * out).toFixed(3);
+        l.style.transform = `translateY(${((1 - e) * 18 - (1 - out) * 24).toFixed(1)}px) scale(${(1.04 - e * .04).toFixed(4)})`;
+        if (a >= 1 && !landed[j] && window.BERNS_HAPTIC) window.BERNS_HAPTIC(12);
+        landed[j] = a >= 1;
+      });
+    };
+    let tk = false;
+    addEventListener('scroll', () => { if (!tk) { tk = true; requestAnimationFrame(() => { tk = false; paint(); }); } }, { passive: true });
+    addEventListener('resize', paint);
+    paint();
+  }
+
+  /* Carousel: the set is laid out three times; drifting past either end jumps back by one set, so it never ends */
+  document.querySelectorAll('[data-carousel]').forEach(car => {
+    const track = car.querySelector('.cs-car-track');
+    const orig = [...track.children];
+    orig.forEach(c => { const a = c.cloneNode(true), b = c.cloneNode(true); a.setAttribute('aria-hidden', 'true'); b.setAttribute('aria-hidden', 'true'); track.insertBefore(a, orig[0]); track.appendChild(b); });
+    const setW = () => orig[0].offsetLeft - track.children[0].offsetLeft;
+    const home = () => { car.style.scrollSnapType = 'none'; car.scrollLeft = setW(); car.offsetWidth; car.style.scrollSnapType = ''; };
+    let W = 0;
+    const fit = () => { W = setW(); home(); };
+    requestAnimationFrame(fit); addEventListener('resize', fit);
+    let jt = 0;
+    car.addEventListener('scroll', () => {
+      clearTimeout(jt);
+      jt = setTimeout(() => {
+        const x = car.scrollLeft;
+        if (x < W * .5 || x > W * 1.5) { car.style.scrollSnapType = 'none'; car.scrollLeft = x < W * .5 ? x + W : x - W; car.offsetWidth; car.style.scrollSnapType = ''; }
+      }, 120);
+    }, { passive: true });
+    const by = dir => { const c = orig[0].getBoundingClientRect().width + parseFloat(getComputedStyle(track).columnGap || 0); car.scrollBy({ left: dir * c, behavior: reduce ? 'auto' : 'smooth' }); if (window.BERNS_HAPTIC) window.BERNS_HAPTIC(8); };
+    car.parentElement.querySelectorAll('.cs-car-b').forEach(b => b.addEventListener('click', () => by(+b.dataset.dir)));
+    car.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); by(e.key === 'ArrowRight' ? 1 : -1); } });
+    /* mouse drag on desktop */
+    let dg = null;
+    car.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') return; dg = { x: e.clientX, l: car.scrollLeft, moved: false }; car.style.scrollSnapType = 'none'; });
+    addEventListener('pointermove', e => { if (!dg) return; const dx = e.clientX - dg.x; if (Math.abs(dx) > 3) { dg.moved = true; car.classList.add('drag'); } car.scrollLeft = dg.l - dx; });
+    addEventListener('pointerup', () => { if (!dg) return; dg = null; car.classList.remove('drag'); car.style.scrollSnapType = ''; });
+    car.addEventListener('dragstart', e => e.preventDefault());
+  });
+
   /* The coin: three.js, only once it is near the screen (assets/coin.js) */
-  const coins = document.querySelectorAll('[data-coin]');
+  const coins = document.querySelectorAll('[data-coin],[data-sleeve]');
   if (coins.length) {
     const load = () => {
       if (document.querySelector('script[data-coin-js]')) return;
       const s = document.createElement('script');
-      s.src = base + 'assets/coin.js?v=1'; s.dataset.coinJs = ''; s.async = true;
+      s.src = base + 'assets/coin.js?v=3'; s.dataset.coinJs = ''; s.async = true;
       document.head.appendChild(s);
     };
     if ('IntersectionObserver' in window) {
@@ -304,13 +405,27 @@
 
   /* The film: the title card until you press play, then YouTube (no-cookie) in its place */
   document.querySelectorAll('.cs-play').forEach(b => b.addEventListener('click', () => {
+    const id = encodeURIComponent(b.dataset.yt);
     const f = document.createElement('iframe');
-    f.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(b.dataset.yt)}?autoplay=1&rel=0&playsinline=1`;
+    const origin = /^https?:/.test(location.origin) ? `&origin=${encodeURIComponent(location.origin)}` : '';
+    f.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&playsinline=1&enablejsapi=1${origin}`;
     f.title = b.dataset.title;
-    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen';
+    f.referrerPolicy = 'strict-origin-when-cross-origin';
     f.allowFullscreen = true;
+    const box = b.parentElement;
     b.replaceWith(f);
-    f.focus();
+    /* listen to the player: error 101/150/153 means it will not play here, so hand over to YouTube */
+    f.addEventListener('load', () => f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 1 }), '*'));
+    const onMsg = e => {
+      if (e.source !== f.contentWindow) return;
+      let d; try { d = JSON.parse(e.data); } catch (_) { return; }
+      if (d.event === 'onError') {
+        removeEventListener('message', onMsg);
+        box.innerHTML = `<a class="cs-film-out" href="https://www.youtube.com/watch?v=${id}" target="_blank" rel="noopener"><img src="https://i.ytimg.com/vi/${id}/maxresdefault.jpg" alt=""><span class="cs-play-b mono">Watch it on YouTube</span></a>`;
+      }
+    };
+    addEventListener('message', onMsg);
   }));
 
   /* Stories: tap the right side for the next, the left for the last, hold to pause. Plays while on screen. */
