@@ -1130,3 +1130,9 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 
 /* (Also known as 'Berns') sits on its own patch of the page colour so it never runs into what's underneath */
 .aka{background:var(--ground);padding:5px 10px 5px 0;z-index:2}
+
+/* Offset rows line up with the text column (same grid as the chapters), Berns's note Nov 2026 */
+.r-offset{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:calc(96 * var(--u))}
+.r-offset > *{grid-column:2}
+.r-offset .cs-cells,.r-offset > .cs-cap{width:min(100%,calc(760 * var(--u)));margin-left:0}
+@media (max-width:760px){.r-offset{display:block}.r-offset .cs-cells,.r-offset > .cs-cap{width:100%}}
