@@ -155,7 +155,7 @@
         <div class="cs-swatches" style="--n:${w.colours.length}">${w.colours.map(([nm, hex]) => `<div class="cs-sw"><span style="background:${hex}"></span><p class="mono">${esc(nm)}<br>${hex}</p></div>`).join('')}</div>
         ${w.cap ? `<figcaption class="cs-cap mono"><span>${pad(++fn)}</span>${esc(w.cap)}</figcaption>` : ''}</figure>`;
       const tall = w.items.every(m => (m.r || 1) <= 1.05);
-      return `<figure class="cs-row r-${w.row}${tall ? ' tall' : ''}${w.cap && w.items.some(m => m.cap) ? ' set' : ''}"${w.bg || w.w ? ` style="${w.bg ? `--row-bg:${w.bg};` : ''}${w.w ? `--w:${w.w}` : ''}"` : ''} data-reveal>
+      return `<figure class="cs-row r-${w.row}${tall ? ' tall' : ''}${w.sync ? '" data-sync="1' : ''}${w.cap && w.items.some(m => m.cap) ? ' set' : ''}"${w.bg || w.w ? ` style="${w.bg ? `--row-bg:${w.bg};` : ''}${w.w ? `--w:${w.w}` : ''}"` : ''} data-reveal>
         <div class="cs-cells">${w.items.map(cell).join('')}</div>
         ${w.cap ? `<figcaption class="cs-cap mono">${w.items.some(m => m.cap) ? '' : `<span>${pad(++fn)}</span>`}${esc(w.cap)}</figcaption>` : ''}
       </figure>`;
@@ -300,7 +300,24 @@
       if (en.isIntersecting && !reduce && !v.dataset.hold) { if (!v.src && v.dataset.src) v.src = v.dataset.src; v.play().catch(() => {}); }
       else v.pause();
     }), { threshold: .2 });
-    document.querySelectorAll('#case video:not(.ig video)').forEach(v => vo.observe(v));
+    document.querySelectorAll('#case video:not(.ig video)').forEach(v => { if (!v.closest('[data-sync]')) vo.observe(v); });
+    /* Rows with sync: true start together and stay locked to the first loop (e.g. Monzo's pot titles) */
+    document.querySelectorAll('#case [data-sync]').forEach(row => {
+      const vs = [...row.querySelectorAll('video')], lead = vs[0];
+      let ready = null;
+      const load = () => ready || (ready = Promise.all(vs.map(v => new Promise(r => {
+        if (!v.src) v.src = v.dataset.src;
+        v.preload = 'auto';
+        if (v.readyState >= 3) r(); else { v.addEventListener('canplaythrough', r, { once: true }); setTimeout(r, 4000); }
+      }))));
+      lead && lead.addEventListener('timeupdate', () => vs.slice(1).forEach(v => {
+        if (!v.paused && Math.abs(v.currentTime - lead.currentTime) > .08) v.currentTime = lead.currentTime;
+      }));
+      new IntersectionObserver(es => {
+        if (es[0].isIntersecting && !reduce) load().then(() => { vs.forEach(v => { v.currentTime = 0; }); vs.forEach(v => v.play().catch(() => {})); });
+        else vs.forEach(v => v.pause());
+      }, { threshold: .2 }).observe(row);
+    });
   }
 
   /* Scrubbable loops: drag the slider to any point, Pause holds it there */
