@@ -76,6 +76,39 @@
   if (p.chapters) {
     body = '';
     let fn = 0;
+    /* The quote, set in the record's own lettering, fading up a line at a time like the end credits */
+    const quote = () => p.quoteArt
+      ? `<figure class="cs-mantra" data-reveal role="img" aria-label="${esc(p.quote)}" style="--gold:${p.quoteArt.colour || '#F4DC8B'}">
+          ${p.quoteArt.lines.map((l, j) => `<span class="ln" style="--r:${l.r};--m:url('${base + l.img}');--d:${(.25 + j * 1.5).toFixed(2)}s"></span>`).join('')}
+        </figure>`
+      : `<blockquote class="cs-quote scale" data-reveal><p>${esc(p.quote)}</p></blockquote>`;
+    /* Instagram stories, as they ran: a phone you can tap through */
+    const stories = w => {
+      const n = pad(++fn);
+      const ico = {
+        heart: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.6 8.4 3.4 5 6.8 5c2.1 0 3.4 1.2 4.2 2.5h2C13.8 6.2 15.1 5 17.2 5c3.4 0 5.2 3.4 4.1 6.3C19.5 15.9 12 20.5 12 20.5z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+        send: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.5 3 2.5 10.2l7.2 2.9L13 21z M9.7 13.1 21.5 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>'
+      };
+      return `<figure class="cs-row r-stories" data-reveal>
+        <div class="ig" data-stories tabindex="0" role="region" aria-roledescription="stories" aria-label="${esc(w.cap || 'Stories')}. Left and right arrows move between stories, space pauses.">
+          <div class="ig-phone">
+            <div class="ig-screen">
+              <div class="ig-slides">${w.items.map((m, j) => `<div class="ig-slide${j ? '' : ' on'}" data-ms="${m.ms || 5000}" data-ago="${esc(m.ago || '')}" aria-hidden="${j ? 'true' : 'false'}">${m.video
+                ? `<video muted playsinline preload="none" poster="${base + m.poster}" data-src="${base + m.video}" aria-label="${esc(m.cap || '')}"></video>`
+                : `<img src="${base + m.img}" alt="${esc(m.cap || '')}" loading="lazy" decoding="async">`}</div>`).join('')}</div>
+              <div class="ig-top">
+                <div class="ig-bars">${w.items.map(() => '<span><i></i></span>').join('')}</div>
+                <div class="ig-head"><img src="${base + w.avatar}" alt="" width="32" height="32"><b>${esc(w.handle)}</b><span class="ig-ago">${esc(w.items[0].ago || '')}</span></div>
+              </div>
+              <button class="ig-tap ig-prev" type="button" tabindex="-1" aria-label="Previous story"></button>
+              <button class="ig-tap ig-next" type="button" tabindex="-1" aria-label="Next story"></button>
+              <div class="ig-foot" aria-hidden="true"><span class="ig-reply">Send message</span>${ico.heart}${ico.send}</div>
+            </div>
+          </div>
+        </div>
+        ${w.cap ? `<figcaption class="cs-cap mono"><span>${n}</span>${esc(w.cap)}</figcaption>` : ''}
+      </figure>`;
+    };
     const cell = m => {
       const n = pad(++fn);
       const media = m.video
@@ -87,6 +120,21 @@
       </div>`;
     };
     const row = w => {
+      if (w.row === 'coin') return `<figure class="cs-row r-coin" data-reveal>
+        <div class="cs-coin" data-coin='${esc(JSON.stringify({ faces: w.faces.map(f => base + f) }))}' tabindex="0" role="group" aria-roledescription="3D object" aria-label="${esc(w.label || 'Coin')}, both faces. Drag or use the arrow keys to turn it.">
+          <img class="cs-coin-poster" src="${base + w.poster}" alt="" draggable="false">
+          <button class="cs-coin-flip mono" type="button" hidden>Turn it</button>
+        </div>
+        ${w.cap ? `<figcaption class="cs-cap mono"><span>${pad(++fn)}</span>${esc(w.cap)}</figcaption>` : ''}</figure>`;
+      if (w.row === 'film') return `<figure class="cs-row r-film" data-reveal>
+        <div class="cs-film">
+          <button class="cs-play" type="button" data-yt="${esc(w.youtube)}" data-title="${esc(w.title || p.name)}" aria-label="Play ${esc(w.title || 'the film')}">
+            <img src="${base + w.poster}" alt="" loading="lazy" decoding="async">
+            <span class="cs-play-b mono"><svg viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" fill="currentColor"/></svg>Play the film</span>
+          </button>
+        </div>
+        <figcaption class="cs-cap mono"><span>${pad(++fn)}</span><span class="t">${esc(w.cap || '')} <a href="https://www.youtube.com/watch?v=${esc(w.youtube)}" target="_blank" rel="noopener">Watch on YouTube</a></span></figcaption></figure>`;
+      if (w.row === 'stories') return stories(w);
       if (w.row === 'palette') return `<figure class="cs-row r-palette" data-reveal>
         <div class="cs-swatches">${w.colours.map(([nm, hex]) => `<div class="cs-sw"><span style="background:${hex}"></span><p class="mono">${esc(nm)}<br>${hex}</p></div>`).join('')}</div>
         ${w.cap ? `<figcaption class="cs-cap mono"><span>${pad(++fn)}</span>${esc(w.cap)}</figcaption>` : ''}</figure>`;
@@ -101,7 +149,7 @@
         <div class="cs-sec-h"><p class="cs-sec-n mono">${pad(k + 1)}</p><h2 class="cs-sec-t">${esc(c.h)}</h2></div>
         <div class="cs-sec-body">${(c.text || []).map((t, j) => `<p${k === 0 && j === 0 ? ' class="lede"' : ''}>${esc(t)}</p>`).join('')}</div>
       </section>`;
-      if (k === 0 && p.quote) body += `<blockquote class="cs-quote scale" data-reveal><p>${esc(p.quote)}</p></blockquote>`;
+      if (k === 0 && p.quote) body += quote();
       body += (c.rows || []).map(row).join('');
     });
     if (p.made || p.credits) body += `<section class="cs-sec cs-index" data-reveal>
@@ -149,7 +197,7 @@
     </section>
 
     <div class="cs-end">
-      <a class="cs-next" href="project.html?p=${encodeURIComponent(next.id)}" data-vt-case="${next.id}" style="--bg:${next.bg};--fg:${next.ink ? 'var(--ink)' : 'var(--white)'}">
+      <a class="cs-next" href="project.html?p=${encodeURIComponent(next.id)}" data-vt-case="${next.id}" style="--bg:${next.bg};--fg:${D.fgOn(next.bg)}">
         <span class="cs-next-l mono"><span>Next project</span><span>${pad(P.indexOf(next) + 1)}</span></span>
         <span class="cs-next-t scale">${esc(next.name)}</span>
         <span class="cs-next-by mono">${by(next)}</span>
@@ -236,8 +284,85 @@
       if (en.isIntersecting && !reduce) { if (!v.src && v.dataset.src) v.src = v.dataset.src; v.play().catch(() => {}); }
       else v.pause();
     }), { threshold: .2 });
-    document.querySelectorAll('#case video').forEach(v => vo.observe(v));
+    document.querySelectorAll('#case video:not(.ig video)').forEach(v => vo.observe(v));
   }
+
+  /* The coin: three.js, only once it is near the screen (assets/coin.js) */
+  const coins = document.querySelectorAll('[data-coin]');
+  if (coins.length) {
+    const load = () => {
+      if (document.querySelector('script[data-coin-js]')) return;
+      const s = document.createElement('script');
+      s.src = base + 'assets/coin.js?v=1'; s.dataset.coinJs = ''; s.async = true;
+      document.head.appendChild(s);
+    };
+    if ('IntersectionObserver' in window) {
+      const co = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { co.disconnect(); load(); } }, { rootMargin: '600px 0px' });
+      coins.forEach(c => co.observe(c));
+    } else load();
+  }
+
+  /* The film: the title card until you press play, then YouTube (no-cookie) in its place */
+  document.querySelectorAll('.cs-play').forEach(b => b.addEventListener('click', () => {
+    const f = document.createElement('iframe');
+    f.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(b.dataset.yt)}?autoplay=1&rel=0&playsinline=1`;
+    f.title = b.dataset.title;
+    f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    f.allowFullscreen = true;
+    b.replaceWith(f);
+    f.focus();
+  }));
+
+  /* Stories: tap the right side for the next, the left for the last, hold to pause. Plays while on screen. */
+  document.querySelectorAll('[data-stories]').forEach(ig => {
+    const slides = [...ig.querySelectorAll('.ig-slide')];
+    const bars = [...ig.querySelectorAll('.ig-bars i')];
+    const ago = ig.querySelector('.ig-ago');
+    let k = 0, t = 0, last = 0, paused = false, seen = false, raf = 0;
+    const media = j => slides[j].querySelector('video');
+    const len = j => { const v = media(j); return v && v.duration ? v.duration * 1000 : +slides[j].dataset.ms; };
+    const show = j => {
+      const v0 = media(k); if (v0) v0.pause();
+      k = (j + slides.length) % slides.length; t = 0;
+      slides.forEach((s, n) => { s.classList.toggle('on', n === k); s.setAttribute('aria-hidden', n === k ? 'false' : 'true'); });
+      bars.forEach((b, n) => { b.style.transform = `scaleX(${n < k ? 1 : 0})`; });
+      ago.textContent = slides[k].dataset.ago;
+      const v = media(k);
+      if (v) { if (!v.src) v.src = v.dataset.src; v.currentTime = 0; if (seen && !paused) v.play().catch(() => {}); }
+    };
+    const tick = now => {
+      raf = requestAnimationFrame(tick);
+      const dt = Math.min(64, now - (last || now)); last = now;
+      if (!seen || paused) return;
+      const v = media(k);
+      t = v && v.duration ? v.currentTime * 1000 : t + dt;
+      bars[k].style.transform = `scaleX(${Math.min(1, t / len(k)).toFixed(4)})`;
+      if (t >= len(k) - 30 && !reduce) show(k + 1);
+    };
+    const setPause = on => {
+      paused = on; ig.classList.toggle('paused', on);
+      const v = media(k); if (v) { if (on || !seen) v.pause(); else v.play().catch(() => {}); }
+    };
+    show(0);
+    raf = requestAnimationFrame(tick);
+    if ('IntersectionObserver' in window) new IntersectionObserver(es => es.forEach(e => {
+      seen = e.isIntersecting && !reduce; setPause(paused);
+    }), { threshold: .5 }).observe(ig);
+    /* hold to pause, a quick tap moves on */
+    let down = 0;
+    ig.querySelectorAll('.ig-tap').forEach(b => {
+      b.addEventListener('pointerdown', () => { down = performance.now(); setPause(true); });
+      b.addEventListener('pointerup', () => { const held = performance.now() - down > 260; setPause(false); if (!held) { show(k + (b.classList.contains('ig-next') ? 1 : -1)); if (window.BERNS_HAPTIC) window.BERNS_HAPTIC(8); } });
+      b.addEventListener('pointerleave', () => { if (paused && down) { down = 0; setPause(false); } });
+      b.addEventListener('click', e => { if (e.detail === 0) show(k + (b.classList.contains('ig-next') ? 1 : -1)); });
+      b.addEventListener('contextmenu', e => e.preventDefault());
+    });
+    ig.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(k + 1); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); show(k - 1); }
+      else if (e.key === ' ') { e.preventDefault(); setPause(!paused); }
+    });
+  });
 
   /* A light tick as the frame opens fully */
   let was = false;
