@@ -8,7 +8,7 @@
    4. The close, then the next project waiting at the bottom as a file in its own colour.
    The colour is set in the page head before the first paint (see project.html).
    ========================================================= */
-(() => {
+(window.BERNS_COPY || Promise.resolve()).then(() => { /* after the copy from the sheet is in (assets/copy.js) */
   const D = window.BERNS;
   const P = D.projects;
   const p = window.BERNS_CASE || P[0];
@@ -486,4 +486,4 @@
     if (on && !was && window.BERNS_HAPTIC) window.BERNS_HAPTIC(14);
     was = on;
   }, { passive: true });
-})();
+});

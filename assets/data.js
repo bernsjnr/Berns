@@ -79,6 +79,8 @@ window.BERNS = {
   /* Where the Buy button sends the order. Empty = email order (static hosting, e.g. GitHub Pages).
      On Hostinger set it to 'api/checkout.php' once api/config.php holds the Stripe key. */
   checkoutEndpoint: '',
+  /* Work copy lives in Berns's Google Sheet "Berns website: Work copy" (assets/copy.js reads it). Empty = use the copy in this file. */
+  copySheet: '1BqQbt8275emfQHJmjbJIUOUsZqCPO1wlt5bVQHbtLyQ',
 
   /* Each print can hold one Stripe Payment Link per size + frame,
      keyed "<size>-<frame>", e.g. checkout: { 'a2-oak': 'https://buy.stripe.com/...' }.
