@@ -999,10 +999,14 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 @media (max-width:760px){
   .cs-mantra{--h:3.9vw;margin-top:72px;margin-left:-20px;margin-right:-20px;height:240svh}
   .cs-mantra-pin{padding:0 20px}
-  .r-coin{margin-left:-20px;margin-right:-20px}
-  .r-coin > .cs-cap{padding:0 20px}
-  .cs-coin{height:auto;aspect-ratio:1;min-height:0}
-  .cs-coin-flip{font-size:11px;padding:12px 16px;bottom:16px}
+  /* phones: no ink band, the coin sits on the white page, centred; Turn it in ink */
+  .r-coin{margin-left:0;margin-right:0}
+  .r-coin > .cs-cap{padding:0}
+  .cs-coin{height:auto;aspect-ratio:1;min-height:0;background:transparent;padding-bottom:48px;box-sizing:content-box}
+  .cs-coin-gl{height:calc(100% - 48px)!important}
+  .cs-coin-poster{display:none}
+  .cs-coin-flip{font-size:11px;padding:12px 16px;bottom:4px;color:var(--ink)}
+  .cs-coin-flip:hover,.cs-coin-flip:focus-visible{color:var(--white)}
   .r-text{display:block}
   .r-text .cs-cells{width:100%}
   .cs-film{border-radius:12px}

@@ -63,7 +63,7 @@
     scene.environment = pm.fromScene(new THREE.RoomEnvironment(), .03).texture;
     const camera = new THREE.PerspectiveCamera(24, 1, .1, 50);
     const size = () => {
-      const w = host.clientWidth, h = host.clientHeight;
+      const w = cv.clientWidth || host.clientWidth, h = cv.clientHeight || host.clientHeight; /* the canvas box, as CSS sizes it */
       if (!w || !h) return;
       renderer.setSize(w, h, false);
       camera.aspect = w / h;
@@ -126,7 +126,7 @@
   const coin = async (host, THREE) => {
     const cfg = JSON.parse(host.dataset.coin);
     const [a, b] = await Promise.all(cfg.faces.map(img));
-    const { renderer, scene, camera } = stage(THREE, host, { tone: true, exposure: 1.2, span: 2, fill: .62, cls: 'cs-coin-gl' });
+    const { renderer, scene, camera } = stage(THREE, host, { tone: true, exposure: 1.2, span: 2, fill: innerWidth < 760 ? .76 : .62, cls: 'cs-coin-gl' });
     const key = new THREE.DirectionalLight(0xFFF1D6, 2.4); key.position.set(-3, 4, 5); scene.add(key);
     const rim = new THREE.DirectionalLight(0xFFE2A8, 1.6); rim.position.set(4, -2, -3); scene.add(rim);
     const brass = { color: 0xFFFFFF, metalness: 1, envMapIntensity: 1.6 };
