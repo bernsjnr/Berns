@@ -140,7 +140,7 @@ body.home{min-height:100vh;min-height:100svh;display:grid;grid-template-rows:aut
 
 /* =========================================================
    Scrolling pages (About): grounds, reveals, chapters
-   Each chapter sets data-ground (ink, white, blue). As it takes the
+   Each chapter sets data-ground (ink or white; About is black and white only). As it takes the
    middle of the screen, the whole page eases to that colour.
    ========================================================= */
 html{--ground:var(--ink)}
@@ -269,15 +269,21 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
   .chap:has(> .prints){display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:calc(96 * var(--u));align-content:start}
   .chap > .prints{grid-column:1;grid-row:1 / span 30;display:block;margin:0;align-self:stretch}
   .chap:has(> .prints) > :not(.prints){grid-column:2}
-  /* the picture pins beside the text while you read it, always fully in view */
-  .chap > .prints .photo{position:sticky;top:calc(112 * var(--u));width:100%;height:calc(100vh - 112 * var(--u) - 56 * var(--u));aspect-ratio:auto}
-  .chap > .prints .photo--host img{object-position:22% 60%}
+  /* the picture pins beside the text while you read it, the WHOLE picture at its own shape (no crop).
+     One rule for all: top-left of the column, full column width, unless that would make it taller than
+     the screen, then it shrinks to fit the height (portraits). Same frame, same top line, every chapter. */
+  .chap > .prints .photo{--r:272/316;position:sticky;top:calc(112 * var(--u));height:auto;aspect-ratio:var(--r);
+    width:min(100%, calc((100vh - 112 * var(--u) - 56 * var(--u)) * var(--r)))}
+  .chap > .prints .photo--host{--r:1400/935}
+  .chap > .prints .photo--btr{--r:1400/1120}
+  .chap > .prints .photo--tp{--r:1400/1050}
+  .chap > .prints .photo img{object-position:50% 50%}
   .chap:has(> .prints) .chap-title{font-size:calc(88 * var(--u))}
   .chap:has(> .prints) .chap-lede{max-width:none}
   .chap:has(> .prints) .marks{max-width:none;gap:calc(32 * var(--u))}
 }
 .photo .ph{display:grid;place-items:center;width:100%;height:100%;background:#F1F2F3;color:var(--ink);font-size:calc(13 * var(--u));text-align:center;padding:12px}
-/* Print frame follows its chapter: black on white pages, white on ink and blue */
+/* Print frame follows its chapter: black on white pages, white on ink */
 .chap[data-ground="white"] .photo{background:var(--ink)}
 
 /* Close */
