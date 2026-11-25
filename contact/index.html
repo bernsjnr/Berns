@@ -1,33 +1,76 @@
 <!doctype html>
-<html lang="en-GB">
+<html lang="en-GB" data-ground="blue">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080CDF">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="icon" href="../favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="../apple-touch-icon.png">
-<title>Contact. Berns</title>
+<title>Contact. Bernard Bannor</title>
 <meta name="description" content="Studio enquiries and presenting bookings.">
-<!-- Adobe Fonts kit (Scale variable + Neue Haas Grotesk). Loads anywhere, no domain setup. -->
 <link rel="stylesheet" href="https://use.typekit.net/tdx4jgk.css">
-<link rel="stylesheet" href="../assets/site.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
+<link rel="stylesheet" href="../assets/core.css?v=113">
+<script src="../assets/motion.js?v=1"></script>
 </head>
-<body data-base="../" data-page="contact">
-<main>
-<section class="contact full">
-  <p class="label rv">Contact</p>
-  <h1 class="big rv">Let's make something you're proud of.</h1>
-  <a class="mail rv" href="mailto:info@bernsds.com">info@bernsds.com</a>
-  <div class="actions rv">
-    <a class="btn" href="mailto:info@bernsds.com?subject=Studio%20enquiry">Studio enquiry</a>
-    <a class="btn line" href="mailto:info@bernsds.com?subject=Presenting%20booking">Presenting booking</a>
-    <a class="btn line" href="https://www.instagram.com/berns.studios/" target="_blank" rel="noopener">Instagram</a>
+<body data-base="../" data-page="contact" class="scroll ct">
+
+<header class="bar">
+  <p class="bar-name"><a href="../home/index.html"><span class="scale">Bernard <br>Bannor</span><span class="aka mono">(Also known as &lsquo;Berns&rsquo;)</span></a></p>
+  <div class="bar-right">
+    <time class="bar-clock mono" data-clock><span class="clock-date"></span><span class="clock-time"></span></time>
+    <span class="bar-batt" data-battery role="img" aria-label="Battery">
+      <svg viewBox="0 0 40 20" aria-hidden="true">
+        <rect x="1" y="1" width="34" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+        <rect x="36.5" y="6.5" width="3" height="7" rx="1.2" fill="currentColor"/>
+        <rect class="fill" x="4" y="4" width="28" height="12" rx="2.5" fill="currentColor"/>
+        <path class="bolt" d="M19.5 3.5 13 11h5l-1.5 5.5L23 9h-5z" fill="#1A1A1A" stroke="#FFFFFF" stroke-width="1" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <button class="bar-menu scale" type="button" data-menu-btn aria-expanded="false" aria-controls="menu"><span class="lbl">Menu</span><span class="pm" aria-hidden="true"></span></button>
   </div>
-  <div class="mark rv" data-logo></div>
-</section>
+</header>
+
+<nav class="menu" id="menu" aria-label="Main">
+  <ol>
+    <li><a class="scale" href="../home/index.html"><span class="n mono">01</span><span class="t">Home</span></a></li>
+    <li><a class="scale" href="../about/index.html"><span class="n mono">02</span><span class="t">About</span></a></li>
+    <li><a class="scale" href="../studios/index.html"><span class="n mono">03</span><span class="t">Work</span></a></li>
+    <li><a class="scale" href="../shop/index.html"><span class="n mono">04</span><span class="t">Shop</span></a></li>
+    <li><a class="scale" href="index.html" aria-current="page"><span class="n mono">05</span><span class="t">Contact</span></a></li>
+    <li><a class="scale" href="../surprise/index.html"><span class="n mono">06</span><span class="t">Surprise</span></a></li>
+  </ol>
+</nav>
+
+<main class="ct-main">
+  <p class="ct-label mono" data-reveal>Contact</p>
+  <h1 class="close-title scale" data-reveal>Time to bring your ideas to life.</h1>
+  <a class="close-mail" href="mailto:info@bernsds.com" data-reveal="2">info@bernsds.com</a>
+  <div class="btns" data-reveal="2">
+    <a class="btn btn-solid" href="mailto:info@bernsds.com?subject=Studio%20enquiry">Studio enquiry</a>
+    <a class="btn" href="mailto:info@bernsds.com?subject=Presenting%20booking">Presenting booking</a>
+    <a class="btn" href="https://www.instagram.com/berns.studios/" target="_blank" rel="noopener">Instagram</a>
+  </div>
+  <span class="wm ct-wm" role="img" aria-label="Berns Studios"><span class="b">Berns</span><span class="s">Studios</span></span>
 </main>
-<script src="../assets/data.js?v=18"></script>
-<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="../assets/site.js"></script>
+
+<script src="../assets/core.js?v=50"></script>
+<script>
+/* Phones: the wordmark is exactly as wide as the CONTACT label above it */
+(() => {
+  const wm = document.querySelector('.ct-wm'), lb = document.querySelector('.ct-label');
+  const fit = () => {
+    wm.style.fontSize = '';
+    if (innerWidth > 760) return;
+    const f = parseFloat(getComputedStyle(wm).fontSize);
+    wm.style.fontSize = (f * lb.offsetWidth / wm.offsetWidth).toFixed(2) + 'px';
+  };
+  fit(); addEventListener('resize', fit);
+  if (document.fonts) document.fonts.ready.then(fit);
+})();
+</script>
 </body>
 </html>

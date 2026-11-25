@@ -38,7 +38,7 @@
   const heroSrc = p.cover || (p.video ? p.poster : p.img);
   const hero = p.cover || !p.video
     ? `<img src="${base + heroSrc}" alt="${esc(p.name)}" draggable="false">`
-    : `<video muted loop playsinline preload="metadata" poster="${base + p.poster}" src="${base + p.video}" aria-label="${esc(p.name)}"></video>`;
+    : `<video muted loop playsinline${reduce ? '' : ' autoplay'} preload="auto" poster="${base + p.poster}" src="${base + (p.videoSm && innerWidth < 760 ? p.videoSm : p.video)}" aria-label="${esc(p.name)}"></video>`; /* phones get the lighter cut (videoSm) and it starts loading straight away */
   const fig = m => m.video
     ? `<figure class="cs-fig" data-reveal><video muted loop playsinline preload="none" poster="${base + m.poster}" data-src="${base + m.video}"></video></figure>`
     : `<figure class="cs-fig" data-reveal><img src="${base + m.img}" alt="" loading="lazy"></figure>`;
@@ -173,7 +173,8 @@
         ${w.cap ? `<figcaption class="cs-cap mono"><span>${pad(++fn)}</span>${esc(w.cap)}</figcaption>` : ''}</figure>`;
       const tall = w.items.every(m => (m.r || 1) <= 1.05);
       return `<figure class="cs-row r-${w.row}${tall ? ' tall' : ''}${w.sync ? '" data-sync="1' : ''}${w.cap && w.items.some(m => m.cap) ? ' set' : ''}"${w.bg || w.w ? ` style="${w.bg ? `--row-bg:${w.bg};` : ''}${w.w ? `--w:${w.w}` : ''}"` : ''} data-reveal>
-        <div class="cs-cells">${w.items.map(cell).join('')}</div>
+        <div class="cs-cells"${/^(trio|quad)$/.test(w.row) ? ` style="--rmax:${Math.max(...w.items.map(m => m.r || 1))}"` : ''}>${w.items.map(cell).join('')}</div>${/^(trio|quad)$/.test(w.row) ? `
+        <div class="cs-swipe" aria-hidden="true"><span class="cs-swipe-n mono">1 / ${w.items.length}</span><span class="cs-swipe-b"><button class="cs-car-b" type="button" tabindex="-1" data-dir="-1"><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button><button class="cs-car-b" type="button" tabindex="-1" data-dir="1"><svg viewBox="0 0 16 16"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></span></div>` : ''}
         ${w.cap ? `<figcaption class="cs-cap mono">${w.items.some(m => m.cap) ? '' : `<span>${pad(++fn)}</span>`}${esc(w.cap)}</figcaption>` : ''}
       </figure>`;
     };
@@ -408,6 +409,21 @@
       }, { threshold: .2 }).observe(row);
     });
   }
+
+  /* Trios and quads swipe on phones: a count and arrows so it reads as a carousel */
+  document.querySelectorAll('#case .cs-swipe').forEach(nav => {
+    const track = nav.parentElement.querySelector('.cs-cells'), cells = [...track.children], n = nav.querySelector('.cs-swipe-n');
+    const at = () => { const x = track.scrollLeft + track.clientWidth / 2; let k = 0, d = 1e9;
+      cells.forEach((c, j) => { const e = Math.abs(c.offsetLeft - track.offsetLeft + c.offsetWidth / 2 - x); if (e < d) { d = e; k = j; } }); return k; };
+    const paint = () => { const k = at(); n.textContent = `${k + 1} / ${cells.length}`;
+      nav.querySelector('[data-dir="-1"]').disabled = k === 0; nav.querySelector('[data-dir="1"]').disabled = k === cells.length - 1; };
+    nav.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+      const c = cells[Math.max(0, Math.min(cells.length - 1, at() + +b.dataset.dir))];
+      track.scrollTo({ left: c.offsetLeft - track.offsetLeft - (track.clientWidth - c.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' });
+    }));
+    let t; track.addEventListener('scroll', () => { cancelAnimationFrame(t); t = requestAnimationFrame(paint); }, { passive: true });
+    paint();
+  });
 
   /* Scrubbable loops: drag the slider to any point, Pause holds it there */
   document.querySelectorAll('.cs-scrub').forEach(sc => {
