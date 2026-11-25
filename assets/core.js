@@ -227,8 +227,11 @@
     addEventListener('scroll', s, { passive: true }); s();
   }
 
+  /* Pages built from data wait for the copy from the sheet (assets/copy.js); these parts wait with them */
+  const built = window.BERNS_COPY || Promise.resolve();
+
   /* Grounds: the chapter holding the middle of the screen sets the page colour (ink, white or blue) */
-  {
+  built.then(() => {
     const chaps = [...document.querySelectorAll('body [data-ground]')];
     if (chaps.length) {
       let cur = '';
@@ -243,7 +246,7 @@
       addEventListener('resize', pick);
       pick();
     }
-  }
+  });
 
 
   /* About: a tick every so often as you scroll, a firmer one when a new chapter takes over */
@@ -257,7 +260,7 @@
   }
 
   /* Reveals: fade up into place when they come on screen */
-  {
+  built.then(() => {
     const els = document.querySelectorAll('[data-reveal]');
     if (els.length) {
       if (reduce || !('IntersectionObserver' in window)) els.forEach(el => el.classList.add('in'));
@@ -268,7 +271,7 @@
         els.forEach(el => io.observe(el));
       }
     }
-  }
+  });
 
   /* Opening scene (About): pinned while you scroll. 0 to 35%: the greeting holds. 30 to 50%: it fades and shrinks away.
      50 to 92%: the one-line bio appears word by word. */

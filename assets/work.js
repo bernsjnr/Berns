@@ -8,7 +8,7 @@
    Art direction) and who it was for (The Guardian, Studio clients, Community, Personal).
    Tap an option to pick it, tap again to clear it. Content: assets/data.js.
    ========================================================= */
-(() => {
+(window.BERNS_COPY || Promise.resolve()).then(() => { /* after the copy from the sheet is in (assets/copy.js) */
   const D = window.BERNS;
   const base = document.body.dataset.base || '';
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -183,4 +183,4 @@
   }
 
   build();
-})();
+});
