@@ -7,7 +7,7 @@ window.BERNS = {
   /* ---------- Work ----------
      Order = recently added: newest first. The Work page stacks them in this order.
      `bg` = the project's colour, pulled from its own imagery. It colours the file on the Work page and
-     the opener of the case study. Text on that colour is picked automatically (BERNS.fgOn: ink or white, whichever contrasts more; keep it at 4.5:1 or above).
+     the opener of the case study. Text on that colour is picked automatically (BERNS.fgOn: ink or white, whichever contrasts more; keep it at 4.5:1 or above). A project can force it with fg (Monzo: white on Hot Coral, Berns's call).
      `summary` = one line under the title (first drafts, Berns to edit). `quote` = pull quote, lifted from the write-up.
      `cover` / `img` = still, `video` = muted loop (assets/video) with `poster`. `gallery` = extra media for the
      case study, placed between the write-up sections: { video, poster } or { img }.
@@ -15,7 +15,7 @@ window.BERNS = {
      `tags` drive the discipline filters, `folder` the second filter (The Guardian, Studio clients, Community, Personal). */
   projects: [
     { id: 'monzo', name: 'Monzo', client: 'Guardian Labs for Monzo', discipline: 'Motion and design', year: '2026',
-      tags: ['Animation', 'Design'], folder: 'The Guardian', bg: '#FF4F40',
+      tags: ['Animation', 'Design'], folder: 'The Guardian', bg: '#FF4F40', fg: '#FFFFFF',
       summary: 'Pot title animations for a Guardian Labs film with Monzo, plus the article images for Get Your Money Moving.',
       quote: "What's in your savings pot?",
       /* Monzo Hot Coral #FF4F40 (Berns's call, Nov 2026; ink text, 5.3:1). Holibobs was this campaign: merged into Monzo (Berns's call, Nov 2026). Opener is his own pot title on navy (the old film loop looked grey). */
@@ -24,7 +24,7 @@ window.BERNS = {
       made: ["Pot title animations: Holibobs, Cat dentist, Rewedding", "Article header images", "Article drop-in images"],
       credits: [["Client", "Monzo"], ["Agency", "Guardian Labs"], ["Me", "Digital designer: pot title animations and article images"]] },
     { id: 'this-bed-i-made', name: 'This Bed I Made', client: "Guvna B", discipline: "Art direction, design and motion", year: '2026',
-      tags: ['Animation', 'Design', 'Art direction'], folder: 'Studio clients', bg: '#AA8020',
+      tags: ['Animation', 'Design', 'Art direction'], folder: 'Studio clients', bg: '#0B3A0E',
       summary: "Art direction and the full visual world for Guvna B's comeback album, from the coin to the cover to the film.",
       quote: 'No one above accountability, no one beyond redemption.',
       /* the quote set in the album's own lettering (traced from the artwork), faded up line by line like the end credits */
