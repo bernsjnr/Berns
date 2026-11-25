@@ -16,7 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
 <link rel="stylesheet" href="../assets/core.css?v=110">
-<script src="../assets/data.js?v=14"></script>
+<script src="../assets/data.js?v=15"></script>
 <script src="../assets/copy.js?v=1"></script>
 <script>
 /* The project's colour, set before the first paint so the page opens in it */
@@ -25,7 +25,7 @@
   const p = P.find(x => x.id === id) || P[0];
   const r = document.documentElement.style;
   r.setProperty('--p-bg', p.bg);
-  r.setProperty('--p-fg', BERNS.fgOn(p.bg));
+  r.setProperty('--p-fg', p.fg || BERNS.fgOn(p.bg));
   document.querySelector('meta[name="theme-color"]').content = p.bg;
   window.BERNS_CASE = p;
 })();
@@ -64,7 +64,7 @@
 <!-- Built by assets/case.js from assets/data.js: opener, write-up, close, next project -->
 <main class="cs" id="case"></main>
 
-<script src="../assets/case.js?v=14"></script>
+<script src="../assets/case.js?v=15"></script>
 <script src="../assets/core.js?v=50"></script>
 <i id="ready" hidden></i>
 </body>
