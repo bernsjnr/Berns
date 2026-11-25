@@ -263,24 +263,29 @@ html[data-ground="white"] .btn:hover,html[data-ground="white"] .btn:focus-visibl
 .chap .photo--tp{width:calc(554 * var(--u));aspect-ratio:1400/1050}
 .chap .photo img{object-position:50% 40%}
 
-/* Desktop: picture on the left, the whole chapter's text on the right. The picture stretches to the height
-   of the text so the two columns line up top and bottom. */
+/* Desktop (Berns's call, Nov 2026): the same journey as phones. Picture first, then everything under it,
+   centred on one axis. Every picture is shown whole at its own shape, inside one shared box
+   (760 wide, 58% of the screen tall), so portrait and landscape carry the same weight. */
 @media (min-width:761px){
-  .chap:has(> .prints){display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);column-gap:calc(96 * var(--u));align-content:start}
-  .chap > .prints{grid-column:1;grid-row:1 / span 30;display:block;margin:0;align-self:stretch}
-  .chap:has(> .prints) > :not(.prints){grid-column:2}
-  /* the picture pins beside the text while you read it, the WHOLE picture at its own shape (no crop).
-     One rule for all: top-left of the column, full column width, unless that would make it taller than
-     the screen, then it shrinks to fit the height (portraits). Same frame, same top line, every chapter. */
-  .chap > .prints .photo{--r:272/316;position:sticky;top:calc(112 * var(--u));height:auto;aspect-ratio:var(--r);
-    width:min(100%, calc((100vh - 112 * var(--u) - 56 * var(--u)) * var(--r)))}
+  .chap{text-align:center}
+  .chap-title[data-reveal]{transform-origin:50% 100%}
+  .prints{justify-content:center;margin-bottom:calc(88 * var(--u))}
+  .chap > .prints .photo{--r:272/316;height:auto;aspect-ratio:var(--r);width:min(calc(760 * var(--u)), calc(58vh * var(--r)))}
   .chap > .prints .photo--host{--r:1400/935}
   .chap > .prints .photo--btr{--r:1400/1120}
   .chap > .prints .photo--tp{--r:1400/1050}
   .chap > .prints .photo img{object-position:50% 50%}
-  .chap:has(> .prints) .chap-title{font-size:calc(88 * var(--u))}
-  .chap:has(> .prints) .chap-lede{max-width:none}
-  .chap:has(> .prints) .marks{max-width:none;gap:calc(32 * var(--u))}
+  .chap-lede{margin-left:auto;margin-right:auto;max-width:22ch}
+  .chap-body{margin-left:auto;margin-right:auto}
+  .marks{margin-left:auto;margin-right:auto;max-width:calc(820 * var(--u))}
+  .mark{align-items:center}
+  .mark-logo{justify-content:center}
+  .btns{justify-content:center}
+  .groups{max-width:calc(900 * var(--u));margin-left:auto;margin-right:auto;text-align:left}
+  .close{align-items:center;text-align:center}
+  .close-title{margin:0 auto}
+  .chap.close .close-mail{align-self:center}
+  .chap.close{align-items:center}
 }
 .photo .ph{display:grid;place-items:center;width:100%;height:100%;background:#F1F2F3;color:var(--ink);font-size:calc(13 * var(--u));text-align:center;padding:12px}
 /* Print frame follows its chapter: black on white pages, white on ink */
