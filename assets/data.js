@@ -24,7 +24,7 @@ window.BERNS = {
       made: ["Pot title animations: Holibobs, Cat dentist, Rewedding", "Article header images", "Article drop-in images"],
       credits: [["Client", "Monzo"], ["Agency", "Guardian Labs"], ["Me", "Digital designer: pot title animations and article images"]] },
     { id: 'this-bed-i-made', name: 'This Bed I Made', client: "Guvna B", discipline: "Art direction, design and motion", year: '2026',
-      tags: ['Animation', 'Design', 'Art direction'], folder: 'Studio clients', bg: '#A9C3CF',
+      tags: ['Animation', 'Design', 'Art direction'], folder: 'Studio clients', bg: '#343F4D',
       summary: "Art direction and the full visual world for Guvna B's comeback album, from the coin to the cover to the film.",
       quote: 'No one above accountability, no one beyond redemption.',
       /* the quote set in the album's own lettering (traced from the artwork), faded up line by line like the end credits */
