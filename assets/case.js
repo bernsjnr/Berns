@@ -137,6 +137,23 @@
           <button class="cs-coin-flip mono" type="button" hidden>Turn it</button>
         </div>
         ${w.cap ? `<figcaption class="cs-cap mono"><span>${pad(++fn)}</span>${esc(w.cap)}</figcaption>` : ''}</figure>`;
+      /* A laptop with a live mock of the site: click the tiles, scroll the pages, or watch the tour.
+         { row: 'laptop', start: 'hub', tour: [ids], pages: { id: { img, url, links: [{ to, x, y, w, h, label }] } } }
+         Link boxes are fractions of the page image (0 to 1). */
+      if (w.row === 'laptop') return `<figure class="cs-row r-laptop" data-reveal>
+        <div class="lap" data-laptop="${esc(JSON.stringify({ start: w.start, tour: w.tour || [], pages: w.pages }))}">
+          <div class="lap-lid"><div class="lap-screen">
+            <div class="lap-bar"><i></i><i></i><i></i>
+              <button class="lap-back" type="button" aria-label="Back">&larr;</button>
+              <span class="lap-url mono"></span></div>
+            <div class="lap-view" tabindex="0" aria-label="Scrollable page preview"><div class="lap-page"><img alt="" decoding="async"></div></div>
+            <img class="lap-cursor" src="${base}assets/cursor/arrow.png" alt="" aria-hidden="true">
+          </div></div>
+          <div class="lap-base"></div>
+        </div>
+        <div class="lap-ui"><p class="lap-hint mono"></p><button class="lap-tour mono" type="button">Play the tour</button></div>
+        ${w.cap ? `<figcaption class="cs-cap mono"><span>${pad(++fn)}</span>${esc(w.cap)}</figcaption>` : ''}
+      </figure>`;
       if (w.row === 'film') return `<figure class="cs-row r-film" data-reveal>
         <div class="cs-film">
           <button class="cs-play" type="button" data-yt="${esc(w.youtube)}" data-title="${esc(w.title || p.name)}" aria-label="Play ${esc(w.title || 'the film')}">
@@ -301,6 +318,78 @@
       else v.pause();
     }), { threshold: .2 });
     document.querySelectorAll('#case video:not(.ig video)').forEach(v => { if (!v.closest('[data-sync]')) vo.observe(v); });
+    /* Laptop rows: a clickable, scrollable mock of the live pages, with an auto tour until you take over */
+    document.querySelectorAll('#case [data-laptop]').forEach(lap => {
+      const cfg = JSON.parse(lap.dataset.laptop), P = cfg.pages;
+      const fig = lap.closest('figure'), screen = lap.querySelector('.lap-screen'), view = lap.querySelector('.lap-view');
+      const page = lap.querySelector('.lap-page'), img = page.querySelector('img'), url = lap.querySelector('.lap-url');
+      const back = lap.querySelector('.lap-back'), cur = lap.querySelector('.lap-cursor');
+      const hint = fig.querySelector('.lap-hint'), tourBtn = fig.querySelector('.lap-tour');
+      const hist = []; let now = null, run = 0, touring = false;
+      Object.values(P).forEach(pg => { pg.src = base + pg.img; });
+      const say = t => { hint.textContent = t; };
+      const show = (id, push) => {
+        if (push && now) hist.push(now);
+        now = id; const pg = P[id];
+        img.src = pg.src; url.textContent = pg.url || '';
+        page.querySelectorAll('.lap-hot').forEach(h => h.remove());
+        (pg.links || []).forEach(l => {
+          const b = document.createElement('button');
+          b.type = 'button'; b.className = 'lap-hot'; b.dataset.to = l.to; b.setAttribute('aria-label', l.label || 'Open');
+          Object.assign(b.style, { left: l.x * 100 + '%', top: l.y * 100 + '%', width: l.w * 100 + '%', height: l.h * 100 + '%' });
+          b.addEventListener('click', () => { stop(); show(l.to, true); });
+          page.appendChild(b);
+        });
+        view.scrollTop = 0; back.disabled = !hist.length;
+        if (!touring) say(pg.links && pg.links.length ? 'Click an article or the film' : 'Scroll to read, then go back');
+      };
+      back.addEventListener('click', () => { stop(); if (hist.length) { const id = hist.pop(); show(id); } });
+      /* The tour */
+      const wait = (ms, id) => new Promise(r => setTimeout(() => r(id === run), ms));
+      const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+      const scrollTo = (y, ms, id) => new Promise(r => {
+        const y0 = view.scrollTop, t0 = performance.now();
+        const f = t => { if (id !== run) return r(false); const k = Math.min(1, (t - t0) / ms); view.scrollTop = y0 + (y - y0) * ease(k); k < 1 ? requestAnimationFrame(f) : r(true); };
+        requestAnimationFrame(f);
+      });
+      const point = el => { const a = screen.getBoundingClientRect(), b = el.getBoundingClientRect();
+        cur.style.transform = `translate(${b.left - a.left + b.width / 2}px, ${b.top - a.top + b.height / 2}px)`; };
+      const tap = async (el, id) => { point(el); if (!await wait(950, id)) return false; el.classList.add('on'); cur.classList.add('click');
+        if (!await wait(380, id)) return false; cur.classList.remove('click'); el.classList.remove('on'); return true; };
+      const tour = async () => {
+        const id = ++run; touring = true; tourBtn.hidden = true; cur.style.opacity = 1; say('Touring the site. Scroll or click to take over');
+        while (id === run) {
+          for (const to of cfg.tour) {
+            if (now !== cfg.start) { hist.length = 0; show(cfg.start); }
+            const hot = page.querySelector(`.lap-hot[data-to="${to}"]`); if (!hot) continue;
+            if (!await wait(700, id)) return;
+            const y = Math.max(0, hot.offsetTop - view.clientHeight * .25);
+            if (!await scrollTo(y, 900, id)) return;
+            if (!await tap(hot, id)) return;
+            show(to, true);
+            if (!await wait(700, id)) return;
+            const end = Math.min(page.offsetHeight - view.clientHeight, page.offsetHeight * .55);
+            if (!await scrollTo(end, 4200, id)) return;
+            if (!await wait(600, id)) return;
+            if (!await tap(back, id)) return;
+            show(hist.pop());
+          }
+        }
+      };
+      const stop = () => { if (!touring) return; run++; touring = false; cur.style.opacity = 0; cur.classList.remove('click');
+        tourBtn.hidden = reduce; const pg = P[now]; say(pg.links && pg.links.length ? 'Click an article or the film' : 'Scroll to read, then go back'); };
+      ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach(e => view.addEventListener(e, stop, { passive: true }));
+      tourBtn.addEventListener('click', () => { hist.length = 0; show(cfg.start); tour(); });
+      tourBtn.hidden = true;
+      show(cfg.start);
+      let started = false;
+      new IntersectionObserver(es => {
+        const on = es[0].isIntersecting;
+        if (on && !started) { started = true; if (reduce) { tourBtn.hidden = true; } else tour(); }
+        else if (!on && touring) { run++; touring = false; cur.style.opacity = 0; tourBtn.hidden = false; }
+      }, { threshold: .45 }).observe(lap);
+    });
+
     /* Rows with sync: true start together and stay locked to the first loop (e.g. Monzo's pot titles) */
     document.querySelectorAll('#case [data-sync]').forEach(row => {
       const vs = [...row.querySelectorAll('video')], lead = vs[0];
