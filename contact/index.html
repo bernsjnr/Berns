@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap">
-<link rel="stylesheet" href="../assets/core.css?v=113">
+<link rel="stylesheet" href="../assets/core.css?v=114">
 <script src="../assets/motion.js?v=1"></script>
 </head>
 <body data-base="../" data-page="contact" class="scroll ct">
@@ -49,28 +49,11 @@
   <p class="ct-label mono" data-reveal>Contact</p>
   <h1 class="close-title scale" data-reveal>Time to bring your ideas to life.</h1>
   <a class="close-mail" href="mailto:info@bernsds.com" data-reveal="2">info@bernsds.com</a>
-  <div class="btns" data-reveal="2">
-    <a class="btn btn-solid" href="mailto:info@bernsds.com?subject=Studio%20enquiry">Studio enquiry</a>
-    <a class="btn" href="mailto:info@bernsds.com?subject=Presenting%20booking">Presenting booking</a>
-    <a class="btn" href="https://www.instagram.com/berns.studios/" target="_blank" rel="noopener">Instagram</a>
-  </div>
-  <span class="wm ct-wm" role="img" aria-label="Berns Studios"><span class="b">Berns</span><span class="s">Studios</span></span>
+  <a class="ct-ig" href="https://www.instagram.com/berns.studios/" target="_blank" rel="noopener" aria-label="Instagram, @berns.studios" data-reveal="3">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="2.5" width="19" height="19" rx="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.4" cy="6.6" r="1.2" fill="currentColor"/></svg>
+  </a>
 </main>
 
 <script src="../assets/core.js?v=50"></script>
-<script>
-/* Phones: the wordmark is exactly as wide as the CONTACT label above it */
-(() => {
-  const wm = document.querySelector('.ct-wm'), lb = document.querySelector('.ct-label');
-  const fit = () => {
-    wm.style.fontSize = '';
-    if (innerWidth > 760) return;
-    const f = parseFloat(getComputedStyle(wm).fontSize);
-    wm.style.fontSize = (f * lb.offsetWidth / wm.offsetWidth).toFixed(2) + 'px';
-  };
-  fit(); addEventListener('resize', fit);
-  if (document.fonts) document.fonts.ready.then(fit);
-})();
-</script>
 </body>
 </html>

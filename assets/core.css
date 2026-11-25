@@ -1160,16 +1160,13 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 .ct .close-title{margin:0 auto;max-width:14ch;font-size:min(7vw,calc(112 * var(--u)))}
 .ct .close-mail{align-self:center}
 .ct .close-mail:hover,.ct .close-mail:focus-visible{background:var(--white);color:var(--blue)}
-.ct .btns{justify-content:center}
-.ct .btn-solid:hover,.ct .btn-solid:focus-visible{background:transparent;color:var(--white);border-color:var(--white)}
-.ct .btn:not(.btn-solid):hover,.ct .btn:not(.btn-solid):focus-visible{background:var(--white);color:var(--blue);border-color:var(--white)}
-.ct-wm{margin-top:calc(72 * var(--u));font-size:calc(24 * var(--u))}
+.ct-ig{display:grid;place-items:center;width:calc(56 * var(--u));height:calc(56 * var(--u));min-width:44px;min-height:44px;margin-top:calc(48 * var(--u));border-radius:50%;color:inherit;transition:background-color .2s var(--out),color .2s var(--out)}
+.ct-ig svg{width:60%;height:60%}
+.ct-ig:hover,.ct-ig:focus-visible{background:var(--white);color:var(--blue)}
 @media (max-width:760px){
   .ct-main{padding:110px 20px 48px}
   .ct-label{font-size:12px;margin-bottom:24px}
   .ct .close-title{font-size:9vw;max-width:none}
   .ct .close-mail{font-size:20px;margin-top:28px}
-  .ct .btns{margin-top:28px}
-  /* the wordmark is as wide as the CONTACT label above */
-  .ct-wm{margin-top:48px;font-size:8px}
+  .ct-ig{margin-top:28px}
 }
