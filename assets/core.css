@@ -921,7 +921,7 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
   .r-trio .cs-cells,.r-quad .cs-cells{flex-direction:row;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
     margin:0 -20px;padding:0 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .r-trio .cs-cells::-webkit-scrollbar,.r-quad .cs-cells::-webkit-scrollbar{display:none}
-  .r-trio .cs-cell,.r-quad .cs-cell{flex:0 0 68vw;scroll-snap-align:center}
+  .r-trio .cs-cell,.r-quad .cs-cell{flex:0 0 calc(68vw / var(--rmax,1) * var(--r));scroll-snap-align:center} /* one height across the set */
   .r-offset .cs-cells,.r-offset > .cs-cap{width:100%}
   .cs-cap{font-size:10px;margin-top:8px}
   .cs-swatches{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
@@ -938,6 +938,17 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 }
 /* A row whose pieces carry their own captions: the row caption reads as the set's title, above the work */
 .cs-row.set{display:flex;flex-direction:column-reverse}
+.cs-row.set .cs-swipe{order:-1}
+/* Swipe count and arrows under trios and quads, phones only */
+.cs-swipe{display:none}
+@media (max-width:760px){
+  .cs-swipe{display:flex;align-items:center;justify-content:space-between;margin-top:14px}
+  .cs-swipe-n{font-size:10px}
+  .cs-swipe-b{display:flex;gap:8px}
+  .cs-swipe .cs-car-b{min-width:36px;min-height:36px;width:36px;height:36px}
+  .cs-swipe .cs-car-b:disabled{opacity:.3;pointer-events:none}
+  .cs-row.set .cs-swipe + .cs-cap,.cs-row:not(.set) .cs-swipe + .cs-cap{margin-top:10px}
+}
 .cs-row.set > .cs-cap{margin:0 0 calc(14 * var(--u))}
 @media (max-width:760px){.cs-row.set > .cs-cap{margin:0 0 8px}}
 
@@ -1112,12 +1123,17 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 .lap-tour[hidden]{display:none}
 .r-laptop > .cs-cap{justify-content:center}
 @media (max-width:760px){
-  .lap{padding:0 14px}
-  .lap-lid{border-radius:12px 12px 0 0;padding:7px 7px 9px}
-  .lap-screen{aspect-ratio:4/5;border-radius:4px}
-  .lap-base{margin:0 -14px;border-radius:0 0 10px 10px}
-  .lap-url{font-size:9px}
-  .lap-bar i{width:6px;height:6px}
+  /* The same laptop as desktop, scaled down: 16:10 screen, slim bezel and bar */
+  .lap{padding:0 5.4%}
+  .lap-lid{border-radius:8px 8px 0 0;padding:5px 5px 6px}
+  .lap-screen{border-radius:2px}
+  .lap-bar{height:14px;min-height:0;gap:3px;padding:0 5px}
+  .lap-bar i{width:4px;height:4px}
+  .lap-back{font-size:9px;padding:0 3px;margin-left:2px;border-radius:3px}
+  .lap-url{font-size:6px;padding:1px 6px}
+  .lap-cursor{width:10px}
+  .lap-hot{border-radius:3px;outline-width:1px;outline-offset:1px}
+  .lap-base{height:7px;min-height:0;margin:0 -6%;border-radius:0 0 6px 6px}
   .lap-ui{flex-direction:column;gap:10px;margin-top:16px}
   .lap-hint,.lap-tour{font-size:11px}
 }
@@ -1136,3 +1152,24 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 .r-offset > *{grid-column:2}
 .r-offset .cs-cells,.r-offset > .cs-cap{width:min(100%,calc(760 * var(--u)));margin-left:0}
 @media (max-width:760px){.r-offset{display:block}.r-offset .cs-cells,.r-offset > .cs-cap{width:100%}}
+
+/* Contact (v9, Nov 2026): one Berns Blue screen, the same bar as every page, the close centred */
+.ct-main{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
+  padding:calc(160 * var(--u)) var(--hx,40px) calc(80 * var(--u))}
+.ct-label{font-size:calc(13 * var(--u));line-height:1;margin-bottom:calc(36 * var(--u))}
+.ct .close-title{margin:0 auto;max-width:14ch;font-size:min(7vw,calc(112 * var(--u)))}
+.ct .close-mail{align-self:center}
+.ct .close-mail:hover,.ct .close-mail:focus-visible{background:var(--white);color:var(--blue)}
+.ct .btns{justify-content:center}
+.ct .btn-solid:hover,.ct .btn-solid:focus-visible{background:transparent;color:var(--white);border-color:var(--white)}
+.ct .btn:not(.btn-solid):hover,.ct .btn:not(.btn-solid):focus-visible{background:var(--white);color:var(--blue);border-color:var(--white)}
+.ct-wm{margin-top:calc(72 * var(--u));font-size:calc(24 * var(--u))}
+@media (max-width:760px){
+  .ct-main{padding:110px 20px 48px}
+  .ct-label{font-size:12px;margin-bottom:24px}
+  .ct .close-title{font-size:9vw;max-width:none}
+  .ct .close-mail{font-size:20px;margin-top:28px}
+  .ct .btns{margin-top:28px}
+  /* the wordmark is as wide as the CONTACT label above */
+  .ct-wm{margin-top:48px;font-size:8px}
+}
