@@ -60,8 +60,58 @@
     if (k === 0 && p.quote) body += `<blockquote class="cs-quote scale" data-reveal><p>${esc(p.quote)}</p></blockquote>`;
     if (k >= 1 && gallery.length) body += fig(gallery.shift());
   });
-  if (!secs.length) body += `<section class="cs-sec" data-reveal><div class="cs-sec-h"><p class="cs-sec-n mono">01</p><h2 class="cs-sec-t">The story</h2></div><div class="cs-sec-body"><p class="lede">The full write-up is on its way.</p></div></section>`;
+  if (!secs.length && !p.chapters) body += `<section class="cs-sec" data-reveal><div class="cs-sec-h"><p class="cs-sec-n mono">01</p><h2 class="cs-sec-t">The story</h2></div><div class="cs-sec-body"><p class="lede">The full write-up is on its way.</p></div></section>`;
   body += gallery.map(fig).join('');
+
+  /* ---------- Editorial chapters (Nov 2026) ----------
+     A project can carry `chapters` instead of `about`: [{ h, text: [...], rows: [...] }].
+     Each row lays its media out at the media's own shape (r = width / height, so a row of
+     different shapes lines up on one height, no cropping):
+       full    edge to edge         wide    one piece, page width     offset  one piece, pushed right
+       pair    two side by side     trio    three                      quad    four
+       palette colour swatches: colours: [[name, hex], ...]
+     Items: { img, r, cap } or { video, poster, r, cap }. Row options: bg (ground behind the work), cap.
+     Phones: pairs of portraits stay side by side, everything else stacks; trios and quads swipe.
+     Then `made` (what I made) and `credits` ([[label, text], ...]) close the read. */
+  if (p.chapters) {
+    body = '';
+    let fn = 0;
+    const cell = m => {
+      const n = pad(++fn);
+      const media = m.video
+        ? `<video muted loop playsinline preload="none" poster="${base + m.poster}" data-src="${base + m.video}"${m.cap ? ` aria-label="${esc(m.cap)}"` : ''}></video>`
+        : `<img src="${base + m.img}" alt="${esc(m.cap || '')}" loading="lazy" decoding="async">`;
+      return `<div class="cs-cell" style="--r:${m.r || 1}">
+        <div class="cs-media"${m.bg ? ` style="background:${m.bg}"` : ''}>${media}</div>
+        ${m.cap ? `<p class="cs-cap mono"><span>${n}</span>${esc(m.cap)}</p>` : ''}
+      </div>`;
+    };
+    const row = w => {
+      if (w.row === 'palette') return `<figure class="cs-row r-palette" data-reveal>
+        <div class="cs-swatches">${w.colours.map(([nm, hex]) => `<div class="cs-sw"><span style="background:${hex}"></span><p class="mono">${esc(nm)}<br>${hex}</p></div>`).join('')}</div>
+        ${w.cap ? `<figcaption class="cs-cap mono"><span>${pad(++fn)}</span>${esc(w.cap)}</figcaption>` : ''}</figure>`;
+      const tall = w.items.every(m => (m.r || 1) <= 1.05);
+      return `<figure class="cs-row r-${w.row}${tall ? ' tall' : ''}${w.cap && w.items.some(m => m.cap) ? ' set' : ''}"${w.bg ? ` style="--row-bg:${w.bg}"` : ''} data-reveal>
+        <div class="cs-cells">${w.items.map(cell).join('')}</div>
+        ${w.cap ? `<figcaption class="cs-cap mono">${w.items.some(m => m.cap) ? '' : `<span>${pad(++fn)}</span>`}${esc(w.cap)}</figcaption>` : ''}
+      </figure>`;
+    };
+    p.chapters.forEach((c, k) => {
+      body += `<section class="cs-sec" data-reveal>
+        <div class="cs-sec-h"><p class="cs-sec-n mono">${pad(k + 1)}</p><h2 class="cs-sec-t">${esc(c.h)}</h2></div>
+        <div class="cs-sec-body">${(c.text || []).map((t, j) => `<p${k === 0 && j === 0 ? ' class="lede"' : ''}>${esc(t)}</p>`).join('')}</div>
+      </section>`;
+      if (k === 0 && p.quote) body += `<blockquote class="cs-quote scale" data-reveal><p>${esc(p.quote)}</p></blockquote>`;
+      body += (c.rows || []).map(row).join('');
+    });
+    if (p.made || p.credits) body += `<section class="cs-sec cs-index" data-reveal>
+      <div class="cs-sec-h"><p class="cs-sec-n mono">${pad(p.chapters.length + 1)}</p><h2 class="cs-sec-t">Credits</h2></div>
+      <div class="cs-sec-body">
+        ${p.made ? `<p class="cs-index-l mono">What I made</p><ol class="cs-made">${p.made.map((m, j) => `<li><span class="mono">${pad(j + 1)}</span>${esc(m)}</li>`).join('')}</ol>` : ''}
+        ${p.credits ? `<dl class="cs-credits">${p.credits.map(([a, b]) => `<div><dt class="mono">${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>` : ''}
+      </div>
+    </section>`;
+  }
 
   const facts = [['Client', p.client], ['Discipline', p.discipline], ['Year', p.year], ['Filed under', p.tags.join(', ')]].filter(([, v]) => v);
 

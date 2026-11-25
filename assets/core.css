@@ -862,3 +862,70 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 .wm.stack{flex-direction:column;align-items:flex-start}
 .wm.stack .s{font-size:.99em;margin-left:.022em;margin-top:-.101em;font-variation-settings:"wdth" 117,"wght" 400}
 .foot .wm{font-size:1em;vertical-align:baseline}
+
+/* =========================================================
+   Case study, editorial chapters (Nov 2026): media rows at each piece's own shape.
+   Cells grow by their ratio (--r = w / h) so a row of mixed shapes shares one height, no cropping.
+   ========================================================= */
+.cs-row{margin:calc(96 * var(--u)) 0 0}
+.cs-sec + .cs-row{margin-top:calc(72 * var(--u))}
+.cs-cells{display:flex;align-items:flex-start;gap:calc(24 * var(--u))}
+.cs-cell{flex:var(--r) 1 0;min-width:0}
+.cs-media{aspect-ratio:var(--r);border-radius:16px;overflow:hidden;background:var(--row-bg,#F1F2F3)}
+.cs-media img,.cs-media video{display:block;width:100%;height:100%;object-fit:cover}
+.cs-cap{display:flex;gap:1.2em;margin-top:calc(14 * var(--u));font-size:calc(12 * var(--u));line-height:1.4}
+.cs-cap span{flex:none}
+.r-full{margin-left:calc(-1 * var(--hx));margin-right:calc(-1 * var(--hx))}
+.r-full .cs-cells{gap:0}
+.r-full .cs-media{border-radius:0}
+.r-full .cs-cap,.r-full > .cs-cap{padding:0 var(--hx)}
+.r-offset .cs-cells{width:50%;margin-left:auto}
+.r-offset .cs-cap{margin-left:0}
+.r-offset > .cs-cap{width:50%;margin-left:auto}
+/* Palette */
+.cs-swatches{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:calc(24 * var(--u))}
+.cs-sw span{display:block;aspect-ratio:3/4;border-radius:16px}
+.cs-sw p{margin-top:calc(14 * var(--u));font-size:calc(12 * var(--u));line-height:1.4}
+.r-palette > .cs-cap{margin-top:calc(28 * var(--u))}
+/* What I made and credits */
+.cs-index-l{font-size:calc(13 * var(--u));line-height:1}
+.cs-made{list-style:none;columns:2;column-gap:calc(48 * var(--u));margin-top:calc(20 * var(--u));border-top:1px solid currentColor}
+.cs-made li{break-inside:avoid;display:flex;gap:1.2em;align-items:baseline;padding:calc(14 * var(--u)) 0;border-bottom:1px solid currentColor;font-size:calc(19 * var(--u));line-height:1.3}
+.cs-made li .mono{font-size:calc(12 * var(--u))}
+.cs-credits{margin-top:calc(64 * var(--u));border-top:1px solid currentColor}
+.cs-credits div{display:grid;grid-template-columns:minmax(0,3fr) minmax(0,7fr);gap:calc(24 * var(--u));padding:calc(18 * var(--u)) 0;border-bottom:1px solid currentColor}
+.cs-credits dt{font-size:calc(13 * var(--u));line-height:1.5}
+.cs-credits dd{font-size:calc(19 * var(--u));line-height:1.4}
+.cs-index .cs-sec-body{max-width:none}
+
+@media (max-width:760px){
+  .cs-row{margin-top:44px}
+  .cs-sec + .cs-row{margin-top:32px}
+  .cs-cells{flex-direction:column;gap:12px}
+  .cs-cell{flex:none;width:100%}
+  .cs-media{border-radius:12px}
+  .r-full .cs-media{border-radius:0}
+  .r-pair.tall .cs-cells{flex-direction:row;gap:8px}
+  .r-pair.tall .cs-cell{flex:var(--r) 1 0;width:auto}
+  .r-trio .cs-cells,.r-quad .cs-cells{flex-direction:row;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;
+    margin:0 -20px;padding:0 20px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .r-trio .cs-cells::-webkit-scrollbar,.r-quad .cs-cells::-webkit-scrollbar{display:none}
+  .r-trio .cs-cell,.r-quad .cs-cell{flex:0 0 68vw;scroll-snap-align:center}
+  .r-offset .cs-cells,.r-offset > .cs-cap{width:100%}
+  .cs-cap{font-size:10px;margin-top:8px}
+  .cs-swatches{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .cs-sw span{border-radius:12px;aspect-ratio:1}
+  .cs-sw p{font-size:10px;margin-top:8px}
+  .cs-index-l{font-size:10px}
+  .cs-made{columns:1}
+  .cs-made li{font-size:15px;padding:12px 0}
+  .cs-made li .mono{font-size:10px}
+  .cs-credits{margin-top:40px}
+  .cs-credits div{grid-template-columns:minmax(0,1fr);gap:6px;padding:14px 0}
+  .cs-credits dt{font-size:10px}
+  .cs-credits dd{font-size:15px}
+}
+/* A row whose pieces carry their own captions: the row caption reads as the set's title, above the work */
+.cs-row.set{display:flex;flex-direction:column-reverse}
+.cs-row.set > .cs-cap{margin:0 0 calc(14 * var(--u))}
+@media (max-width:760px){.cs-row.set > .cs-cap{margin:0 0 8px}}
