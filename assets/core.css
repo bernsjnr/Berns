@@ -1121,3 +1121,12 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
   .lap-ui{flex-direction:column;gap:10px;margin-top:16px}
   .lap-hint,.lap-tour{font-size:11px}
 }
+
+/* About, Hosted for (Nov 2026, Berns's call): the logos sit still, centred as a set, no carousel */
+.hosted:not([data-marquee]){animation:none;width:auto;flex-wrap:wrap;justify-content:center;gap:calc(40 * var(--u)) calc(88 * var(--u))}
+.hosted:not([data-marquee]) li{padding-right:0}
+.hosted-wrap:has(.hosted:not([data-marquee])){overflow:visible}
+@media (max-width:760px){.hosted:not([data-marquee]){gap:28px 44px}}
+
+/* (Also known as 'Berns') sits on its own patch of the page colour so it never runs into what's underneath */
+.aka{background:var(--ground);padding:5px 10px 5px 0;z-index:2}
