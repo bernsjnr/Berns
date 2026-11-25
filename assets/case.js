@@ -152,7 +152,7 @@
         <div class="cs-car-nav"><button class="cs-car-b" type="button" data-dir="-1" aria-label="Previous"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button><button class="cs-car-b" type="button" data-dir="1" aria-label="Next"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></button></div>
       </figure>`;
       if (w.row === 'palette') return `<figure class="cs-row r-palette" data-reveal>
-        <div class="cs-swatches">${w.colours.map(([nm, hex]) => `<div class="cs-sw"><span style="background:${hex}"></span><p class="mono">${esc(nm)}<br>${hex}</p></div>`).join('')}</div>
+        <div class="cs-swatches" style="--n:${w.colours.length}">${w.colours.map(([nm, hex]) => `<div class="cs-sw"><span style="background:${hex}"></span><p class="mono">${esc(nm)}<br>${hex}</p></div>`).join('')}</div>
         ${w.cap ? `<figcaption class="cs-cap mono"><span>${pad(++fn)}</span>${esc(w.cap)}</figcaption>` : ''}</figure>`;
       const tall = w.items.every(m => (m.r || 1) <= 1.05);
       return `<figure class="cs-row r-${w.row}${tall ? ' tall' : ''}${w.cap && w.items.some(m => m.cap) ? ' set' : ''}"${w.bg || w.w ? ` style="${w.bg ? `--row-bg:${w.bg};` : ''}${w.w ? `--w:${w.w}` : ''}"` : ''} data-reveal>
