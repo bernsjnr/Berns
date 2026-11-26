@@ -95,14 +95,18 @@
     </li>`;
   }
 
+  /* A fresh order on every visit (Berns's call, Nov 2026): shuffled once per load, kept while filtering */
+  const ORDERED = D.projects.slice();
+  for (let i = ORDERED.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [ORDERED[i], ORDERED[j]] = [ORDERED[j], ORDERED[i]]; }
+
   function build() {
-    const list = D.projects.filter(p => (!tag || p.tags.includes(tag)) && (!folder || p.folder === folder));
+    const list = ORDERED.filter(p => (!tag || p.tags.includes(tag)) && (!folder || p.folder === folder));
     panel.querySelectorAll('[data-tag]').forEach(b => b.setAttribute('aria-pressed', b.dataset.tag === tag));
     panel.querySelectorAll('[data-folder]').forEach(b => b.setAttribute('aria-pressed', b.dataset.folder === folder));
     const n = (tag ? 1 : 0) + (folder ? 1 : 0);
     fltN.textContent = n ? ` (${n})` : '';
     panel.querySelector('[data-flt-clear]').hidden = !n;
-    label.textContent = n ? [tag, folder].filter(Boolean).join(', ') : 'Recently added';
+    label.textContent = n ? [tag, folder].filter(Boolean).join(', ') : 'All work';
     count.textContent = `(${list.length})`;
     empty.hidden = !!list.length;
     stack.innerHTML = list.map(file).join('');
