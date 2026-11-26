@@ -1175,3 +1175,8 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
   .ct .close-mail{font-size:20px;margin-top:28px}
   .ct-ig{margin-top:28px}
 }
+
+/* Embedded social post (row: 'post') */
+.cs-post{width:min(100%,504px);height:calc(var(--h) * 1px);border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--grey-2,#E8E9EA)}
+.cs-post iframe{display:block;width:100%;height:100%;border:0}
+@media (max-width:760px){.cs-post{margin:0 auto;border-radius:12px}.r-post .cs-cap{text-align:center;justify-content:center}}
