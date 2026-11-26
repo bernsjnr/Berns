@@ -990,7 +990,11 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 .cs-play:hover .cs-play-b,.cs-play:focus-visible .cs-play-b{background:var(--blue,#080CDF);color:var(--white)}
 .r-film .cs-cap .t{flex:1 1 auto}
 /* a vertical film (r < 1): centred, never taller than the screen */
-.r-film.tall .cs-film,.r-film.tall > .cs-cap{width:min(100%,calc(82svh * var(--r)));margin-left:auto;margin-right:auto}
+.r-film.tall{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:calc(96 * var(--u))}
+.r-film.tall > *{grid-column:2}
+/* a vertical film sits on the text column, left edges lined up with the words, never taller than the screen */
+.r-film.tall .cs-film,.r-film.tall > .cs-cap{width:min(100%,calc(82svh * var(--r)));margin:0}
+@media (max-width:760px){.r-film.tall{display:block}.r-film.tall .cs-film,.r-film.tall > .cs-cap{width:100%}}
 .r-film .cs-cap a{text-decoration:underline;text-underline-offset:.3em;margin-left:.6em;white-space:nowrap}
 
 /* Stories: a phone you can tap through */
