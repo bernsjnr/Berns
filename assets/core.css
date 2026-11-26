@@ -1156,9 +1156,9 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 /* Contact (v9, Nov 2026): one Berns Blue screen, the same bar as every page, the close centred */
 .ct-main{min-height:100vh;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
   padding:calc(160 * var(--u)) var(--hx,40px) calc(80 * var(--u))}
-.ct .close-title{margin:0 auto;max-width:none;font-size:min(4.6vw,calc(84 * var(--u)))}
-/* never one word on a line: the words travel in pairs (Time to bring / your ideas / to life.) */
-.ct .close-title span{white-space:nowrap}
+.ct .close-title{margin:0 auto;max-width:none;font-size:min(7.4vw,calc(128 * var(--u)))}
+/* three lines everywhere, never one word on a line: Time to bring / your ideas / to life. (Berns's call) */
+.ct .close-title span{display:block;white-space:nowrap}
 /* hovering the email slides in an envelope with a 1 badge (Berns's reference) */
 .ct-mail{position:relative;display:inline-flex;align-items:center}
 .ct-inbox{display:inline-grid;place-items:center;width:0;overflow:hidden;opacity:0;transition:width .35s var(--out),opacity .35s var(--out),margin .35s var(--out)}
@@ -1172,8 +1172,6 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 @media (max-width:760px){
   .ct-main{padding:110px 20px 48px}
   .ct .close-title{font-size:8.2vw}
-  .ct .close-title .ct-l1{white-space:normal}
-  .ct-br{display:none}
   .ct .close-mail{font-size:20px;margin-top:28px}
   .ct-ig{margin-top:28px}
 }
