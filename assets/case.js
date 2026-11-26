@@ -133,7 +133,6 @@
     const row = w => {
       if (w.row === 'coin') return `<figure class="cs-row r-coin" data-reveal>
         <div class="cs-coin" data-coin='${esc(JSON.stringify({ faces: w.faces.map(f => base + f) }))}' tabindex="0" role="group" aria-roledescription="3D object" aria-label="${esc(w.label || 'Coin')}, both faces. Drag or use the arrow keys to turn it.">
-          <img class="cs-coin-poster" src="${base + w.poster}" alt="" draggable="false">
           <button class="cs-coin-flip mono" type="button" hidden>Turn it</button>
         </div>
         ${w.cap ? `<figcaption class="cs-cap mono"><span>${pad(++fn)}</span>${esc(w.cap)}</figcaption>` : ''}</figure>`;
