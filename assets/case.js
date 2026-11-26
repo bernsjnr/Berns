@@ -153,7 +153,7 @@
         <div class="lap-ui"><p class="lap-hint mono"></p><button class="lap-tour mono" type="button">Play the tour</button></div>
         ${w.cap ? `<figcaption class="cs-cap mono"><span>${pad(++fn)}</span>${esc(w.cap)}</figcaption>` : ''}
       </figure>`;
-      if (w.row === 'film') return `<figure class="cs-row r-film" data-reveal>
+      if (w.row === 'film') return `<figure class="cs-row r-film${w.r && w.r < 1 ? ' tall' : ''}"${w.r ? ` style="--r:${w.r}"` : ''} data-reveal>
         <div class="cs-film">
           <button class="cs-play" type="button"${w.src ? ` data-src="${base + w.src}"` : ` data-yt="${esc(w.youtube)}"`} data-title="${esc(w.title || p.name)}" aria-label="Play ${esc(w.title || 'the film')}">
             <img src="${/^https?:/.test(w.poster) ? w.poster : base + w.poster}" alt="" loading="lazy" decoding="async" onload="if(this.naturalWidth<=120)this.onerror()" onerror="if(this.dataset.f){this.onerror=null;this.onload=null;this.src='${base + (w.still || 'assets/work/tbim/title-card.webp')}'}else{this.dataset.f=1;this.src='https://i.ytimg.com/vi/${esc(w.youtube)}/hqdefault.jpg'}">
