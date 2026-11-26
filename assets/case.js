@@ -162,6 +162,10 @@
           </button>
         </div>
         <figcaption class="cs-cap mono"><span>${pad(++fn)}</span><span class="t">${esc(w.cap || '')} <a href="https://www.youtube.com/watch?v=${esc(w.youtube)}" target="_blank" rel="noopener">Watch on YouTube</a></span></figcaption></figure>`;
+      /* An embedded social post on the text column: { row: 'post', embed, url, h, cap } */
+      if (w.row === 'post') return `<figure class="cs-row r-text r-post" data-reveal>
+        <div class="cs-post" style="--h:${w.h || 640}"><iframe src="${esc(w.embed)}" title="${esc(w.cap || 'Post')}" loading="lazy" allowfullscreen></iframe></div>
+        <figcaption class="cs-cap mono"><span>${pad(++fn)}</span><span class="t">${esc(w.cap || '')} <a href="${esc(w.url)}" target="_blank" rel="noopener">View on LinkedIn</a></span></figcaption></figure>`;
       if (w.row === 'stories') return stories(w);
       /* A looping carousel: three in view and a hint of the next; swipe, drag, scroll or the arrows */
       if (w.row === 'carousel') return `<figure class="cs-row r-carousel" data-reveal>
