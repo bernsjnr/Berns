@@ -962,19 +962,16 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
   -webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat;opacity:0;will-change:opacity,transform}
 .cs-mantra + .cs-sec{margin-top:calc(120 * var(--u))}
 
-/* The coin: a full-width ink band the coin turns in */
-.r-coin{margin-left:calc(-1 * var(--hx));margin-right:calc(-1 * var(--hx))}
-.r-coin > .cs-cap{padding:0 var(--hx)}
-.cs-coin{position:relative;height:100vh;height:100svh;max-height:calc(64vw + 120px);min-height:320px;background:var(--ink);overflow:hidden;cursor:grab;touch-action:pan-y;outline-offset:-6px;user-select:none;-webkit-user-select:none}
+/* The coin: on the white page, centred, everywhere (Berns's call, Nov 2026: no ink band, no flat poster before the 3D) */
+.r-coin > .cs-cap{justify-content:center}
+.cs-coin{position:relative;width:min(100%,calc(720 * var(--u)));margin:0 auto;aspect-ratio:1;padding-bottom:calc(72 * var(--u));box-sizing:content-box;
+  background:transparent;overflow:hidden;cursor:grab;touch-action:pan-y;outline-offset:-6px;user-select:none;-webkit-user-select:none}
 .cs-coin.grab{cursor:grabbing}
-.cs-coin-gl{position:absolute;inset:0;width:100%;height:100%;display:block}
-.cs-coin-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity .8s var(--out);pointer-events:none}
-.cs-coin.ready .cs-coin-poster{opacity:0}
-.cs-coin-gl{opacity:0;transition:opacity 1s var(--out)}
+.cs-coin-gl{position:absolute;left:0;top:0;width:100%;height:calc(100% - 72 * var(--u))!important;display:block;opacity:0;transition:opacity 1s var(--out)}
 .cs-coin.ready .cs-coin-gl{opacity:1}
-.cs-coin-flip{position:absolute;left:50%;bottom:calc(32 * var(--u));transform:translateX(-50%);font-size:calc(13 * var(--u));line-height:1;color:var(--white);
-  background:transparent;border:1px solid currentColor;border-radius:999px;padding:calc(14 * var(--u)) calc(22 * var(--u));cursor:pointer;transition:background-color .2s var(--out),border-color .2s var(--out)}
-.cs-coin-flip:hover,.cs-coin-flip:focus-visible{background:var(--blue,#080CDF);border-color:var(--blue,#080CDF)}
+.cs-coin-flip{position:absolute;left:50%;bottom:0;transform:translateX(-50%);font-size:calc(13 * var(--u));line-height:1;color:var(--ink);
+  background:transparent;border:1px solid currentColor;border-radius:999px;padding:calc(14 * var(--u)) calc(22 * var(--u));cursor:pointer;transition:background-color .2s var(--out),border-color .2s var(--out),color .2s var(--out)}
+.cs-coin-flip:hover,.cs-coin-flip:focus-visible{background:var(--blue,#080CDF);border-color:var(--blue,#080CDF);color:var(--white)}
 
 /* The system: the piece starts where the text starts */
 .r-text{display:grid;grid-template-columns:minmax(0,4fr) minmax(0,8fr);column-gap:calc(96 * var(--u))}
@@ -1021,14 +1018,10 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 @media (max-width:760px){
   .cs-mantra{--h:3.9vw;margin-top:72px;margin-left:-20px;margin-right:-20px;height:240svh}
   .cs-mantra-pin{padding:0 20px}
-  /* phones: no ink band, the coin sits on the white page, centred; Turn it in ink */
-  .r-coin{margin-left:0;margin-right:0}
-  .r-coin > .cs-cap{padding:0}
-  .cs-coin{height:auto;aspect-ratio:1;min-height:0;background:transparent;padding-bottom:48px;box-sizing:content-box}
+  /* phones: the coin fills the width */
+  .cs-coin{width:100%;padding-bottom:48px}
   .cs-coin-gl{height:calc(100% - 48px)!important}
-  .cs-coin-poster{display:none}
-  .cs-coin-flip{font-size:11px;padding:12px 16px;bottom:4px;color:var(--ink)}
-  .cs-coin-flip:hover,.cs-coin-flip:focus-visible{color:var(--white)}
+  .cs-coin-flip{font-size:11px;padding:12px 16px;bottom:4px}
   .r-text{display:block}
   .r-text .cs-cells{width:100%}
   .cs-film{border-radius:12px}
