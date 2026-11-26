@@ -68,7 +68,7 @@
 
   /* ---------- Files ---------- */
   function media(p) {
-    if (p.video) return `<video muted loop playsinline preload="none" poster="${base + (p.poster || p.img)}" data-src="${base + p.video}"></video>`;
+    if (p.video) return `<video muted loop playsinline preload="none" poster="${base + (p.poster || p.img)}" data-src="${base + (p.videoSm && innerWidth < 760 ? p.videoSm : p.video)}"></video>`;
     return `<img src="${base + (p.img || p.cover)}" alt="" loading="lazy" draggable="false">`;
   }
   function file(p, i) {
