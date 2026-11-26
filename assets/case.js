@@ -155,12 +155,12 @@
       </figure>`;
       if (w.row === 'film') return `<figure class="cs-row r-film" data-reveal>
         <div class="cs-film">
-          <button class="cs-play" type="button" data-yt="${esc(w.youtube)}" data-title="${esc(w.title || p.name)}" aria-label="Play ${esc(w.title || 'the film')}">
+          <button class="cs-play" type="button"${w.src ? ` data-src="${base + w.src}"` : ` data-yt="${esc(w.youtube)}"`} data-title="${esc(w.title || p.name)}" aria-label="Play ${esc(w.title || 'the film')}">
             <img src="${/^https?:/.test(w.poster) ? w.poster : base + w.poster}" alt="" loading="lazy" decoding="async" onload="if(this.naturalWidth<=120)this.onerror()" onerror="if(this.dataset.f){this.onerror=null;this.onload=null;this.src='${base + (w.still || 'assets/work/tbim/title-card.webp')}'}else{this.dataset.f=1;this.src='https://i.ytimg.com/vi/${esc(w.youtube)}/hqdefault.jpg'}">
             <span class="cs-play-b mono"><svg viewBox="0 0 12 14" aria-hidden="true"><path d="M1 1l10 6-10 6z" fill="currentColor"/></svg>Play the film</span>
           </button>
         </div>
-        <figcaption class="cs-cap mono"><span>${pad(++fn)}</span><span class="t">${esc(w.cap || '')} <a href="https://www.youtube.com/watch?v=${esc(w.youtube)}" target="_blank" rel="noopener">Watch on YouTube</a></span></figcaption></figure>`;
+        <figcaption class="cs-cap mono"><span>${pad(++fn)}</span><span class="t">${esc(w.cap || '')}${w.youtube ? ` <a href="https://www.youtube.com/watch?v=${esc(w.youtube)}" target="_blank" rel="noopener">Watch on YouTube</a>` : ''}</span></figcaption></figure>`;
       /* An embedded social post on the text column: { row: 'post', embed, url, h, cap } */
       if (w.row === 'post') return `<figure class="cs-row r-text r-post" data-reveal>
         <div class="cs-post" style="--h:${w.h || 640}"><iframe src="${esc(w.embed)}" title="${esc(w.cap || 'Post')}" loading="lazy" allowfullscreen></iframe></div>
@@ -530,6 +530,14 @@
 
   /* The film: the title card until you press play, then YouTube (no-cookie) in its place */
   document.querySelectorAll('.cs-play').forEach(b => b.addEventListener('click', () => {
+    /* a film we host ourselves (src): our own player, with sound, in place of the card */
+    if (b.dataset.src) {
+      const v = document.createElement('video');
+      Object.assign(v, { src: b.dataset.src, controls: true, playsInline: true, autoplay: true });
+      v.setAttribute('aria-label', b.dataset.title);
+      b.replaceWith(v); v.play().catch(() => {});
+      return;
+    }
     const id = encodeURIComponent(b.dataset.yt);
     const f = document.createElement('iframe');
     const origin = /^https?:/.test(location.origin) ? `&origin=${encodeURIComponent(location.origin)}` : '';
