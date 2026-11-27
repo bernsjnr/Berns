@@ -1070,6 +1070,7 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 .cs-3d.ready canvas{opacity:1}
 .cs-3d-poster{position:absolute;inset:16%;width:68%!important;height:68%!important;object-fit:cover;transition:opacity .8s var(--out);pointer-events:none}
 .cs-3d.ready .cs-3d-poster{opacity:0}
+.cs-3d-poster.tee{inset:9%;width:82%!important;height:82%!important;object-fit:contain}
 
 /* Film fallback when YouTube won't play it here */
 .cs-film-out{position:absolute;inset:0;display:block;color:var(--ink)}

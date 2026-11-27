@@ -112,6 +112,12 @@
     };
     const cell = m => {
       const n = pad(++fn);
+      if (m.tee) return `<div class="cs-cell" style="--r:${m.r || 1}">
+        <div class="cs-media cs-3d" data-tee='${esc(JSON.stringify({ front: base + m.tee.front, back: base + m.tee.back, depth: base + m.tee.depth }))}' tabindex="0" role="group" aria-roledescription="3D object" aria-label="${esc(m.cap || 'The tee')}. Drag or use the arrow keys to turn it.">
+          <img class="cs-3d-poster tee" src="${base + m.tee.front}" alt="" loading="lazy" decoding="async" draggable="false">
+        </div>
+        ${m.cap ? `<p class="cs-cap mono"><span>${n}</span>${esc(m.cap)}</p>` : ''}
+      </div>`;
       if (m.sleeve) return `<div class="cs-cell" style="--r:${m.r || 1}">
         <div class="cs-media cs-3d" data-sleeve='${esc(JSON.stringify({ front: base + m.sleeve.front, back: base + m.sleeve.back }))}' tabindex="0" role="group" aria-roledescription="3D object" aria-label="${esc(m.cap || 'The sleeve')}. Drag or use the arrow keys to turn it.">
           <img class="cs-3d-poster" src="${base + m.sleeve.front}" alt="" loading="lazy" decoding="async" draggable="false">
@@ -514,12 +520,12 @@
   });
 
   /* The coin: three.js, only once it is near the screen (assets/coin.js) */
-  const coins = document.querySelectorAll('[data-coin],[data-sleeve]');
+  const coins = document.querySelectorAll('[data-coin],[data-sleeve],[data-tee]');
   if (coins.length) {
     const load = () => {
       if (document.querySelector('script[data-coin-js]')) return;
       const s = document.createElement('script');
-      s.src = base + 'assets/coin.js?v=5'; s.dataset.coinJs = ''; s.async = true;
+      s.src = base + 'assets/coin.js?v=7'; s.dataset.coinJs = ''; s.async = true;
       document.head.appendChild(s);
     };
     if ('IntersectionObserver' in window) {

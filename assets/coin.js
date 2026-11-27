@@ -158,15 +158,66 @@
     turn(host, rig, () => renderer.render(scene, camera), { ry0: -.35, rx0: .06, idle: .006, rest: 2500 });
   };
 
+  /* A tee (Nov 2026, the BTR x MSNGR tee): the front and back cutouts printed on a garment inflated from the
+     silhouette (tee-depth: white = full puff, black = the edge), so it has a rounded body and sleeves. Drag to turn. */
+  const tee = async (host, THREE) => {
+    const cfg = JSON.parse(host.dataset.tee);
+    const [f, b, d] = await Promise.all([cfg.front, cfg.back, cfg.depth].map(img));
+    const W = 2, H = 2 * f.naturalHeight / f.naturalWidth, Z = .1;
+    const { renderer, scene, camera } = stage(THREE, host, { tone: false, span: 2.3, fill: innerWidth < 760 ? .94 : .86 });
+    const key = new THREE.DirectionalLight(0xFFFFFF, 1.5); key.position.set(-2.5, 3, 4); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xFFFFFF, .5); fill.position.set(3, -1, -4); scene.add(fill);
+    scene.add(new THREE.AmbientLight(0xFFFFFF, .75));
+    /* the depth map, read once */
+    const dc = document.createElement('canvas'); dc.width = d.naturalWidth; dc.height = d.naturalHeight;
+    const dx = dc.getContext('2d'); dx.drawImage(d, 0, 0);
+    const dd = dx.getImageData(0, 0, dc.width, dc.height).data;
+    const depth = (u, v) => {
+      const x = Math.min(dc.width - 1, Math.max(0, u * (dc.width - 1))), y = Math.min(dc.height - 1, Math.max(0, (1 - v) * (dc.height - 1)));
+      const x0 = Math.floor(x), y0 = Math.floor(y), x1 = Math.min(dc.width - 1, x0 + 1), y1 = Math.min(dc.height - 1, y0 + 1), fx = x - x0, fy = y - y0;
+      const p = (i, j) => dd[(j * dc.width + i) * 4] / 255;
+      return (p(x0, y0) * (1 - fx) + p(x1, y0) * fx) * (1 - fy) + (p(x0, y1) * (1 - fx) + p(x1, y1) * fx) * fy;
+    };
+    const side = s => {
+      const g = new THREE.PlaneGeometry(W, H, 220, 164);
+      const pos = g.attributes.position, uv = g.attributes.uv;
+      for (let i = 0; i < pos.count; i++) {
+        const u = uv.getX(i), v = uv.getY(i), x = pos.getX(i);
+        /* puff from the silhouette, plus a soft curve across the chest so it reads as cloth on a body */
+        pos.setZ(i, s * (Z * depth(u, v) + .04 * depth(u, v) * Math.cos(x * 1.1)));
+      }
+      /* two smoothing passes over the grid so the edges roll over cleanly, no contour steps */
+      const cols = 221, rows = 165, z = new Float32Array(pos.count);
+      for (let k = 0; k < 2; k++) {
+        for (let r = 0; r < rows; r++) for (let q = 0; q < cols; q++) {
+          const i = r * cols + q, n = [i - 1, i + 1, i - cols, i + cols].filter((j, m) => (m === 0 ? q > 0 : m === 1 ? q < cols - 1 : m === 2 ? r > 0 : r < rows - 1));
+          z[i] = pos.getZ(i) === 0 ? 0 : (pos.getZ(i) * 2 + n.reduce((a, j) => a + pos.getZ(j), 0)) / (2 + n.length);
+        }
+        for (let i = 0; i < pos.count; i++) pos.setZ(i, z[i]);
+      }
+      g.computeVertexNormals();
+      return g;
+    };
+    const tex = (im, flip) => { const t = new THREE.Texture(im); t.encoding = THREE.sRGBEncoding; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); if (flip) { t.wrapS = THREE.RepeatWrapping; t.repeat.x = -1; t.offset.x = 1; } t.needsUpdate = true; return t; };
+    const cloth = (map, s) => new THREE.MeshStandardMaterial({ map, alphaTest: .5, transparent: false, roughness: .95, metalness: 0, envMapIntensity: .25, side: s });
+    const rig = new THREE.Group();
+    rig.add(new THREE.Mesh(side(1), cloth(tex(f), THREE.FrontSide)));
+    const back = new THREE.Mesh(side(1), cloth(tex(b, true), THREE.FrontSide));
+    back.rotation.y = Math.PI; /* the same puffed shell, turned round: its front is the tee's back */
+    rig.add(back);
+    scene.add(rig);
+    turn(host, rig, () => renderer.render(scene, camera), { ry0: -.45, rx0: .05, idle: .006, rest: 2500 });
+  };
+
   const go = async () => {
-    const hosts = document.querySelectorAll('[data-coin],[data-sleeve]');
+    const hosts = document.querySelectorAll('[data-coin],[data-sleeve],[data-tee]');
     if (!hosts.length) return;
     try {
       if (!window.THREE) await js(T + 'build/three.min.js');
       if (!THREE.RoomEnvironment) await js(T + 'examples/js/environments/RoomEnvironment.js');
       const t = document.createElement('canvas');
       if (!(t.getContext('webgl2') || t.getContext('webgl'))) return; /* no WebGL: the stills stay */
-      for (const h of hosts) await (h.dataset.coin ? coin : sleeve)(h, THREE).catch(() => {});
+      for (const h of hosts) await (h.dataset.coin ? coin : h.dataset.tee ? tee : sleeve)(h, THREE).catch(() => {});
     } catch (e) { /* the stills stay */ }
   };
   go();
