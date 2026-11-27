@@ -1196,14 +1196,16 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 .file-pop img,.file-pop video{display:block;width:100%;height:auto;border-radius:var(--prad)}
 .file-pop.vid video{aspect-ratio:16/9;object-fit:cover;border-radius:12px;background:#1A1A1A}
 .file-pop.spin img{animation:pop-spin 5s linear infinite;animation-play-state:paused}
+.file-pop.flag img{transform-origin:6% 100%;animation:pop-flag 2.6s ease-in-out infinite alternate;animation-play-state:paused}
+@keyframes pop-flag{from{transform:rotate(-1.2deg) skewY(-.6deg)}to{transform:rotate(1.2deg) skewY(.6deg)}}
 @keyframes pop-spin{to{transform:rotate(360deg)}}
 @media (hover:hover){
   .file:not(.open):hover .file-pop{opacity:1;transform:translateY(-76%) rotate(var(--pr))}
-  .file:not(.open):hover .file-pop.spin img{animation-play-state:running}
+  .file:not(.open):hover .file-pop.spin img,.file:not(.open):hover .file-pop.flag img{animation-play-state:running}
   .stack.all .file-pop{display:none}
 }
 @media (hover:none){ .file-pop{display:none} }
-@media (prefers-reduced-motion:reduce){ .file-pop{transition:opacity .2s} .file-pop.spin img{animation:none} }
+@media (prefers-reduced-motion:reduce){ .file-pop{transition:opacity .2s} .file-pop.spin img,.file-pop.flag img{animation:none} }
 
 /* ---------- Shop lock (Nov 2026): greyed out with a padlock ---------- */
 .lock-i{display:inline-block;width:.42em;height:.49em;margin-left:.3em;vertical-align:.08em}

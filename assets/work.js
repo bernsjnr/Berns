@@ -101,7 +101,7 @@
     const inner = o.video
       ? `<video muted loop playsinline preload="none" poster="${base + p.poster}" data-src="${base + (p.videoSm || p.video)}"></video>`
       : `<img src="${base + o.img}" alt="" loading="lazy" decoding="async" draggable="false">`;
-    return `<span class="file-pop${o.spin ? ' spin' : ''}${o.video ? ' vid' : ''}" aria-hidden="true" style="--pw:${o.w};--px:${o.x}%;--pr:${o.rot || 0}deg;--prad:${o.rad || 0}px">${inner}</span>`;
+    return `<span class="file-pop${o.spin ? ' spin' : ''}${o.flag ? ' flag' : ''}${o.video ? ' vid' : ''}" aria-hidden="true" style="--pw:${o.w};--px:${o.x}%;--pr:${o.rot || 0}deg;--prad:${o.rad || 0}px">${inner}</span>`;
   }
   /* the Monzo film only plays while it is out */
   stack.addEventListener('mouseover', e => {

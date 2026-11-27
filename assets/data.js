@@ -46,7 +46,7 @@ window.BERNS = {
       made: ["Concept", "Logo and visual identity", "Motion graphics and animation", "Video series: direction and edit", "Panel event visuals", "Email, social and screen assets"],
       credits: [["Client", "The Guardian Advertising, D&I team"], ["Me", "Concept, art direction, identity, motion, video direction and edit; panel host"], ["Panel", "Jojo Sonubi, Melina Mavoungou, Sophia Tassew"]] },
     { id: 'track-and-play', name: 'Track + Play', client: "Track + Play", discipline: "Branding, motion and web", year: '2025',
-      pop: { img: 'assets/work/pop/tp.webp', w: 190, x: 55, rot: -7, rad: 14 },
+      pop: { img: 'assets/work/pop/tp-flag.webp', w: 300, x: 50, rot: -2, flag: true },
       tags: ['Animation', 'Design'], folder: 'Community', bg: '#0D0D0D',
       summary: 'Identity, motion and website for the community sports day I co-founded.',
       quote: 'Giving adults the chance to relive the energy and magic of school sports day.',
