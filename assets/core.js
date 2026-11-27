@@ -468,3 +468,13 @@
     }, 4500);
   }
 })();
+
+/* Back to top: one handler for every [data-top] link (an inline onclick's scrollTo hits the link itself, not the page) */
+document.addEventListener('click', e => {
+  const a = e.target.closest('[data-top]');
+  if (!a) return;
+  e.preventDefault();
+  const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+  history.replaceState(null, '', location.pathname + location.search);
+});
