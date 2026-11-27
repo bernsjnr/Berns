@@ -73,7 +73,7 @@
   }
   function file(p, i) {
     const side = [p.discipline, p.year].filter(Boolean).map(esc).join(' &middot; ');
-    return `<li class="file" style="--bg:${p.bg};--fg:${p.fg || D.fgOn(p.bg)};--i:${i}">
+    return `<li class="file" style="--bg:${p.bg};--fg:${p.fg || D.fgOn(p.bg)};--i:${i}">${pop(p)}
       <a class="file-a" href="${url(p)}" data-vt-case="${p.id}" draggable="false">
         <span class="file-head">
           <span class="file-title">${esc(p.name)}</span>
@@ -93,6 +93,27 @@
       </a>
     </li>`;
   }
+
+  /* Hide and seek (Berns's call, Nov 2026): on hover a piece of the project peeks out from behind its file,
+     the record for This Bed I Made, the badge for Bully The Roads, the film for Monzo. `pop` in data.js. */
+  function pop(p) {
+    const o = p.pop; if (!o) return '';
+    const inner = o.video
+      ? `<video muted loop playsinline preload="none" poster="${base + p.poster}" data-src="${base + (p.videoSm || p.video)}"></video>`
+      : `<img src="${base + o.img}" alt="" loading="lazy" decoding="async" draggable="false">`;
+    return `<span class="file-pop${o.spin ? ' spin' : ''}${o.video ? ' vid' : ''}" aria-hidden="true" style="--pw:${o.w};--px:${o.x}%;--pr:${o.rot || 0}deg;--prad:${o.rad || 0}px">${inner}</span>`;
+  }
+  /* the Monzo film only plays while it is out */
+  stack.addEventListener('mouseover', e => {
+    const li = e.target.closest('.file'); if (!li || li.classList.contains('open')) return;
+    const v = li.querySelector('.file-pop video'); if (!v || reduce) return;
+    if (!v.src) v.src = v.dataset.src;
+    v.play().catch(() => {});
+  });
+  stack.addEventListener('mouseout', e => {
+    const li = e.target.closest('.file'); if (!li || li.contains(e.relatedTarget)) return;
+    const v = li.querySelector('.file-pop video'); if (v && !v.paused) v.pause();
+  });
 
   /* A fresh order on every visit (Berns's call, Nov 2026): shuffled once per load, kept while filtering */
   const ORDERED = D.projects.slice();
@@ -173,10 +194,10 @@
     seen.clear();
     if (!('IntersectionObserver' in window)) return;
     io = new IntersectionObserver(es => { es.forEach(e => e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)); play(); }, { threshold: .2 });
-    stack.querySelectorAll('video').forEach(v => io.observe(v));
+    stack.querySelectorAll('.file-media video').forEach(v => io.observe(v));
   }
   function play() {
-    stack.querySelectorAll('video').forEach(v => {
+    stack.querySelectorAll('.file-media video').forEach(v => {
       const on = !reduce && v.closest('.file').classList.contains('open') && (seen.has(v) || !io);
       if (on) {
         if (!v.src) v.src = v.dataset.src;
