@@ -3,7 +3,8 @@
 Personal site for Berns (Bernard Bannor). "Berns" is the main name; Berns Studios is one section of the site. Positioning: designer and presenter, design first.
 
 ## Decisions so far
-- Domain stays **bernsds.com**. Email on Zoho must keep working (don't touch MX records).
+- Domain stays **bernsds.com**. Email is iCloud Mail (MX mx01/mx02.mail.icloud.com); never break the email records.
+- DNS (27 Nov 2026): GoDaddy's own DNS (ns47/ns48.domaincontrol.com), registrar GoDaddy. Records: A @ 77.37.37.94 (Hostinger), CNAME www bernsds.com, iCloud MX x2, TXT apple-domain, SPF `v=spf1 include:icloud.com include:zoho.eu include:_spf.mail.hostinger.com ~all`, CNAME sig1._domainkey (iCloud DKIM), DMARC p=none. GoDaddy asks for an SMS code on every DNS change. Cargo no longer serves DNS and can be cancelled. `api/subscribe.php` sends with `-f info@bernsds.com` so SPF/DMARC pass.
 - Hand-built static HTML/CSS/JS (PHP available on Hostinger: `api/subscribe.php`, `api/checkout.php`). Hosting moves to **Hostinger** (Berns's call, 27 Nov 2026, replaces the GitHub-Pages-only call): Hostinger pulls `main` from this repo, so merging to main is still how things go live. GitHub Pages stays as the preview. `.htaccess` (Hostinger only, ignored by Pages) forces https and no www, blocks CLAUDE.md, .git and the prototypes, and 301s the old Cargo links (/this-bed-i-made, /together, /track-+-play, /play-1, /visit-denmark, /selected-work, /nwaka-okparaeke). Moving off Cargo; the Cargo backup (pages + every freight.cargo.site file) was taken 27 Nov 2026.
 - Nav (v9, Nov 2026; About and Work swapped, About 02, Work 03): HOME / ABOUT / WORK / SHOP / CONTACT / SURPRISE (06), in a full-screen menu behind MENU. Presenting and Community to be folded in later.
 - Shop sells Berns's posters. He prints, checks and posts them himself (quality control). Checkout via **Stripe Payment Links** (no cart backend).
@@ -102,7 +103,7 @@ Placeholders still to replace: poster prices and Stripe links, project write-ups
 3. Wire each size/frame combo to a Stripe Payment Link.
 4. Contact and booking forms (a form service, no server on GitHub Pages), routed Studio vs Presenting.
 5. Studios case-study template, Presenting page with showreel.
-6. Point bernsds.com at Hostinger (nameservers at GoDaddy, after recreating every email record: iCloud MX, SPF, sig1 DKIM, DMARC, apple-domain), check email still works, then cancel Cargo.
+6. Done (27 Nov 2026): live on Hostinger, DNS on GoDaddy. Cancel Cargo once email is confirmed working.
 
 ## Brand (2026 identity) — follow exactly
 - Source of truth: the 2026 Brand Kit in iCloud (Berns Studios > Branding > 2026 Brand Kit): `Berns Studios Type.css`, logo SVGs, and the Client Guide, Design Agreement, Invoice and email signature templates. Match those.
