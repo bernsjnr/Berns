@@ -37,7 +37,7 @@ window.BERNS = {
       made: ["Coin and its two faces", "Wordmark and lockups", "Front and back cover", "12 inch sleeve and labels", "Tracklist", "Film title, title cards and end credits", "In-store, live show and screening posters", "Hoodies, tees, tote and notebook", "Bundles", "Social and playlist assets", "Animation"],
       credits: [["Client", "Guvna B"], ["Studio", "Berns Studios: art direction, illustration, design and motion"], ["Film", "A film by Guvna B. Written by Isaac Borquaye and Christoph Davis, directed by Christoph Davis. A Guvvy Studios and Grade A production."], ["Partners", "Nudie Jeans, KOKO, Curzon, Forward, Samaritans"]] },
     { id: 'together', name: 'Together', client: 'The Guardian Advertising', discipline: 'Art direction, identity, motion and video', year: '2025',
-      pop: { img: 'assets/work/pop/together.webp', w: 190, x: 58, rot: 7, rad: 10 },
+      pop: { img: 'assets/work/pop/together.webp', w: 190, x: 58, rot: 7 },
       tags: ['Design', 'Animation', 'Art direction'], folder: 'The Guardian', bg: '#BA241E',
       summary: 'A Black History Month campaign I led the creative direction for at The Guardian, from the identity to the video series.',
       quote: 'Black History Month needed to be more than a moment.',
