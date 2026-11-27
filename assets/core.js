@@ -394,7 +394,7 @@
           <button class="mx-b mono" type="submit">${esc(c.b)}</button>
           <p class="mx-msg" role="status" aria-live="polite"></p>
         </form>
-        ${opts.page ? `<a class="mx-home mono" href="${base}home/index.html">Back to the site</a>` : ''}
+        ${opts.page ? `<a class="mx-home mono" href="${base}index.html">Back to the site</a>` : ''}
       </div>`;
     body.appendChild(wrap);
     openBox = wrap;
