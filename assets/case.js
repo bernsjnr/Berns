@@ -204,7 +204,7 @@
     <section class="cs-open" data-ground="project" aria-labelledby="cs-t">
       <div class="cs-pin" data-vt-case="${p.id}">
         <div class="cs-top">
-          <p class="cs-crumb mono cs-rise"><a href="index.html">Work</a> / ${pad(i + 1)}</p>
+          <p class="cs-crumb mono cs-rise"><a href="index.html">Work</a></p>
           <h1 class="cs-title scale cs-rise" id="cs-t">${esc(p.name)}</h1>
           <p class="cs-by mono cs-rise">${by(p)}</p>
         </div>
@@ -235,7 +235,7 @@
 
     <div class="cs-end">
       <a class="cs-next" href="project.html?p=${encodeURIComponent(next.id)}" data-vt-case="${next.id}" style="--bg:${next.bg};--fg:${next.fg || D.fgOn(next.bg)}">
-        <span class="cs-next-l mono"><span>Next project</span><span>${pad(P.indexOf(next) + 1)}</span></span>
+        <span class="cs-next-l mono"><span>Next project</span></span>
         <span class="cs-next-t scale">${esc(next.name)}</span>
         <span class="cs-next-by mono">${by(next)}</span>
         <span class="cs-next-go mono"><span class="go">Open it</span></span>
