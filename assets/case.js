@@ -113,7 +113,7 @@
     const cell = m => {
       const n = pad(++fn);
       if (m.tee) return `<div class="cs-cell" style="--r:${m.r || 1}">
-        <div class="cs-media cs-3d" data-tee='${esc(JSON.stringify({ front: base + m.tee.front, back: base + m.tee.back, depth: base + m.tee.depth }))}' tabindex="0" role="group" aria-roledescription="3D object" aria-label="${esc(m.cap || 'The tee')}. Drag or use the arrow keys to turn it.">
+        <div class="cs-media cs-3d" data-tee='${esc(JSON.stringify({ model: base + m.tee.model, front: base + m.tee.front, back: base + m.tee.back }))}' tabindex="0" role="group" aria-roledescription="3D object" aria-label="${esc(m.cap || 'The tee')}. Drag or use the arrow keys to turn it.">
           <img class="cs-3d-poster tee" src="${base + m.tee.front}" alt="" loading="lazy" decoding="async" draggable="false">
         </div>
         ${m.cap ? `<p class="cs-cap mono"><span>${n}</span>${esc(m.cap)}</p>` : ''}
@@ -525,7 +525,7 @@
     const load = () => {
       if (document.querySelector('script[data-coin-js]')) return;
       const s = document.createElement('script');
-      s.src = base + 'assets/coin.js?v=7'; s.dataset.coinJs = ''; s.async = true;
+      s.src = base + 'assets/coin.js?v=9'; s.dataset.coinJs = ''; s.async = true;
       document.head.appendChild(s);
     };
     if ('IntersectionObserver' in window) {
