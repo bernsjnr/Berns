@@ -171,14 +171,71 @@
     const back = new THREE.DirectionalLight(0xFFFFFF, .6); back.position.set(3, 1, -2); scene.add(back);
     scene.add(new THREE.HemisphereLight(0xFFFFFF, 0x9A9A9A, 1.1));
     const tex = im => { const t = new THREE.Texture(im); t.encoding = THREE.sRGBEncoding; t.flipY = false; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.needsUpdate = true; return t; };
-    const cotton = map => new THREE.MeshStandardMaterial({ map, color: 0xEDEDEA, roughness: .92, metalness: 0, side: THREE.DoubleSide });
-    const F = cotton(tex(f)), B = cotton(tex(b));
     const model = gltf.scene;
-    model.traverse(o => { if (o.isMesh) o.material = /^back/.test(o.material.name || '') ? B : F; });
     const box = new THREE.Box3().setFromObject(model);
+    /* The cloth moves in the vertex shader: a soft breeze ripples it, and when it turns the loose parts
+       (hem and sleeves) lag behind, swing past and settle. The shoulders hold still, like it is on a hanger. */
+    const U = { uT: { value: 0 }, uSwing: { value: 0 }, uTilt: { value: 0 }, uWind: { value: reduce ? 0 : 1 },
+      uTop: { value: box.max.y }, uBot: { value: box.min.y }, uC: { value: box.getCenter(new THREE.Vector3()) } };
+    const cloth = `
+      uniform float uT, uSwing, uTilt, uWind, uTop, uBot; uniform vec3 uC;
+      float clothW(vec3 p) {
+        float h = clamp((uTop - p.y) / (uTop - uBot), 0., 1.);
+        float sl = smoothstep(.2, .42, abs(p.x - uC.x));
+        return clamp(h * h * .9 + h * .1 + sl * .55 * (1. - h * .4), 0., 1.2);
+      }
+      float breeze(vec3 p) {
+        float t = uT;
+        return .0045 * (sin(p.x * 7. + p.y * 3. + t * 1.3)
+          + .7 * sin(p.y * 11. - p.x * 5. + t * 1.9 + sin(p.z * 6. + t * .7))
+          + .4 * sin((p.x + p.y) * 19. + t * 2.7)
+          + .25 * sin(p.x * 31. - p.y * 13. + t * 3.6)) * uWind;
+      }
+      mat3 rotY(float a) { float c = cos(a), s = sin(a); return mat3(c, 0., -s, 0., 1., 0., s, 0., c); }
+      mat3 rotX(float a) { float c = cos(a), s = sin(a); return mat3(1., 0., 0., 0., c, s, 0., -s, c); }
+    `;
+    const cotton = map => {
+      const m = new THREE.MeshStandardMaterial({ map, color: 0xEDEDEA, roughness: .92, metalness: 0, side: THREE.DoubleSide });
+      m.onBeforeCompile = sh => {
+        Object.assign(sh.uniforms, U);
+        sh.vertexShader = sh.vertexShader
+          .replace('#include <common>', '#include <common>\n' + cloth)
+          .replace('#include <beginnormal_vertex>', `
+            vec3 objectNormal = vec3(normal);
+            float cw = clothW(position);
+            vec3 cq = abs(normal.y) < .9 ? vec3(0., 1., 0.) : vec3(1., 0., 0.);
+            vec3 t1 = normalize(cross(normal, cq)), t2 = cross(normal, t1);
+            float e = .004, f0 = breeze(position);
+            float d1 = breeze(position + t1 * e) - f0, d2 = breeze(position + t2 * e) - f0;
+            objectNormal = normalize(objectNormal - (t1 * d1 + t2 * d2) / e * cw);
+            mat3 cr = rotY(uSwing * cw) * rotX(uTilt * cw);
+            objectNormal = cr * objectNormal;
+            vec3 clothP = uC + cr * (position + normal * f0 * cw - uC);
+            #ifdef USE_TANGENT
+              vec3 objectTangent = vec3(tangent.xyz);
+            #endif`)
+          .replace('#include <begin_vertex>', 'vec3 transformed = clothP;');
+      };
+      return m;
+    };
+    const F = cotton(tex(f)), B = cotton(tex(b));
+    model.traverse(o => { if (o.isMesh) o.material = /^back/.test(o.material.name || '') ? B : F; });
     model.position.sub(box.getCenter(new THREE.Vector3()));
     const rig = new THREE.Group(); rig.add(model); scene.add(rig);
-    turn(host, rig, () => renderer.render(scene, camera), { ry0: -.5, rx0: .04, idle: .006, rest: 2500 });
+    /* the swing: a damped spring chasing how fast the tee is turning, so it lags, overshoots and settles */
+    let lastY = null, lastX = null, sw = 0, sv = 0, tl = 0, tv = 0, t0 = performance.now();
+    turn(host, rig, () => {
+      const ry = rig.rotation.y, rx = rig.rotation.x;
+      const vy = lastY === null ? 0 : ry - lastY, vx = lastX === null ? 0 : rx - lastX;
+      lastY = ry; lastX = rx;
+      if (!reduce) {
+        sv += (Math.max(-.35, Math.min(.35, -vy * 9)) - sw) * .09; sv *= .86; sw += sv;
+        tv += (Math.max(-.2, Math.min(.2, -vx * 7)) - tl) * .09; tv *= .86; tl += tv;
+      }
+      U.uSwing.value = sw; U.uTilt.value = tl;
+      U.uT.value = (performance.now() - t0) / 1000;
+      renderer.render(scene, camera);
+    }, { ry0: -.5, rx0: .04, idle: .006, rest: 2500 });
   };
 
   const go = async () => {

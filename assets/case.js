@@ -525,7 +525,7 @@
     const load = () => {
       if (document.querySelector('script[data-coin-js]')) return;
       const s = document.createElement('script');
-      s.src = base + 'assets/coin.js?v=9'; s.dataset.coinJs = ''; s.async = true;
+      s.src = base + 'assets/coin.js?v=10'; s.dataset.coinJs = ''; s.async = true;
       document.head.appendChild(s);
     };
     if ('IntersectionObserver' in window) {
