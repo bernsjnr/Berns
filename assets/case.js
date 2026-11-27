@@ -82,7 +82,7 @@
       ? `<section class="cs-mantra" data-mantra data-ground="ink" role="img" aria-label="${esc(p.quote)}" style="--gold:${p.quoteArt.colour || '#F4DC8B'}">
           <div class="cs-mantra-pin">${p.quoteArt.lines.map(l => `<span class="ln" style="--r:${l.r};--m:url('${base + l.img}')"></span>`).join('')}</div>
         </section>`
-      : `<blockquote class="cs-quote scale" data-reveal><p>${esc(p.quote)}</p></blockquote>`;
+      : `<blockquote class="cs-quote scale" data-reveal${p.quoteInk ? ' style="color:var(--ink)"' : ''}><p>${esc(p.quote)}</p></blockquote>`;
     /* Instagram stories, as they ran: a phone you can tap through */
     const stories = w => {
       const n = pad(++fn);

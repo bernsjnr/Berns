@@ -341,3 +341,130 @@
     if (matchMedia('(hover: hover) and (pointer: fine)').matches) root.classList.add('cur-hide-native');
   }
 })();
+
+/* =========================================================
+   Shop lock and the mailing list (Nov 2026, Berns's call, before the move to Hostinger).
+   - SHOP_LOCKED: the Shop menu item is greyed with a padlock; tapping it opens "The shop is on its way"
+     with a name + email sign-up. The shop pages themselves show the padlock and the same sign-up.
+   - Welcome: the first time someone lands, after a few seconds, a pop-up invites them onto the list.
+     Shown once (localStorage), never over the shop pop-up, never for someone already signed up.
+   Sign-ups POST to api/subscribe.php (Hostinger, PHP). On github.io, where there is no PHP, they open a
+   pre-filled email to info@bernsds.com instead.
+   ========================================================= */
+(() => {
+  const SHOP_LOCKED = true;
+  const body = document.body;
+  const base = body.dataset.base || '';
+  const store = (k, v) => { try { return v === undefined ? localStorage.getItem(k) : localStorage.setItem(k, v); } catch (_) { return null; } };
+  const LOCK = '<svg class="lock-i" viewBox="0 0 24 28" aria-hidden="true"><path d="M7 12.5V8.2a5 5 0 0 1 10 0v4.3" fill="none" stroke="currentColor" stroke-width="3.2"/><path fill="currentColor" fill-rule="evenodd" d="M4.5 12h15a2.5 2.5 0 0 1 2.5 2.5v9a2.5 2.5 0 0 1-2.5 2.5h-15A2.5 2.5 0 0 1 2 23.5v-9A2.5 2.5 0 0 1 4.5 12Zm7.5 3.6a2 2 0 0 0-1.1 3.67L10.1 23h3.8l-.8-3.73A2 2 0 0 0 12 15.6Z"/></svg>';
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  const COPY = {
+    shop: { lock: true, t: 'The shop is on its way.', p: "I'm getting the prints ready. Leave your name and email and I'll let you know the moment it opens.", b: 'Let me know', done: "You're on the list. I'll be in touch when the shop opens." },
+    welcome: { t: 'Welcome in.', p: "I'm building a community around creativity. Sign up for tips for creatives, new ideas, what I'm doing with my communities and the fun projects I'm working on.", b: 'Sign me up', done: "You're in. Speak soon." }
+  };
+
+  const send = async (name, email, list) => {
+    const onPages = /github\.io$/.test(location.hostname) || location.protocol === 'file:' || /^(localhost|127\.)/.test(location.hostname);
+    if (!onPages) {
+      const r = await fetch(base + 'api/subscribe.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, email, list }) });
+      if (!r.ok) throw new Error('fail');
+      return;
+    }
+    const sub = list === 'shop' ? 'Tell me when the shop opens' : 'Mailing list';
+    location.href = `mailto:info@bernsds.com?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}`)}`;
+  };
+
+  let openBox = null;
+  const modal = (kind, opts = {}) => {
+    if (openBox) return;
+    const c = COPY[kind];
+    const wrap = document.createElement('div');
+    wrap.className = 'mx' + (opts.page ? ' page' : '');
+    wrap.innerHTML = `
+      <div class="mx-back" data-mx-close></div>
+      <div class="mx-card" role="dialog" aria-modal="true" aria-labelledby="mx-t">
+        ${opts.page ? '' : '<button class="mx-x mono" type="button" data-mx-close aria-label="Close">Close</button>'}
+        ${c.lock ? `<span class="mx-lock">${LOCK}</span>` : ''}
+        <h2 class="mx-t" id="mx-t">${esc(c.t)}</h2>
+        <p class="mx-p">${esc(c.p)}</p>
+        <form class="mx-f" novalidate>
+          <label class="mx-l"><span class="mono">Name</span><input name="name" autocomplete="name" required></label>
+          <label class="mx-l"><span class="mono">Email</span><input name="email" type="email" autocomplete="email" required></label>
+          <button class="mx-b mono" type="submit">${esc(c.b)}</button>
+          <p class="mx-msg" role="status" aria-live="polite"></p>
+        </form>
+        ${opts.page ? `<a class="mx-home mono" href="${base}home/index.html">Back to the site</a>` : ''}
+      </div>`;
+    body.appendChild(wrap);
+    openBox = wrap;
+    const prev = document.activeElement;
+    const close = () => {
+      if (opts.page) return;
+      wrap.classList.remove('on');
+      setTimeout(() => wrap.remove(), 300);
+      openBox = null;
+      document.removeEventListener('keydown', key);
+      if (prev && prev.focus) prev.focus();
+    };
+    const key = e => {
+      if (e.key === 'Escape') close();
+      if (e.key === 'Tab') {
+        const f = [...wrap.querySelectorAll('button,input,a')];
+        if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+      }
+    };
+    document.addEventListener('keydown', key);
+    wrap.querySelectorAll('[data-mx-close]').forEach(el => el.addEventListener('click', close));
+    const form = wrap.querySelector('form'), msg = wrap.querySelector('.mx-msg');
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const name = form.name.value.trim(), email = form.email.value.trim();
+      if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.textContent = 'Add your name and a valid email.'; return; }
+      const btn = form.querySelector('button'); btn.disabled = true;
+      try {
+        await send(name, email, kind);
+        store('berns-list', '1');
+        form.innerHTML = `<p class="mx-done">${esc(c.done)}</p>`;
+        if (!opts.page) setTimeout(close, 2600);
+      } catch (_) {
+        btn.disabled = false;
+        msg.textContent = 'That did not go through. Try again, or email info@bernsds.com.';
+      }
+    });
+    requestAnimationFrame(() => { wrap.classList.add('on'); const i = wrap.querySelector('input'); if (i && !opts.page) i.focus({ preventScroll: true }); });
+  };
+  window.BERNS_MODAL = modal;
+
+  if (SHOP_LOCKED) {
+    /* the Shop item in the menu */
+    document.querySelectorAll('a[href*="shop/"]').forEach(a => {
+      a.classList.add('locked');
+      a.setAttribute('aria-haspopup', 'dialog');
+      a.setAttribute('aria-label', 'Shop, coming soon');
+      const t = a.querySelector('.t') || a;
+      t.insertAdjacentHTML('beforeend', LOCK);
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const mb = document.querySelector('[data-menu-btn]');
+        if (document.documentElement.classList.contains('menu-open') && mb) mb.click();
+        modal('shop');
+      });
+    });
+    /* the shop pages: the padlock and the sign-up, nothing else */
+    if (body.dataset.page === 'shop') {
+      document.documentElement.classList.add('shop-locked');
+      modal('shop', { page: true });
+    }
+  }
+
+  /* welcome, once */
+  if (body.dataset.page !== 'shop' && !store('berns-welcome') && !store('berns-list')) {
+    setTimeout(() => {
+      if (openBox || document.documentElement.classList.contains('menu-open')) return;
+      store('berns-welcome', String(Date.now()));
+      modal('welcome');
+    }, 4500);
+  }
+})();

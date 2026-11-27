@@ -1181,3 +1181,70 @@ html.leaving main,html.leaving .foot{opacity:0;transform:translateY(-12px);trans
 .cs-post{width:min(100%,504px);height:calc(var(--h) * 1px);border-radius:16px;overflow:hidden;background:#fff;border:1px solid var(--grey-2,#E8E9EA)}
 .cs-post iframe{display:block;width:100%;height:100%;border:0}
 @media (max-width:760px){.cs-post{margin:0 auto;border-radius:12px}.r-post .cs-cap{text-align:center;justify-content:center}}
+
+/* ---------- Work intro (Nov 2026, Berns's call: no big WORK title, a welcome in his voice) ---------- */
+.wk-intro{font-family:var(--f-head);font-weight:700;font-size:min(7.4vw,calc(84 * var(--u)));line-height:1;letter-spacing:-.03em;max-width:17ch}
+.wk-sub{margin-top:calc(28 * var(--u));max-width:46ch;font-size:calc(19 * var(--u));line-height:1.45}
+.wk-sub a{text-decoration:underline;text-underline-offset:.2em;text-decoration-thickness:1px}
+.wk-sub a:hover{background:var(--blue);color:var(--white)}
+@media (max-width:760px){ .wk-intro{font-size:9.6vw;max-width:none} .wk-sub{font-size:16px;margin-top:16px} }
+
+/* ---------- Work: hide and seek. A piece of each project peeks out from behind its file on hover ---------- */
+.file{isolation:isolate}
+.file-pop{position:absolute;z-index:-1;top:0;left:var(--px);width:calc(var(--pw) * var(--u));opacity:0;pointer-events:none;
+  transform:translateY(20%) rotate(0deg);transition:transform .55s cubic-bezier(.3,1.5,.6,1),opacity .2s var(--out)}
+.file-pop img,.file-pop video{display:block;width:100%;height:auto;border-radius:var(--prad)}
+.file-pop.vid video{aspect-ratio:16/9;object-fit:cover;border-radius:12px;background:#1A1A1A}
+.file-pop.spin img{animation:pop-spin 5s linear infinite;animation-play-state:paused}
+@keyframes pop-spin{to{transform:rotate(360deg)}}
+@media (hover:hover){
+  .file:not(.open):hover .file-pop{opacity:1;transform:translateY(-76%) rotate(var(--pr))}
+  .file:not(.open):hover .file-pop.spin img{animation-play-state:running}
+  .stack.all .file-pop{display:none}
+}
+@media (hover:none){ .file-pop{display:none} }
+@media (prefers-reduced-motion:reduce){ .file-pop{transition:opacity .2s} .file-pop.spin img{animation:none} }
+
+/* ---------- Shop lock (Nov 2026): greyed out with a padlock ---------- */
+.lock-i{display:inline-block;width:.42em;height:.49em;margin-left:.3em;vertical-align:.08em}
+a.locked{opacity:.42}
+a.locked:hover,a.locked:focus-visible{opacity:.7}
+html.shop-locked body > :not(.mx):not(.bar):not(.cur):not(script):not(#menu){visibility:hidden}
+
+/* ---------- Pop-ups: the shop sign-up and the welcome ---------- */
+.mx{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:20px;opacity:0;transition:opacity .3s var(--out)}
+.mx.on{opacity:1}
+.mx-back{position:absolute;inset:0;background:rgba(26,26,26,.72)}
+.mx-card{position:relative;width:min(100%,520px);background:var(--white);color:var(--ink);border-radius:24px;padding:44px 40px 36px;
+  transform:translateY(16px);transition:transform .5s var(--out)}
+.mx.on .mx-card{transform:none}
+.mx-x{position:absolute;top:20px;right:24px;font-size:12px;line-height:1;padding:.3em 0;border-bottom:1px solid currentColor}
+.mx-x:hover{background:var(--blue);color:var(--white)}
+.mx-lock{display:block;width:30px;margin-bottom:22px}
+.mx-lock .lock-i{width:30px;height:35px;margin:0}
+.mx-t{font-family:var(--f-head);font-weight:700;font-size:34px;line-height:1.02;letter-spacing:-.025em;max-width:14ch}
+.mx-p{margin-top:14px;font-size:16px;line-height:1.5}
+.mx-f{margin-top:26px;display:grid;gap:14px}
+.mx-l{display:grid;gap:6px}
+.mx-l span{font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.mx-l input{font:inherit;font-size:16px;color:inherit;background:none;border:0;border-bottom:1px solid var(--ink);border-radius:0;padding:8px 0;outline:none}
+.mx-l input:focus{border-bottom-width:2px;padding-bottom:7px}
+.mx-b{justify-self:start;margin-top:8px;font-size:13px;line-height:1;padding:16px 26px;border-radius:999px;background:var(--ink);color:var(--white);transition:background-color .15s var(--out)}
+.mx-b:hover,.mx-b:focus-visible{background:var(--blue)}
+.mx-b:disabled{opacity:.5}
+.mx-msg{font-size:13px;min-height:1em}
+.mx-done{font-family:var(--f-head);font-weight:700;font-size:22px;line-height:1.15;letter-spacing:-.015em}
+.mx-home{display:inline-block;margin-top:22px;font-size:12px;padding:.3em 0;border-bottom:1px solid currentColor}
+/* the shop pages: the padlock on ink, like the reference, with the sign-up under it */
+.mx.page{z-index:40}
+.mx.page .mx-back{background:#1A1A1A}
+.mx.page .mx-card{background:none;color:var(--white);text-align:center;display:grid;justify-items:center}
+.mx.page .mx-lock{width:64px;margin-bottom:34px}
+.mx.page .mx-lock .lock-i{width:64px;height:75px}
+.mx.page .mx-t{max-width:none}
+.mx.page .mx-f{width:100%;text-align:left}
+.mx.page .mx-l input{border-color:var(--white)}
+.mx.page .mx-b{justify-self:center;background:var(--white);color:var(--ink)}
+.mx.page .mx-b:hover{background:var(--blue);color:var(--white)}
+@media (max-width:760px){ .mx-card{padding:36px 24px 28px;border-radius:20px} .mx-t{font-size:28px} }
+@media (prefers-reduced-motion:reduce){ .mx,.mx-card{transition:none} }
