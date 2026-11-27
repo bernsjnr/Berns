@@ -51,7 +51,7 @@ window.BERNS = {
       made: ["Logo, longform and shortform", "Visual identity", "Logo animation", "Print: banners, staff lanyards, play cards", "Launch video: animation and voiceover", "Social content", "Team photoshoot", "Website"],
       credits: [["Co-founded by", "Bully The Roads and Rise and Rally"], ["Launch video", "Filmed by Kelvin Atiasé. Animation and voiceover by me. Music, sound and soundbites by Jude Amponsah"], ["With", "Temi Ajlore, Kente Club, Kelvin Atiasé, Emma Hardy"]] },
     { id: 'bully-the-roads', name: 'Bully The Roads', client: 'Bully The Roads', discipline: 'Identity, art direction and content', year: 'Since 2020',
-      tags: ['Design', 'Art direction'], folder: 'Community', bg: '#000000',
+      tags: ['Design', 'Art direction'], folder: 'Community', bg: '#1851A4', /* blue from the Bully the Track poster (Berns's pick, Nov 2026) */
       summary: 'The London run club I founded, and everything it looks like: the badge, the series, the content and the kit.',
       quote: 'You run. We bully.',
       cover: 'assets/work/btr/cover.webp', img: 'assets/work/btr/cover.webp', /* the crew at Runlimited, IMG_3259 (Berns's pick, Nov 2026) */

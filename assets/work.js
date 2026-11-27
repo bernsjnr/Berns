@@ -72,13 +72,12 @@
     return `<img src="${base + (p.img || p.cover)}" alt="" loading="lazy" draggable="false">`;
   }
   function file(p, i) {
-    const n = pad(D.projects.indexOf(p) + 1);
     const side = [p.discipline, p.year].filter(Boolean).map(esc).join(' &middot; ');
     return `<li class="file" style="--bg:${p.bg};--fg:${p.fg || D.fgOn(p.bg)};--i:${i}">
       <a class="file-a" href="${url(p)}" data-vt-case="${p.id}" draggable="false">
         <span class="file-head">
           <span class="file-title">${esc(p.name)}</span>
-          <span class="file-side mono"><span class="file-disc">${side}</span><span class="file-n">${n}</span></span>
+          <span class="file-side mono"><span class="file-disc">${side}</span></span>
         </span>
         <span class="file-body"><span class="file-in"><span class="file-grid">
           <span class="file-media">${media(p)}</span>
