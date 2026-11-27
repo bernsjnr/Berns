@@ -30,6 +30,8 @@ fclose($fh);
 
 $subject = $list === 'shop' ? 'New sign-up: tell me when the shop opens' : 'New mailing list sign-up';
 @mail('info@bernsds.com', $subject, "Name: $name\nEmail: $email\nFrom: $list pop-up\n",
-  "From: Berns website <info@bernsds.com>\r\nReply-To: $email\r\n");
+  "From: Berns website <info@bernsds.com>\r\nReply-To: $email\r\n",
+  /* envelope sender on bernsds.com, so SPF (which includes Hostinger) lines up with the From and passes DMARC */
+  '-f info@bernsds.com');
 
 echo '{"ok":true}';
